@@ -212,20 +212,20 @@ Data yang dikumpulkan dapat bersumber dari beragam kanal:
 Pada penerapan industri riil, kesalahan prediksi memiliki bobot konsekuensi finansial yang tidak seimbang (*asymmetric cost*):
 
 $$
-	ext{Total Biaya Kerugian} = (C_{	ext{FP}} 	imes 	ext{FP}) + (C_{	ext{FN}} 	imes 	ext{FN})
+\text{Total Biaya Kerugian} = (C_{\text{FP}} \times \text{FP}) + (C_{\text{FN}} \times \text{FN})
 $$
 
 Di mana:
-* $C_{	ext{FP}}$ (*Cost of False Positive*): Biaya akibat memprediksi positif pada entitas yang sebenarnya negatif (misal: memberikan voucher diskon retensi Rp 50.000 kepada nasabah loyal yang sebenarnya tidak akan berhenti langganan).
-* $C_{	ext{FN}}$ (*Cost of False Negative*): Biaya akibat gagal mendeteksi entitas positif (misal: membiarkan nasabah VIP berhenti langganan dengan potensi kehilangan nilai seumur hidup / *Customer Lifetime Value* sebesar Rp 1.500.000).
+* $C_{\text{FP}}$ (*Cost of False Positive*): Biaya akibat memprediksi positif pada entitas yang sebenarnya negatif (misal: memberikan voucher diskon retensi Rp 50.000 kepada nasabah loyal yang sebenarnya tidak akan berhenti langganan).
+* $C_{\text{FN}}$ (*Cost of False Negative*): Biaya akibat gagal mendeteksi entitas positif (misal: membiarkan nasabah VIP berhenti langganan dengan potensi kehilangan nilai seumur hidup / *Customer Lifetime Value* sebesar Rp 1.500.000).
 
-Ambang batas pemotongan probabilitas optimal ($	heta^*$) yang meminimalkan total kerugian finansial organisasi diturunkan secara analitik melalui:
+Ambang batas pemotongan probabilitas optimal ($\theta^*$) yang meminimalkan total kerugian finansial organisasi diturunkan secara analitik melalui:
 
 $$
-	heta^* = rac{C_{	ext{FP}}}{C_{	ext{FP}} + C_{	ext{FN}}}
+\theta^* = \frac{C_{\text{FP}}}{C_{\text{FP}} + C_{\text{FN}}}
 $$
 
-Pada kasus deteksi kecurangan (*fraud detection*) dan diagnosis medis, konsekuensi *False Negative* jauh lebih fatal ($C_{	ext{FN}} \gg C_{	ext{FP}}$), sehingga ambang batas klasifikasi harus digeser ke kiri (menurunkan $	heta^*$) untuk memaksimalkan **Recall (Sensitivitas)**.
+Pada kasus deteksi kecurangan (*fraud detection*) dan diagnosis medis, konsekuensi *False Negative* jauh lebih fatal ($C_{\text{FN}} \gg C_{\text{FP}}$), sehingga ambang batas klasifikasi harus digeser ke kiri (menurunkan $\theta^*$) untuk memaksimalkan **Recall (Sensitivitas)**.
 
 ---
 
@@ -281,7 +281,7 @@ Data yang digunakan adalah harga saham historis **Tata Global Beverages Ltd** da
 Evaluasi dilakukan menggunakan metrik **Root Mean Squared Error (RMSE)**:
 
 $$
-	ext{RMSE} = \sqrt{rac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}
+\text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}
 $$
 
 ```mermaid
@@ -313,7 +313,7 @@ xychart-beta
 
 ### E. Implementasi Python Mandiri: Prediksi Saham Tata Global
 
-Dataset [NSE-TATAGLOBAL11.csv](file:///Users/mac/code/Learn-AI/public/data/NSE-TATAGLOBAL11.csv) telah tersedia di direktori portal `/data/NSE-TATAGLOBAL11.csv`. Skrip Python berikut mereplikasi alur eksperimen perbandingan model dari materi pelatihan:
+Dataset [NSE-TATAGLOBAL11.csv](https://mahendartea.github.io/Learn-AI/data/NSE-TATAGLOBAL11.csv) telah tersedia di direktori portal [`/data/NSE-TATAGLOBAL11.csv`](https://mahendartea.github.io/Learn-AI/data/NSE-TATAGLOBAL11.csv). Skrip Python berikut mereplikasi alur eksperimen perbandingan model dari materi pelatihan:
 
 ```python
 """
