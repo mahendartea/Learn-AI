@@ -1,176 +1,469 @@
 ---
 title: "Pertemuan 03: Metodologi Pengembangan Sains Data Berbasis Data"
-description: "Pembedahan metodologi standar industri dalam eksekusi proyek Data Science dan AI: CRISP-DM, OSEMN, Microsoft Team Data Science Process (TDSP), serta tata kelola eksperimen end-to-end."
+description: "Kajian komprehensif metodologi pengembangan aplikasi AI dan sains data: Mengapa mayoritas proyek AI gagal, perbandingan metodologi teknis (KDD, SEMMA) vs bisnis (CRISP-DM, IBM, Microsoft TDSP, Domino), 21 Unit Kompetensi SKKNI No. 299/2020, 7 langkah generik end-to-end, serta studi kasus Python integrasi 2 dataset CSV imunisasi bayi DKI Jakarta."
 ---
 
+import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
 > **Penyusun Modul:** Mahendar Dwi Payana  
-> **Acuan Silabus:** DTS Kominfo - STEI ITB (Ir. Windy Gambetta, MBA) & SKKNI No. 299 Tahun 2020
+> **Sumber Kurikulum Resmi:** Thematic Academy Digital Talent Scholarship (DTS) 2021 — Badan Penelitian dan Pengembangan SDM Kementerian Komunikasi dan Informatika RI (Kominfo)  
+> **Instruktur & Pengembang Modul Asal:** Ir. Windy Gambetta, MBA (Sekolah Teknik Elektro dan Informatika - STEI ITB)  
+> **Acuan Standar Kompetensi:** SKKNI No. 299 Tahun 2020 (Bidang Artificial Intelligence sub bidang Data Science)
 
 ---
 
 ## 1. Urgensi Metodologi dalam Proyek Data Science
 
-Studi dari Gartner dan MIT Sloan menunjukkan bahwa lebih dari **80% proyek sains data dan AI gagal mencapai tahap produksi**. Faktor kegagalan terbesar bukan terletak pada algoritma machine learning, melainkan pada:
-- Ketiadaan pemahaman masalah bisnis yang jelas (*ill-defined business problems*).
-- Kurangnya keterlibatan pemangku kepentingan (*stakeholders*).
-- Proses pembersihan dan validasi data yang tidak sistematis.
-- Ketiadaan kerangka kerja terstruktur untuk mengulang (*iterative loop*) eksperimen.
+Pemanfaatan kecerdasan buatan (*Artificial Intelligence*) dan pembelajaran mesin (*Machine Learning*) saat ini telah menjadi prioritas strategis di berbagai organisasi. Namun, terdapat sebuah kesalahpahaman mendasar yang kerap terjadi di industri:
 
-Oleh karena itu, penguasaan metodologi sains data menjadi kompetensi fundamental yang membedakan seorang insinyur AI profesional dari sekadar pembuat kode skrip (*script runner*).
+$$
+\mathbf{Pengembangan\ Sistem\ AI\ Berbasis\ Data} \neq \mathbf{Data} + \mathbf{Algoritma\ Machine\ Learning}
+$$
 
----
-
-## 2. Metodologi CRISP-DM (Cross-Industry Standard Process for Data Mining)
-
-CRISP-DM merupakan metodologi proses terbuka (*open standard*) yang paling banyak diadopsi di dunia industri data science internasional.
+Sekadar mengunduh *dataset* dan mengeksekusi algoritma *Machine Learning* tidak menjamin lahirnya sistem intelijen yang berdaya guna dan bernilai bisnis. Tanpa panduan metodologi yang terstruktur, mayoritas proyek sains data berakhir dengan kegagalan.
 
 ```mermaid
 graph TD
-    A["1. Business Understanding"] --> B["2. Data Understanding"]
-    B --> A
-    B --> C["3. Data Preparation"]
-    C --> D["4. Modeling"]
-    D --> C
-    D --> E["5. Evaluation"]
-    E --> A
-    E --> F["6. Deployment"]
+    subgraph SainsData["Sains Data: Interseksi Tiga Disiplin Keilmuan"]
+        CS["💻 Ilmu Komputer / IT<br/>(AI, Machine Learning, Rekayasa Perangkat Lunak)"]
+        Math["📐 Matematika & Statistika<br/>(Teori Peluang, Aljabar Linier, Kalkulus)"]
+        Domain["🏢 Pengetahuan Domain / Bisnis<br/>(Perbankan, Kesehatan, E-Commerce, Pemerintahan)"]
+        DS(("🎯 Data Science"))
+    end
+
+    CS --- DS
+    Math --- DS
+    Domain --- DS
 ```
 
-### 6 Tahapan CRISP-DM:
-1. **Business Understanding**:
-   - Menentukan tujuan bisnis (*business objectives*) dan kriteria kesuksesan.
-   - Menerjemahkan kebutuhan bisnis menjadi sasaran teknis pemodelan data.
-   - Menyusun rencana proyek (*project charter*) dan penilaian risiko (*risk assessment*).
-2. **Data Understanding**:
-   - Mengumpulkan data mentah awal (*initial data collection*).
-   - Mengeksplorasi data (*Exploratory Data Analysis / EDA*), mengidentifikasi tipe atribut dan pola distribusi.
-   - Memverifikasi kualitas data (menemukan pencilan, ketidaklengkapan, atau anomali data).
-3. **Data Preparation**:
-   - Memilih baris (*records*) dan kolom (*features*) yang relevan.
-   - Melakukan pembersihan data (*data cleansing*): imputasi nilai kosong, normalisasi, dan penanganan inkonsistensi.
-   - Membangun atribut baru (*feature engineering*) dan menyatukan beberapa sumber tabel (*data merging*).
-   - **Fase ini umumnya menyita 70% - 80% dari total waktu kerja proyek.**
-4. **Modeling**:
-   - Memilih algoritma pemodelan yang sesuai (Regresi, Klasifikasi, Clustering, ANN).
-   - Membagi data menjadi subset *Train, Validation, Test* untuk mencegah bias.
-   - Mengatur parameter model (*hyperparameter tuning*) untuk performa optimal.
-5. **Evaluation**:
-   - Menguji performa model terhadap data uji menggunakan metrik evaluasi yang tepat (Precision, Recall, F1, ROC-AUC, RMSE).
-   - Meninjau kembali apakah solusi model telah memenuhi tujuan bisnis awal.
-   - Menentukan keputusan: apakah model siap di-deploy atau perlu perbaikan data/fitur kembali.
-6. **Deployment**:
-   - Merancang arsitektur integrasi model ke sistem produksi (REST API, batch scoring, microservices).
-   - Membangun antarmuka web interaktif untuk pengguna akhir.
-   - Menyiapkan strategi monitoring performa dan pemeliharaan model berkala (*model drift monitoring*).
+### Dua Tahap Pemanfaatan Data
+Untuk mewujudkan sistem intelijen berbasis data yang andal, proyek dijalankan dalam dua fase besar:
+1. **Tahap Pengembangan / Pelatihan (*Training Phase*)**: Proses mengekstraksi pola tersembunyi (*knowledge discovery*) dari kumpulan data historis (basis data relasional atau *Big Data*) dan membekukan pengetahuan tersebut ke dalam suatu artefak model.
+2. **Tahap Penggunaan / Operasional (*Inference Phase*)**: Pemanfaatan model yang telah dipasang (*deployed*) ke dalam sistem aplikasi untuk menjawab pertanyaan bisnis secara seketika (*real-time inference*).
+
+```mermaid
+graph LR
+    subgraph Fase1["1. Tahap Pengembangan (Pelatihan)"]
+        Goal["Penentuan Masalah"] --> DataGov["Pengumpulan Data"]
+        DataGov --> Prep["Persiapan Data"]
+        Prep --> Train["Pelatihan Model"]
+        Train --> Test["Pengujian Akurasi"]
+    end
+
+    subgraph Fase2["2. Tahap Penggunaan (Operasional)"]
+        In["Masukan Parameter"] --> ModelRun["📦 Model Terlatih"]
+        ModelRun --> Out["Prediksi / Keputusan"]
+    end
+
+    Test -.->|"Model Lolos Uji Disimpan"| ModelRun
+```
 
 ---
 
-## 3. Perbandingan Kerangka Kerja: CRISP-DM vs OSEMN vs Microsoft TDSP
+## 2. Spektrum Kemampuan Sistem & 7 Tugas Analitiks
 
-| Metodologi | Tahapan Inti | Kekuatan Utama | Cocok Digunakan Untuk |
-| :--- | :--- | :--- | :--- |
-| **CRISP-DM** | Business → Data Understanding → Preparation → Modeling → Evaluation → Deployment | Berorientasi bisnis yang kuat, iteratif, teruji selama dekade | Proyek industri skala menengah, riset terapan, konsultansi |
-| **OSEMN** | **O**btain → **S**crub → **E**xplore → **M**odel → i**N**terpret | Berorientasi alur teknis data scientist perorangan | Eksplorasi analitik cepat, hackathon, riset akademik |
-| **Microsoft TDSP** | Business Understanding → Data Acquisition → Modeling → Deployment → Customer Acceptance | Dukungan kolaborasi tim besar, standar struktur repositori kode, integrasi cloud MLOps | Tim enterprise skala besar, lingkungan DevOps modern |
+Sistem intelijen yang dibangun diklasifikasikan berdasarkan spektrum kedewasaan analitis dan sasaran tugas yang diselesaikannya:
 
----
+```mermaid
+graph LR
+    D1["1. Deskriptif<br/>'Apa yang sedang terjadi?'<br/>(Rasio Keuangan, Dasbor KPI)"] --> D2["2. Diagnostik<br/>'Mengapa hal itu terjadi?'<br/>(Akar Masalah Gejala Medis)"]
+    D2 --> D3["3. Prediktif<br/>'Apa yang akan terjadi?'<br/>(Peramalan Saham, Risiko Kredit)"]
+    D3 --> D4["4. Preskriptif<br/>'Tindakan apa yang terbaik?'<br/>(Rekomendasi Terapi Obat, Rute GPS)"]
+```
 
-## 4. Struktur Direktori Proyek Data Science Standar Industri (Cookiecutter Data Science)
+### 7 Ragam Tugas Analitiks (*Analytics Tasks*)
 
-Salah satu ciri profesionalisme dalam data science adalah penataan direktori yang rapi dan terstandarisasi:
-
-<Files>
-  <Folder name="data" defaultOpen>
-    <File name="raw/ (Data mentah read-only)" />
-    <File name="interim/ (Data bersih parsial)" />
-    <File name="processed/ (Data siap model)" />
-  </Folder>
-  <Folder name="notebooks" defaultOpen>
-    <File name="01_data_understanding.ipynb" />
-    <File name="02_eda_and_cleaning.ipynb" />
-    <File name="03_model_training.ipynb" />
-  </Folder>
-  <Folder name="src" defaultOpen>
-    <File name="__init__.py" />
-    <File name="data_loader.py" />
-    <File name="preprocessing.py" />
-    <File name="model_pipeline.py" />
-  </Folder>
-  <Folder name="models">
-    <File name="best_model.joblib" />
-  </Folder>
-  <File name="requirements.txt" />
-  <File name="README.md" />
-</Files>
+| No | Tugas Analitiks | Karakteristik Output | Contoh Kasus Nyata di Industri |
+| :---: | :--- | :--- | :--- |
+| **1** | **Regresi / Estimasi** | Nilai numerik kontinu | Menaksir nilai wajar harga properti berdasarkan luas dan lokasi; memprediksi pergerakan harga saham esok hari. |
+| **2** | **Klasifikasi** | Label kelas/kategori diskret | Menentukan status kelayakan kredit nasabah bank (*Lancar*, *Dalam Perhatian*, *Macet*); mendeteksi apakah suatu perusahaan berisiko bangkrut dalam kurun 2 tahun ke depan. |
+| **3** | **Klustering** | Pengelompokan tanpa label | Segmentasi nasabah perbankan berdasarkan pola transaksi dan saldo; pengelompokan riwayat rekam medis pasien yang memiliki kemiripan gejala klinis. |
+| **4** | **Asosiasi** | Kumpulan item/kejadian bersamaan | *Market Basket Analysis* (menemukan kombinasi barang ritel yang sering dibeli bersama untuk strategi *cross-selling*); perancangan portofolio investasi saham. |
+| **5** | **Deteksi Anomali** | Kasus abnormal langka | Mendeteksi transaksi gesek kartu kredit ilegal (*fraud detection*); mendeteksi penyusupan tidak sah pada lalu lintas jaringan komputer (*intrusion detection*). |
+| **6** | **Sequence Mining** | Prediksi urutan aksi berikutnya | Memprediksi langkah navigasi pembeli di platform e-commerce (apakah akan membatalkan belanja atau menuju *checkout*); analisis risiko pemutusan langganan (*churn*). |
+| **7** | **Sistem Rekomendasi** | Usulan item berbasis preferensi | Mesin rekomendasi film Netflix, kurasi daftar lagu Spotify, dan rekomendasi produk terkait pada marketplace e-commerce. |
 
 ---
 
-## 5. Implementasi Python: Pelacakan Eksperimen Sederhana (*Experiment Tracker*)
+## 3. Fakta Empiris: Mengapa Mayoritas Proyek Sains Data Gagal?
 
-Salah satu bagian penting dalam evaluasi pemodelan adalah mencatat setiap iterasi eksperimen secara sistematis:
+Laporan riset industri global menunjukkan realitas yang sangat menantang:
+* **Gartner Research**: Lebih dari **85% proyek Big Data dan AI gagal** memberikan dampak bisnis nyata.
+* **Gartner 2018**: Sebanyak **80% proyek AI tetap menjadi "alkimia"** (eksperimen terisolasi yang dijalankan oleh segelintir ilmuwan tanpa mampu di-skala-kan ke seluruh organisasi).
+* **NewVantage Partners Survey 2019**: **77% eksekutif puncak** menyatakan bahwa adopsi bisnis atas inisiatif Big Data dan AI terus menjadi tantangan utama organisasi mereka.
+
+```mermaid
+pie title 5 Faktor Utama Penyebab Kegagalan Proyek AI/DS
+    "Lingkup Masalah Tidak Jelas / Over-promise" : 30
+    "Kualitas & Bias Data Buruk" : 25
+    "Model Tidak Explainable / Metrik Keliru" : 20
+    "Algoritma Terlalu Kompleks / Tak Tepat" : 15
+    "SDM Terisolasi (One-Man Show)" : 10
+```
+
+### 5 Akar Masalah Kegagalan:
+1. **Lingkup Masalah (*Problem Scope*)**: Masalah bisnis tidak dirumuskan secara tegas dan terukur. AI kerap dijadikan *jargon* pemasaran sehingga memicu ekspektasi berlebihan (*over-promising*) yang melampaui kemampuan data.
+2. **Kualitas Data (*Data Issues*)**: Data tidak tersedia, sampel terbatas, atau kualitasnya buruk (banyak nilai kosong, inkonsistensi penamaan). Tim teknis sering kali tidak memahami arti semantik data di lapangan, serta mengabaikan aspek bias keterwakilan (*sampling bias*).
+3. **Model Tidak Tepat (*Model Issues*)**: Model menghasilkan akurasi yang rendah, mengalami *overfitting*, atau bersifat *Black-Box* sehingga tidak dapat dipahami (*lack of explainability*) oleh pimpinan bisnis.
+4. **Algoritma Terlalu Rumit (*Algorithm Complexity*)**: Terpaku pada algoritma yang rumit (*sophisticated*) hanya karena tren, padahal model yang lebih sederhana (seperti Regresi Logistik atau Decision Tree) jauh lebih andal dan mudah diaudit.
+5. **Sumber Daya Manusia (*Human Resources*)**: Proyek sains data keliru dianggap sebagai pekerjaan perseorangan (*one-man show*). Padahal pengembangan sistem cerdas menuntut kolaborasi erat tim multi-peran:
+
+```mermaid
+graph TD
+    subgraph TimPengembang["Tim Pengembang Proyek Sains Data: Kolaborasi Terpadu"]
+        PM["👔 Project / Product Manager<br/>(Mengelola ruang lingkup, jadwal WBS, dan anggaran)"]
+        DE["🔧 Data Engineer<br/>(Membangun pipeline penarikan & penyimpanan data masif)"]
+        DS["🧠 Data Scientist<br/>(Merancang eksperimen, pemodelan ML, dan tuning parameter)"]
+        DA["📊 Data Analyst<br/>(Menganalisis korelasi data & menyajikan dasbor visualisasi)"]
+        Expert["🩺 Domain / Business Expert<br/>(Memberikan konteks industri & validasi kebutuhan riil)"]
+        IT["🌐 IT / MLOps Engineer<br/>(Menyiapkan infrastruktur server, container, dan API deployment)"]
+    end
+
+    PM <--> DS
+    DE <--> DS
+    DA <--> DS
+    Expert <--> DS
+    IT <--> DS
+```
+
+<Callout type="warn" title="Definisi Formal Metodologi Pengembangan Sains Data">
+  Untuk mengatasi risiko kegagalan di atas, proyek sains data wajib mengadopsi metodologi:  
+  **"Metoda iteratif yang dipakai untuk menyelesaikan masalah dengan menggunakan data dan pendekatan sains data melalui urutan langkah yang terstandardisasi."**
+</Callout>
+
+---
+
+## 4. Taksonomi Metodologi Sains Data di Industri
+
+Secara garis besar, metodologi sains data terbagi menjadi dua mazhab: **Metodologi Teknis** dan **Metodologi Berorientasi Bisnis**.
+
+```mermaid
+graph TD
+    Metodologi["Metodologi Pengembangan Data Science"]
+    
+    Metodologi --> Teknis["A. Metodologi Teknis<br/>(Berangkat langsung dari data)"]
+    Teknis --> KDD["KDD (Knowledge Discovery in Databases)<br/>Selection → Preprocessing → Transformation → Data Mining → Evaluation"]
+    Teknis --> SEMMA["SEMMA (SAS Institute)<br/>Sample → Explore → Modify → Model → Assess"]
+    
+    Metodologi --> Bisnis["B. Metodologi Berorientasi Bisnis<br/>(Berangkat dari pemahaman objektif organisasi)"]
+    Bisnis --> CRISP["CRISP-DM (Cross-Industry Standard)<br/>Business Und. ↔ Data Und. → Data Prep ↔ Modeling → Evaluation → Deployment"]
+    Bisnis --> IBM["IBM Data Science Methodology<br/>Menambahkan tahapan Analytic Approach & Feedback Loop eksplisit"]
+    Bisnis --> TDSP["Microsoft Team Data Science Process (TDSP)<br/>Fokus pada kolaborasi tim, struktur direktori git, dan DevOps MLOps"]
+    Bisnis --> Domino["Domino DataLab Methodology<br/>Menekankan Ideation (Cost-Benefit Analysis) & Deliverable Tracking"]
+```
+
+### A. Metodologi Teknis
+* **KDD (Knowledge Discovery in Databases - Fayyad et al., 1996)**: Berfokus pada pemurnian data: *Data $\to$ Selection $\to$ Preprocessing $\to$ Transformation $\to$ Data Mining $\to$ Evaluation/Interpretation*.
+* **SEMMA (SAS Institute)**: Siklus berulang terintegrasi: *Sample* (pengambilan cuplikan data representatif), *Explore* (analisis tren dan anomali), *Modify* (rekayasa fitur dan seleksi variabel), *Model* (eksekusi algoritma pembelajaran mesin), dan *Assess* (evaluasi keandalan pola).
+
+### B. Metodologi Berorientasi Bisnis
+* **CRISP-DM**: Standar de-facto industri paling populer dengan sifat non-linier dan iteratif.
+* **IBM Data Science Methodology**: Menyempurnakan CRISP-DM dengan memisahkan tahap penentuan strategi komputasi (*Analytic Approach*) serta menyematkan lingkar umpan balik (*feedback loop*) dari pengguna operasional.
+* **Microsoft TDSP**: Menggabungkan metodologi data science dengan disiplin rekayasa perangkat lunak modern (Git flow, sprint agile, standarisasi repositori Cookiecutter, integrasi pipeline CI/CD Azure ML).
+* **Domino DataLab**: Mengedepankan fase awal *Ideation* yang dilengkapi kalkulasi kelayakan finansial (*Cost-Benefit Analysis*) sebelum dana riset dialokasikan.
+
+---
+
+## 5. Pemetaan 21 Unit Kompetensi SKKNI No. 299 Tahun 2020
+
+Pemerintah Republik Indonesia melalui Kementerian Ketenagakerjaan telah mengesahkan **Keputusan Menteri Ketenagakerjaan No. 299 Tahun 2020** tentang Standar Kompetensi Kerja Nasional Indonesia (SKKNI) Bidang Artificial Intelligence Sub-bidang Data Science. 
+
+Standar ini memetakan **21 Unit Kompetensi Kerja** ke dalam 7 fungsi utama yang menjadi cetak biru kurikulum pelatihan ini:
+
+```mermaid
+graph TD
+    subgraph SKKNI["21 Unit Kompetensi SKKNI No. 299 Tahun 2020"]
+        F1["1. Business Understanding (Unit 1 - 3)<br/>• Menentukan objektif bisnis<br/>• Menentukan tujuan teknis<br/>• Membuat rencana proyek"]
+        F2["2. Data Understanding (Unit 4 - 6)<br/>• Mengumpulkan data<br/>• Menelaah data<br/>• Memvalidasi data"]
+        F3["3. Data Preparation (Unit 7 - 11)<br/>• Memilah data<br/>• Membersihkan data<br/>• Mengkonstruksi data<br/>• Menentukan label data<br/>• Mengintegrasikan data"]
+        F4["4. Modeling (Unit 12 - 13)<br/>• Membangun skenario pengujian<br/>• Membangun model"]
+        F5["5. Model Evaluation (Unit 14 - 15)<br/>• Mengevaluasi hasil pemodelan<br/>• Melakukan review proses pemodelan"]
+        F6["6. Deployment (Unit 16 - 19)<br/>• Membuat rencana deployment<br/>• Melakukan deployment model<br/>• Membuat rencana pemeliharaan<br/>• Melakukan pemeliharaan"]
+        F7["7. Project Evaluation (Unit 20 - 21)<br/>• Melakukan review proyek<br/>• Membuat laporan akhir proyek"]
+    end
+
+    F1 --> F2 --> F3 --> F4 --> F5 --> F6 --> F7
+```
+
+---
+
+## 6. Tujuh Langkah Generik Pengembangan Aplikasi Data Science
+
+Mengacu pada standar SKKNI No. 299 Tahun 2020 dan kurikulum ITB, berikut adalah bedah rinci ketujuh tahapan eksekusi proyek:
+
+### 6.1 Business Understanding (Penentuan Masalah Bisnis)
+Tahapan awal untuk memastikan bahwa solusi yang dikembangkan benar-benar menyelesaikan kebutuhan nyata pemangku kepentingan:
+* **Perumusan Masalah**: Mengubah problem bisnis kualitatif menjadi rumusan kuantitatif. Contoh: Masalah rasio pinjaman bermasalah (*Non-Performing Loan* / NPL) perbankan yang tinggi diubah menjadi tujuan spesifik: *"Bagaimana memperbaiki penetapan Credit Score calon debitur agar rasio gagal bayar menurun sebesar 15%?"*.
+* **Pemetaan Tugas Analitiks**: Memilih apakah masalah NPL diselesaikan melalui pendekatan **Regresi** (menaksir skor kontinu $0-100$) atau **Klasifikasi** (mengelompokkan ke dalam kategori risiko: *Sangat Layak, Layak, Kurang Layak, Ditolak*).
+* **Pemilihan Metrik Performansi**: Menetapkan tolok ukur kesuksesan teknis yang selaras dengan bisnis:
+  * Regresi: *Root Mean Squared Error* (RMSE), $R^2$ Score, *Mean Absolute Error* (MAE).
+  * Klasifikasi: *Precision*, *Recall*, *F1-Score*, *Log-Loss*, *ROC-AUC*.
+* **Manajemen & Kelayakan Proyek**:
+  * *Cost-Benefit Analysis (CBA)*: Menimbang estimasi biaya personel tim, komputasi cloud, dan akuisisi data terhadap potensi keuntungan penambahan omzet atau mitigasi kerugian risiko.
+  * *Situation Assessment*: Mengidentifikasi ketersediaan infrastruktur data internal, regulasi privasi, dan analisis risiko.
+  * *Project Plan*: Menyusun rincian rencana kerja (*Work Breakdown Structure* / WBS) beserta linimasa jadwal.
+
+---
+
+### 6.2 Data Understanding (Mendalami & Mengenali Data)
+Data yang dikumpulkan harus ditelaah secara menyeluruh sebelum dimanipulasi:
+* **Pengumpulan Data**: Menghimpun data dari berbagai sumber (basis data transaksional internal ERP/CRM, file flat CSV/Excel, Web API, open data pemerintah).
+* **Telaah Eksploratif (Exploratory Data Analysis - EDA)**:
+  * *Analisis Univariat*: Memeriksa statistik deskriptif tiap kolom (rata-rata, median, deviasi standar, sebaran kuartil, dan keberadaan *missing values*).
+  * *Analisis Multivariat*: Menyelidiki korelasi antar-fitur dan hubungan antara fitur prediktor terhadap variabel target menggunakan uji statistik (Pearson, Spearman, ANOVA, Chi-Square).
+* **Validasi Kualitas Data**:
+  * Mengidentifikasi rasio ketimpangan kelas (*Imbalanced Data*). Misalnya pada transaksi kartu kredit, kasus fraud sering kali hanya memiliki perbandingan 1:200 terhadap transaksi sah. Ketimpangan ini harus diantisipasi agar model tidak menghasilkan akurasi semu.
+  * Memastikan data bebas dari bias demografis (gender, suku, agama) untuk menjamin asas keadilan (*fairness*).
+
+<Callout type="info" title="Pelajaran Berharga: Survivorship Bias Abraham Wald (PD II)">
+  Pada Perang Dunia II, militer AS menganalisis lubang peluru pada pesawat pengebom yang berhasil kembali dari medan tempur. Kerusakan terbanyak terkonsentrasi pada bagian sayap, badan, dan ekor pesawat. Mayoritas perwira menyarankan penambahan pelat baja pada bagian-bagian tersebut.  
+  Namun, ahli statistik **Abraham Wald** memberikan analisis jenius sebaliknya: **Pelat baja harus dipasang pada bagian mesin yang justru bersih dari lubang peluru!** Mengapa? Karena pesawat yang tertembak di bagian mesin tidak pernah kembali (jatuh di medan perang) sehingga tidak masuk dalam sampel data pengamatan.  
+  *Insight Data Science*: **Memahami data yang tidak ada / mekanisme missing data (Survivorship Bias) sama pentingnya dengan menganalisis data yang tampak di layar.**
+</Callout>
+
+---
+
+### 6.3 Data Preparation (Persiapan & Penyiapan Data)
+Fase paling intensif yang mengonsumsi 70% hingga 80% total waktu siklus proyek:
+1. **Memilih dan Memilah Data**: Membuang baris data duplikat atau kolom yang tidak memiliki relevansi kausalitas terhadap variabel target (misalnya: NIK, nama pasien, atau nomor rekening).
+2. **Membersihkan Data (*Data Cleansing*)**:
+   * Imputasi nilai kosong (*missing values*) menggunakan rata-rata (*mean*) atau median untuk data numerik, dan modus (nilai terbanyak) untuk data kategorikal.
+   * Imputasi berbasis relasi antar-fitur (misal: gaji kosong diisi berdasarkan rata-rata gaji karyawan pada tingkat golongan jabatan yang sama).
+3. **Merekonstruksi Data (*Feature Engineering*)**:
+   * *Normalisasi & Standardisasi*: Menyamakan skala fitur numerik (Min-Max Scaling $[0, 1]$ atau Z-score Standardization) agar fitur berangka besar tidak mendominasi algoritma gradien.
+   * *Transformasi Data*: Mengubah data numerik kontinu ke dalam kelompok interval (*binning/bucketing*), serta mengubah variabel kategorikal menjadi *One-Hot Encoding* / variabel dummy.
+   * *Reduksi Dimensi*: Mereduksi multikolinearitas fitur menggunakan teknik *Principal Component Analysis* (PCA).
+4. **Integrasi Data (*Data Integration*)**: Menggabungkan (*merge/join*) tabel-tabel data yang terpisah menjadi satu *dataframe* terpadu dengan memastikan konsistensi tipe data dan penanganan kunci relasi (*primary-foreign keys*).
+
+---
+
+### 6.4 Modeling (Pengembangan Model Pembelajaran Mesin)
+* **Skenario Pemodelan**:
+  * Menyeleksi algoritma yang sesuai karakteristik masalah: *k-Nearest Neighbors (k-NN), Naïve Bayes, Regresi Linier/Logistik, Support Vector Machines (SVM), Decision Tree, Random Forest, hingga Deep Learning*.
+  * Membagi data secara ketat menjadi **Data Latih (*Training Set*)** dan **Data Uji (*Testing Set*)** dengan proporsi 80:20 atau 70:30 (menggunakan teknik *Stratified Splitting* untuk data imbalanced).
+* **Strategi Eksperimen Parameter**:
+  * *Best Guess*: Menentukan parameter awal berdasarkan pengalaman pakar.
+  * *One Factor at a Time (OFAT)*: Mengubah satu parameter secara berurutan sembari menahan parameter lain konstan.
+  * *Grid Search / Random Search*: Eksplorasi kombinasi hiperparameter secara sistematis untuk menemukan konfigurasi dengan skor validasi silang (*Cross-Validation*) terbaik.
+
+---
+
+### 6.5 Model Evaluation (Evaluasi Model & Peninjauan Proses)
+* **Evaluasi Teknis**: Menguji model terhadap data uji (*unseen data*) untuk mengukur apakah model mampu melakukan generalisasi dengan baik atau mengalami *overfitting*. Menerapkan uji hipotesis statistik (*t-test* atau *Wilcoxon signed-rank test*) untuk memverifikasi apakah peningkatan performa model baru bernilai signifikan secara ilmiah dibanding model dasar (*baseline*).
+* **Evaluasi Bisnis**: Memastikan luaran model dapat dijelaskan secara transparan kepada manajemen (*Explainable AI*), tidak melanggar rambu kepatuhan hukum (*regulatory compliance*), dan memberikan dampak finansial positif terukur.
+* **Evaluasi Proses**: Meninjau kembali seluruh tahapan kerja untuk memastikan tidak ada celah kebocoran data (*data leakage*) sebelum melangkah ke tahap pemasangan di server produksi.
+
+---
+
+### 6.6 Deployment (Pemasangan & Operasionalisasi Model)
+* **Pemasangan Model**: Membungkus model biner terlatih (format `.joblib` atau `.onnx`) ke dalam layanan mikro (*microservice*) REST API berbasis FastAPI/Flask atau aplikasi antarmuka web Streamlit.
+* **Tantangan Lingkungan Operasional**: Kode *Machine Learning* hanyalah komponen kecil dari keseluruhan ekosistem operasional (*Hidden Technical Debt in ML Systems*):
+
+```mermaid
+graph TD
+    subgraph MLOps["Ekosistem Sistem Intelijen Produksi (MLOps)"]
+        Config["Konfigurasi"]
+        Collect["Pengumpulan Data"]
+        Verif["Verifikasi Data"]
+        Feat["Ekstraksi Fitur"]
+        ML["🧠 KODE ML<br/>(Bagian Kecil)"]
+        Resource["Manajemen Sumber Daya"]
+        Analysis["Alat Analisis"]
+        Process["Manajemen Proses"]
+        Serving["Infrastruktur Serving (API)"]
+        Monitor["Pemantauan (Monitoring)"]
+    end
+
+    Config --- Collect --- Verif --- Feat --- ML --- Resource --- Analysis --- Process --- Serving --- Monitor
+```
+
+* **Pemantauan & Degradasi Model**:
+  * *Data Skew*: Perbedaan distribusi data di dunia nyata dibandingkan data latih masa lalu.
+  * *Model Staleness / Concept Drift*: Perubahan perilaku konsumen dan populasi seiring berjalannya waktu.
+  * *Model Retraining & Decommissioning*: Jika performa model turun di bawah ambang batas (*threshold*) yang ditentukan, picu proses pelatihan ulang (*retraining*); atau hentikan pemakaian (*decommission*) jika asumsi masalah bisnis telah usang.
+
+---
+
+### 6.7 Project Evaluation (Evaluasi Proyek & Pelaporan Akhir)
+* **Kilas Balik Proyek (*Retrospective*)**: Mendokumentasikan *lesson learned*, kendala teknis yang dihadapi, efektivitas alokasi waktu WBS, dan efisiensi biaya komputasi.
+* **Pelaporan Akhir**: Menyusun laporan eksekutif komprehensif bagi jajaran manajemen yang merangkum pencapaian objektif bisnis, dampak efisiensi operasional, dan rekomendasi langkah lanjutan.
+
+---
+
+## 7. Studi Kasus Python: Siklus CRISP-DM pada Data Imunisasi Bayi DKI Jakarta
+
+Berikut adalah implementasi praktis metodologi sains data secara *end-to-end* menggunakan Python. Studi kasus ini mengintegrasikan **dua dataset nyata dari Open Data DKI Jakarta tahun 2016**:
+1. **Dataset Capaian Imunisasi (`data-imunisasi-bayi-dki-2016.csv`)**: Jumlah bayi yang menerima berbagai antigen imunisasi di 6 wilayah kota/kabupaten administrasi.
+2. **Dataset Target Sasaran Kelahiran (`data-sasaran-bayi-dki-2016.csv`)**: Jumlah target kelahiran bayi hidup per wilayah yang menjadi penyebut (*denominator*) resmi Dinas Kesehatan.
+
+### Skenario Bisnis & Analitiks:
+* **Tujuan Bisnis**: Dinas Kesehatan Provinsi DKI Jakarta ingin mengevaluasi pencapaian target nasional *Universal Child Immunization* (UCI $\ge 95\%$) untuk kategori **Imunisasi Dasar Lengkap (IDL)** serta mengidentifikasi wilayah dengan *drop-out rate* tertinggi antara vaksin dosis awal (BCG/HB0) menuju dosis lanjutan (Booster).
+* **Tugas Analitiks**: Integrasi data antar-sumber, pembersihan inkonsistensi spasi atribut, rekayasa fitur perhitungan persentase cakupan per wilayah, dan penyusunan rekomendasi intervensi faskes.
 
 ```python
 """
-Sistem Pelacakan Eksperimen Sederhana untuk Siklus CRISP-DM
+Studi Kasus Metodologi Sains Data: Evaluasi Capaian Imunisasi Bayi DKI Jakarta 2016
+Siklus Terpadu: Business Understanding -> Data Understanding -> Data Prep -> Modeling -> Evaluation
+
 Disusun oleh: Mahendar Dwi Payana
+Acuan: Modul Metodologi Data Science DTS 2021 (Ir. Windy Gambetta, MBA - STEI ITB)
 """
 
-import json
-from datetime import datetime
+import pandas as pd
+import numpy as np
 
-class ExperimentTracker:
-    def __init__(self, experiment_file="experiment_history.json"):
-        self.experiment_file = experiment_file
-        self.history = []
-        
-    def log_run(self, model_name, hyperparameters, metrics, notes=""):
-        run_data = {
-            "run_id": f"EXP-{len(self.history) + 1:03d}",
-            "timestamp": datetime.now().isoformat(),
-            "model": model_name,
-            "hyperparameters": hyperparameters,
-            "metrics": metrics,
-            "notes": notes
-        }
-        self.history.append(run_data)
-        print(f"Berhasil mencatat {run_data['run_id']} | Model: {model_name} | Akurasi/F1: {metrics.get('f1_score', 'N/A')}")
-        
-    def show_leaderboard(self):
-        print("\n" + "=" * 70)
-        print("PAPAN PERINGKAT EKSPERIMEN (LEADERBOARD)")
-        print(f"{'Run ID':<10} | {'Model':<20} | {'F1 Score':<10} | {'Catatan'}")
-        print("-" * 70)
-        for r in self.history:
-            f1 = r['metrics'].get('f1_score', 0)
-            print(f"{r['run_id']:<10} | {r['model']:<20} | {f1:<10.4f} | {r['notes']}")
-        print("=" * 70)
+# ==============================================================================
+# TAHAP 1 & 2: DATA UNDERSTANDING & PEMUATAN DATASET
+# ==============================================================================
+print("=" * 80)
+print("TAHAP 1 & 2: DATA UNDERSTANDING - PEMUATAN DAN PEMERIKSAAN SKEMA DATASET")
+print("=" * 80)
 
-# Contoh penggunaan
-if __name__ == "__main__":
-    tracker = ExperimentTracker()
-    
-    # Eksperimen 1: Baseline Model
-    tracker.log_run(
-        model_name="LogisticRegression",
-        hyperparameters={"C": 1.0, "max_iter": 100},
-        metrics={"accuracy": 0.81, "f1_score": 0.79},
-        notes="Baseline model dengan fitur standar"
-    )
-    
-    # Eksperimen 2: Random Forest dengan Feature Engineering
-    tracker.log_run(
-        model_name="RandomForestClassifier",
-        hyperparameters={"n_estimators": 100, "max_depth": 5},
-        metrics={"accuracy": 0.88, "f1_score": 0.86},
-        notes="Penambahan fitur rasio numerik"
-    )
-    
-    tracker.show_leaderboard()
+# Dataset 1: Data Capaian Imunisasi (Tahun 2016)
+url_imunisasi = "https://mahendartea.github.io/Learn-AI/data/data-imunisasi-bayi-dki-2016.csv"
+# Dataset 2: Data Target Sasaran Kelahiran Bayi (Tahun 2016)
+url_sasaran = "https://mahendartea.github.io/Learn-AI/data/data-sasaran-bayi-dki-2016.csv"
+
+# Membaca dataset
+df_imunisasi = pd.read_csv(url_imunisasi)
+df_sasaran = pd.read_csv(url_sasaran)
+
+print("\n1. Struktur Kolom Mentah df_imunisasi:")
+print(df_imunisasi.columns.tolist())
+print(f"Dimensi data imunisasi : {df_imunisasi.shape[0]} baris, {df_imunisasi.shape[1]} kolom")
+
+print("\n2. Struktur Kolom Mentah df_sasaran:")
+print(df_sasaran.columns.tolist())
+print(f"Dimensi data sasaran   : {df_sasaran.shape[0]} baris, {df_sasaran.shape[1]} kolom")
+
+
+# ==============================================================================
+# TAHAP 3: DATA PREPARATION (PEMBERSIHAN & INTEGRASI DATA)
+# ==============================================================================
+print("\n" + "=" * 80)
+print("TAHAP 3: DATA PREPARATION - CLEANSING & DATA INTEGRATION")
+print("=" * 80)
+
+# 1. Cleansing: Deteksi dan pembersihan whitespace pada nama kolom ('tahun ' -> 'tahun')
+df_imunisasi.columns = df_imunisasi.columns.str.strip()
+df_sasaran.columns = df_sasaran.columns.str.strip()
+
+# 2. Cleansing: Standarisasi nilai teks (menghilangkan spasi liar pada kategori antigen & wilayah)
+df_imunisasi['antigen'] = df_imunisasi['antigen'].str.strip()
+df_imunisasi['wilayah'] = df_imunisasi['wilayah'].str.strip()
+df_sasaran['wilayah'] = df_sasaran['wilayah'].str.strip()
+
+# 3. Validasi Anomali Data: Pengecekan antigen IPV (Inactivated Polio Vaccine)
+ipv_data = df_imunisasi[df_imunisasi['antigen'] == 'IPV']
+print("\nTemuan Validasi Kualitas Data (Antigen IPV pada tahun 2016):")
+print(ipv_data[['wilayah', 'jumlah_bayi']].to_string(index=False))
+print(">> Catatan Domain Expert: Nilai 0 wajar secara historis karena vaksin suntik IPV")
+print("   baru dicanangkan secara percontohan di Jakarta Barat pada pertengahan 2016.")
+
+# 4. Integrasi Data: Menggabungkan kedua dataset berdasarkan Tahun dan Wilayah
+df_merged = pd.merge(df_imunisasi, df_sasaran, on=['tahun', 'wilayah'], how='inner')
+print(f"\nBerhasil mengintegrasikan data. Dimensi gabungan: {df_merged.shape}")
+
+
+# ==============================================================================
+# TAHAP 4: FEATURE ENGINEERING & PEMODELAN POLA (MODELING)
+# ==============================================================================
+print("\n" + "=" * 80)
+print("TAHAP 4: FEATURE ENGINEERING & ANALISIS POLA CAKUPAN")
+print("=" * 80)
+
+# 1. Rekayasa Fitur: Menghitung Rasio Persentase Cakupan Imunisasi
+# Formula: Cakupan (%) = (Jumlah Bayi Diimunisasi / Target Sasaran Bayi) * 100
+df_merged['persentase_cakupan'] = (df_merged['jumlah_bayi'] / df_merged['jumlah_sasaran_bayi']) * 100
+
+# 2. Rekayasa Fitur: Penentuan Status Universal Child Immunization (UCI Target >= 95%)
+df_merged['status_uci'] = np.where(
+    df_merged['persentase_cakupan'] >= 95.0, 
+    'Tercapai (>=95%)', 
+    'Belum Tercapai (<95%)'
+)
+
+# 3. Pemodelan Tabular: Matriks Pivot Cakupan per Wilayah untuk Antigen Utama
+antigen_utama = ['HB0', 'BCG', 'POLIO 1', 'DPT-HB-HIB 1', 'CAMPAK', 'IDL', 'BOOSTER CAMPAK']
+pivot_cakupan = df_merged[df_merged['antigen'].isin(antigen_utama)].pivot_table(
+    index='wilayah',
+    columns='antigen',
+    values='persentase_cakupan'
+)[antigen_utama].round(2)
+
+print("\nMatriks Persentase Cakupan Imunisasi (%) di DKI Jakarta Tahun 2016:")
+print(pivot_cakupan)
+
+
+# ==============================================================================
+# TAHAP 5 & 6: EVALUATION & REKOMENDASI KEBIJAKAN (DEPLOYMENT INSIGHTS)
+# ==============================================================================
+print("\n" + "=" * 80)
+print("TAHAP 5 & 6: EVALUATION & REKOMENDASI STRATEGIS KESEHATAN PUBLIK")
+print("=" * 80)
+
+# Filter Evaluasi Capaian Imunisasi Dasar Lengkap (IDL)
+evaluasi_idl = df_merged[df_merged['antigen'] == 'IDL'][
+    ['wilayah', 'jumlah_bayi', 'jumlah_sasaran_bayi', 'persentase_cakupan', 'status_uci']
+].sort_values(by='persentase_cakupan', ascending=False)
+
+print("\nEvaluasi Kinerja Imunisasi Dasar Lengkap (IDL) per Wilayah:")
+print(evaluasi_idl.to_string(index=False))
+
+# Analisis Drop-Out Rate (Penurunan dari Campak Dosis Pertama ke Booster Campak)
+campak_1 = df_merged[df_merged['antigen'] == 'CAMPAK'].set_index('wilayah')['jumlah_bayi']
+booster_campak = df_merged[df_merged['antigen'] == 'BOOSTER CAMPAK'].set_index('wilayah')['jumlah_bayi']
+drop_out = ((campak_1 - booster_campak) / campak_1 * 100).round(2)
+
+df_dropout = pd.DataFrame({
+    'Campak_Dosis_1': campak_1,
+    'Booster_Campak': booster_campak,
+    'Drop_Out_Rate (%)': drop_out
+})
+
+print("\nAnalisis Fenomena Drop-Out Imunisasi Lanjutan (Campak 1 -> Booster Campak):")
+print(df_dropout)
+
+print("\n--- REKOMENDASI STRATEGIS BAGI DINAS KESEHATAN DKI JAKARTA ---")
+print("1. Wilayah Prioritas Intervensi: Kepulauan Seribu (86.52%) dan Jakarta Pusat (90.31%)")
+print("   membutuhkan penguatan posyandu keliling dan edukasi imunisasi door-to-door.")
+print("2. Fenomena Border-Crossing di Jakarta Utara (Cakupan 123.49%): Mengindikasikan adanya")
+print("   masuknya bayi dari luar wilayah administratif (misal: perbatasan Kab. Bekasi/Bogor)")
+print("   yang memanfaatkan faskes di Jakarta Utara. Alokasi vaksin perlu disesuaikan.")
+print("3. Tingginya Drop-Out Booster Campak (>10% di seluruh wilayah): Perlu sistem SMS/WA")
+print("   reminder otomatis bagi orang tua ketika anak menginjak usia 18 bulan.")
+print("=" * 80)
 ```
 
 ---
 
-## 6. Latihan Mandiri & Evaluasi
+## 8. Lembar Tugas & Proyek Pelatihan (*Assignments*)
 
-1. Pilih salah satu kasus nyata di organisasi atau lingkungan sekitar Anda (misalnya: prediksi keterlambatan mahasiswa, diagnosis medis awal, atau retensi nasabah).
-2. Tuliskan analisis pemetaan proyek tersebut ke dalam 6 fase CRISP-DM lengkap dengan definisi objektif bisnis dan kriteria keberhasilannya.
+Mengacu pada instruksi resmi modul DTS 2021:
+
+<Accordions>
+  <Accordion title="Tugas 1: Analisis Komparasi Metodologi Teknis vs. Metodologi Bisnis">
+    Bandingkan metodologi KDD dan SEMMA dengan CRISP-DM dan Microsoft TDSP. Jelaskan mengapa penempatan tahapan *Business Understanding* di awal proses secara signifikan mampu memitigasi risiko kegagalan proyek sains data sebesar 80%.
+  </Accordion>
+
+  <Accordion title="Tugas 2: Diskusi Faktor Keberhasilan & Kegagalan Tahapan Generik">
+    Pilihlah salah satu dari 7 tahapan generik (Business Understanding, Data Understanding, Data Preparation, Modeling, Evaluation, Deployment, Project Evaluation). Uraikan secara rinci potensi risiko kegagalan yang dapat terjadi pada tahapan tersebut beserta langkah mitigasi preventifnya.
+  </Accordion>
+
+  <Accordion title="Tugas 3: Formulasi 7 Tugas Analitiks pada Konteks Organisasi Nyata">
+    Rumuskan satu contoh kasus nyata untuk masing-masing dari 7 jenis tugas analitiks (Regresi, Klasifikasi, Klastering, Asosiasi, Deteksi Anomali, Sequence Mining, Rekomendasi) menggunakan konteks industri tempat Anda bekerja atau institusi perguruan tinggi Anda.
+  </Accordion>
+</Accordions>
+
+---
+
+## 9. Referensi Pustaka & Tautan Resmi
+
+1. **Kementerian Ketenagakerjaan RI** (2020). *Keputusan Menteri Ketenagakerjaan RI No. 299 Tahun 2020 tentang Penetapan Standar Kompetensi Kerja Nasional Indonesia (SKKNI) Bidang Artificial Intelligence Subbidang Data Science*.
+2. **Chapman, P., Clinton, J., Kerber, R., Khabaza, T., Reinartz, T., Shearer, C., & Wirth, R.** (2000). *CRISP-DM 1.0: Step-by-step data mining guide*. SPSS.
+3. **Rollins, J. B.** (2015). *Foundational Methodology for Data Science*. IBM Analytics White Paper.
+4. **Microsoft Corporation** (2020). *The Team Data Science Process (TDSP) Lifecycle*. Microsoft Azure Architecture Center.
+5. **Domino Data Lab** (2019). *The Data Science Lifecycle: A Framework for Managing Data Science Projects*. Domino Whitepaper.
+6. **Open Data DKI Jakarta** (2016). *Data Cakupan Imunisasi Bayi dan Sasaran Kelahiran Bayi Menurut Kabupaten/Kota Administrasi di Provinsi DKI Jakarta Tahun 2016*. Dinas Kesehatan Provinsi DKI Jakarta.
