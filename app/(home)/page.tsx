@@ -23,10 +23,10 @@ const modules = [
   {
     week: 'Minggu 1',
     title: 'Fondasi AI & Lingkungan Komputasi',
-    desc: 'Setup ekosistem Python 3.10+, Jupyter/Colab, GPU acceleration, serta konsep Intelligent Agents & taksonomi AI modern.',
+    desc: 'Setup ekosistem Python 3.10+, Jupyter/Colab, GPU acceleration, 4 kuadran AI, arsitektur agen PEAS, dan Stranas KA Indonesia 2020-2045.',
     meetings: [
-      { num: '01', title: 'Setup Environment Python Modern', href: '/docs/pertemuan-01' },
-      { num: '02', title: 'Konsep Dasar AI & Intelligent Agents', href: '/docs/pertemuan-02' },
+      { num: '01', title: 'Setup Lingkungan Komputasi Modern & Tools AI', href: '/docs/pertemuan-01' },
+      { num: '02', title: 'Konsep Dasar, Teknologi & Aplikasi AI', href: '/docs/pertemuan-02' },
     ],
     color: 'from-blue-500/20 to-cyan-500/20',
     border: 'hover:border-blue-500/50',
@@ -34,11 +34,11 @@ const modules = [
   },
   {
     week: 'Minggu 2',
-    title: 'Metodologi & Pustaka Inti Sains Data',
-    desc: 'Kerangka kerja CRISP-DM, OSEMN, TDSP, serta penguasaan NumPy Vectorization dan manipulasi tingkat lanjut Pandas DataFrames.',
+    title: 'Metodologi & Kakas Proyek Sains Data',
+    desc: 'Siklus CRISP-DM, 21 Unit SKKNI 299/2020, Git/GitHub, 6 pustaka inti, vektorisasi NumPy BMI, serta studi kasus dataset imunisasi bayi DKI.',
     meetings: [
-      { num: '03', title: 'Metodologi Data Science (CRISP-DM/TDSP)', href: '/docs/pertemuan-03' },
-      { num: '04', title: 'Pustaka Inti: NumPy & Pandas Tingkat Lanjut', href: '/docs/pertemuan-04' },
+      { num: '03', title: 'Metodologi Pengembangan Sains Data Berbasis Data', href: '/docs/pertemuan-03' },
+      { num: '04', title: 'Kakas Proyek Sains Data (Tools for Data Science)', href: '/docs/pertemuan-04' },
     ],
     color: 'from-indigo-500/20 to-purple-500/20',
     border: 'hover:border-indigo-500/50',
@@ -47,10 +47,10 @@ const modules = [
   {
     week: 'Minggu 3',
     title: 'Business & Data Understanding',
-    desc: 'Formulasi masalah bisnis, metriks teknis vs KPI bisnis, teknik akuisisi data multi-sumber (SQL/API), dan statistik deskriptif.',
+    desc: 'Biaya asimetris finansial, machine learning end-to-end, prediksi saham Tata Global LSTM/ARIMA, 4 skala Stevens, dan analisis mobil.',
     meetings: [
-      { num: '05', title: 'Business Understanding & Project Planning', href: '/docs/pertemuan-05' },
-      { num: '06', title: 'Data Acquisition & Statistik Deskriptif', href: '/docs/pertemuan-06' },
+      { num: '05', title: 'Business Understanding & Rencana Proyek AI', href: '/docs/pertemuan-05' },
+      { num: '06', title: 'Data Understanding (Non-Visualisasi)', href: '/docs/pertemuan-06' },
     ],
     color: 'from-emerald-500/20 to-teal-500/20',
     border: 'hover:border-emerald-500/50',
@@ -59,9 +59,9 @@ const modules = [
   {
     week: 'Minggu 4',
     title: 'Visualisasi & Pembersihan Data',
-    desc: 'Exploratory Data Analysis (EDA) dengan Seaborn/Matplotlib, penanganan missing value secara cerdas, dan deteksi outlier multi-metode.',
+    desc: 'Visualisasi variabel vs statistik, uji ANOVA satu arah harga mobil, 5 studi kasus notebook statistik, dan penanganan integritas data.',
     meetings: [
-      { num: '07', title: 'EDA & Visualisasi Statistik Lanjutan', href: '/docs/pertemuan-07' },
+      { num: '07', title: 'Exploratory Data Analysis & Visualisasi Statistik', href: '/docs/pertemuan-07' },
       { num: '08', title: 'Data Cleansing & Validasi Integritas', href: '/docs/pertemuan-08' },
     ],
     color: 'from-amber-500/20 to-orange-500/20',
