@@ -1,178 +1,425 @@
 ---
-title: "Pertemuan 04: Pustaka Inti: NumPy & Pandas Tingkat Lanjut"
-description: "Penguasaan komputasi larik berkecepatan tinggi dengan NumPy (vektorisasi, broadcasting, aljabar linier) dan manipulasi data tabular skala besar dengan Pandas (Groupby, MultiIndex, optimasi memori)."
+title: "Pertemuan 04: Kakas Proyek Sains Data (Tools for Data Science)"
+description: "Penguasaan komprehensif kakas sains data: Mengapa Python mendominasi industri, lingkungan pengembangan (Anaconda, Spyder, Jupyter Notebook, Google Colab), kolaborasi Git/GitHub, serta pendalaman pustaka inti: NumPy, SciPy, Pandas, Matplotlib, Seaborn, dan Scikit-Learn lengkap dengan studi kasus dataset Tab.csv dan pmp_2020_baru.csv."
 ---
+
+import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 > **Penyusun Modul:** Mahendar Dwi Payana  
-> **Acuan Silabus:** DTS Kominfo - STEI ITB (Ir. Windy Gambetta, MBA) & SKKNI No. 299 Tahun 2020
+> **Sumber Kurikulum Resmi:** Thematic Academy Digital Talent Scholarship (DTS) 2021 — Badan Penelitian dan Pengembangan SDM Kementerian Komunikasi dan Informatika RI (Kominfo)  
+> **Instruktur & Pengembang Modul Asal:** Rizal Dwi Prayogo, S.Si, M.Si, M.Sc (Institut Teknologi Bandung - STEI ITB)  
+> **Acuan Standar Kompetensi:** SKKNI No. 299 Tahun 2020 (Bidang Artificial Intelligence sub bidang Data Science)
 
 ---
 
-## 1. Mengapa NumPy & Pandas Mendominasi Komputasi Data?
+## 1. Pengantar Kakas Proyek Sains Data & Mengapa Python?
 
-Python murni (*vanilla Python*) dirancang sebagai bahasa yang dinamis dan fleksibel. Namun, fleksibilitas tersebut dibayar dengan *overhead* memori yang besar dan eksekusi perulangan (*loops*) yang lambat akibat *Dynamic Typing* dan *Global Interpreter Lock (GIL)*.
+Dalam siklus proyek sains data (*data science*), sebagian besar waktu dan energi seorang praktisi dihabiskan untuk pemrosesan, eksplorasi, dan pemodelan data. Memilih perangkat lunak (*tools*) dan bahasa pemrograman yang tepat adalah faktor krusial yang menentukan efisiensi kerja, skalabilitas, dan keberhasilan proyek.
 
-**NumPy (Numerical Python)** mengatasi kelemahan ini dengan memperkenalkan:
-1. **Homogeneous Data Arrays (`ndarray`)**: Seluruh elemen larik memiliki tipe data yang seragam dan disimpan dalam blok memori fisik yang berdampingan (*contiguous C-memory layout*).
-2. **Vectorization & SIMD**: Komputasi dipindahkan ke instruksi prosesor tingkat rendah (*Single Instruction, Multiple Data*) tanpa perulangan eksplisit di level Python.
+```mermaid
+graph TD
+    subgraph AlurKakas["Peran Kakas dalam Siklus Sains Data"]
+        DataRaw["Data Mentah (Multi-Format)"] --> Ingestion["Eksplorasi & Akuisisi<br/>(Scraping, SQL, REST API)"]
+        Ingestion --> Prep["Pembersihan & Transformasi<br/>(NumPy & Pandas)"]
+        Prep --> Viz["Visualisasi & Analisis<br/>(Matplotlib & Seaborn)"]
+        Viz --> Model["Pemodelan Pembelajaran Mesin<br/>(Scikit-Learn & SciPy)"]
+        Model --> Deploy["Deployment & Kolaborasi<br/>(Git, Jupyter, Google Colab)"]
+    end
+```
 
-**Pandas** dibangun di atas NumPy untuk menghadirkan struktur data tabular tingkat tinggi yang fleksibel (**DataFrame** dan **Series**) dengan dukungan penanganan *missing value*, pelabelan baris/kolom, dan operasi relasional layaknya SQL.
+### Sejarah & Karakteristik Bahasa Python
+Python diciptakan oleh **Guido van Rossum** pada tahun 1991 sebagai bahasa pemrograman serbaguna (*general-purpose language*) yang bersifat *open-source* dan lintas platform (*cross-platform*: Windows, macOS, Linux).
+
+#### Karakteristik Unggulan Python:
+1. **Sintaks Bersih & Sangat Mudah Dibaca (*High Readability*)**: Menghilangkan tanda kurung kurawal `{}` yang berbelit dan titik koma `;`, menggantikannya dengan struktur indentasi spasi yang rapi.
+2. **Bahasa Interpreter (*Interpreted Language*)**: Kode dieksekusi baris demi baris secara instan oleh interpreter tanpa memerlukan langkah kompilasi manual ke bahasa mesin (*zero compilation step*), sehingga secara drastis mempersingkat siklus *edit-test-debug*.
+3. **Pengetikan Dinamis (*Dynamically Typed*) & Manajemen Memori Otomatis**: Alokasi memori objek dan pembersihan *garbage collection* dikelola otomatis oleh runtime Python.
+4. **Bahasa Multiparadigma (*Multi-Paradigm*)**:
+   * *Pemrograman Berorientasi Objek (OOP)*: Memudahkan perancangan pipeline model yang modular layaknya Java atau C++.
+   * *Pemrograman Fungsional*: Menyediakan fungsi tingkat tinggi (`map`, `filter`, `lambda`, *list comprehensions*).
+   * *Interoperabilitas C/C++*: Melalui pustaka seperti *Cython*, kode kritis performa tinggi dapat dipacu hingga menyamai kecepatan komputasi bahasa C.
+
+#### Komparasi Sintaks: Bahasa C vs. Python
+
+<Tabs items={['Bahasa C', 'Bahasa Python']}>
+  <Tab value="Bahasa C">
+    ```c
+    #include <stdio.h>
+
+    int main() {
+        printf("Hello World!\n");
+        return 0;
+    }
+    ```
+    *Membutuhkan deklarasi pustaka header, fungsi utama `main()`, tanda kurung kurawal `{ }`, titik koma `;`, dan kompilasi manual (`gcc main.c -o main`).*
+  </Tab>
+  <Tab value="Bahasa Python">
+    ```python
+    print("Hello World!")
+    ```
+    *Sangat ringkas, deklaratif, ekspresif, dan langsung dieksekusi di konsol interaktif.*
+  </Tab>
+</Tabs>
+
+### Adopsi Raksasa Teknologi Dunia & Peluang Karier
+Python telah menjadi standar baku (*gold standard*) di perusahaan teknologi dunia:
+* **YouTube**: *"Google menjalankan jutaan baris kode Python. Server front-end yang menggerakkan youtube.com dan API YouTube ditulis terutama dalam Python dan melayani jutaan permintaan per detik!"* — Dylan Trotter, Youtube Engineer (2017).
+* **Quora**: Memilih Python karena kecepatan iterasi pengembangan dan kemudahan integrasi *unit testing* yang kuat — Adam D'Angelo, CEO Quora (2014).
+* **Google, Spotify, Instagram, Netflix, NASA, Uber, Dropbox, IBM, dan Reddit**: Menjadikan Python sebagai tulang punggung arsitektur analitik data, mesin rekomendasi, dan infrastruktur komputasi kecerdasan buatan mereka.
+* **Keahlian Paling Dicari di Pasar Kerja**: Berdasarkan survei komprehensif *Towards Data Science*, Python menempati **peringkat pertama (77%)** dalam daftar keahlian sains data yang paling dicari dalam lowongan pekerjaan global, melampaui SQL (59%), R (54%), Apache Spark (26%), dan AWS (26%).
 
 ---
 
-## 2. Pembedahan NumPy: Vektorisasi, Broadcasting & Aljabar Linier
+## 2. Penerapan Python dalam 4 Fase Proyek Sains Data
 
-### A. Konsep Broadcasting
-Broadcasting memungkinkan NumPy mengeksekusi operasi aritmatika antara dua larik dengan dimensi (*shape*) yang berbeda tanpa menduplikasi data di memori secara fisik.
+```mermaid
+graph LR
+    F1["1. Data Exploration<br/>• Web Scraping / Crawling<br/>• Data Mining & Query SQL"] --> F2["2. Data Pre-Processing<br/>• Seleksi Fitur Relevan<br/>• Deskriptif & Visualisasi<br/>• Encoding & Binning"]
+    F2 --> F3["3. Data Cleansing<br/>• Imputasi Nilai Kosong<br/>• Hapus Baris Duplikat<br/>• Normalisasi Pencilan"]
+    F3 --> F4["4. Data Modeling<br/>• Pelatihan Model ML<br/>• Regresi, Klasifikasi<br/>• Klasterisasi & Evaluasi"]
+```
 
-**Aturan Broadcasting:**
-1. Jika dua larik memiliki jumlah dimensi yang berbeda, tambahkan dimensi `1` di sebelah kiri shape larik yang lebih pendek.
-2. Dua dimensi kompatibel jika:
-   - Nilainya sama persis, ATAU
-   - Salah satu bernilai `1`.
-3. Jika pada dimensi mana pun kondisinya tidak terpenuhi, NumPy akan melempar `ValueError`.
+1. **Eksplorasi Data (*Data Exploration*)**: Menggali data terstruktur maupun tidak terstruktur dari berbagai sumber melalui teknik penambangan data (*data mining*), *web scraping* (BeautifulSoup, Scrapy), pemanggilan Web API (Requests), hingga query basis data relasional/data warehouse.
+2. **Pra-Pemrosesan Data (*Data Pre-processing*)**: Menyelidiki profil sebaran data (distribusi probabilitas), statistika deskriptif, seleksi fitur (*feature selection*), penanganan ketimpangan kelas (*class balancing*), serta transformasi fitur (*categorical encoding, numerical binning*). Prinsip industri: *"Garbage In, Garbage Out"* — data yang belum diproses dengan baik akan menghasilkan model yang gagal.
+3. **Pembersihan Data (*Data Cleansing*)**: Memperbaiki kualitas data mentah dengan mengimputasi nilai kosong (*missing values*) menggunakan teknik statistika (rata-rata/mean, median, atau modus), menghapus sampel data baris yang terduplikasi, menyelaraskan format penanggalan (*data formatting*), serta meredam efek data pencilan (*outliers*) melalui normalisasi rentang $[-1, 1]$ atau $[0, 1]$.
+4. **Pemodelan Data (*Data Modeling*)**: Melatih data bersih menggunakan algoritma pembelajaran mesin untuk menyelesaikan tugas **Regresi** (memprediksi kenaikan harga saham/komoditas numerik), **Klasifikasi** (memprediksi email spam, deteksi fraud, diagnosis penyakit), atau **Klasterisasi** (segmentasi perilaku pelanggan belanja).
 
-Contoh: Matriks 2D berukuran $3 \times 3$ dijumlahkan secara langsung dengan vektor 1D berukuran $1 \times 3$:
+---
+
+## 3. Lingkungan Pengembangan: IDE, WIDE & Ekosistem Git
+
+Untuk mengeksekusi kode Python secara optimal, praktisi data menggunakan kombinasi *Development Environment* yang bervariasi:
+
+```mermaid
+graph TD
+    Dev["Development Environment Python"]
+    
+    Dev --> Dist["1. Distribusi Terpadu"]
+    Dist --> Ana["Anaconda Distribution<br/>(Python + Conda + Navigator + 1000+ Libraries)"]
+    Dist --> Mini["Miniconda<br/>(Minimalist Package Manager)"]
+    
+    Dev --> Desktop["2. Desktop IDE"]
+    Desktop --> Spyder["Spyder (Scientific Python)<br/>(Dirancang khusus analisis saintifik)"]
+    Desktop --> VSCode["VS Code & PyCharm"]
+    
+    Dev --> Web["3. Web IDE (WIDE)"]
+    Web --> Jupyter["Jupyter Notebook (Lokal / Server)<br/>(Interaktif: Sel Kode, Markdown, Gambar)"]
+    Web --> Colab["Google Colaboratory (Cloud)<br/>(Akselerasi GPU/TPU Gratis & Google Drive)"]
+```
+
+### A. Konsep IPython: Lingkungan REPL (*Read-Eval-Print-Loop*)
+IPython (*Interactive Python*) memperkenalkan cara kerja interaktif:
+* **Read**: Menerima dan membaca baris kode yang dimasukkan pengguna.
+* **Eval**: Mengevaluasi dan mengeksekusi kode secara langsung di memori.
+* **Print**: Mencetak dan menampilkan hasil keluaran (*output*) seketika.
+* **Loop**: Mengulang kembali siklus untuk instruksi berikutnya sembari mempertahankan status variabel di memori.
+
+### B. Web Integrated Development Environment (WIDE)
+* **Jupyter Notebook**: Berakar dari pengembangan perangkat lunak matematika SageMath (William Stein, 2005) dan dirilis sebagai versi browser dari IPython pada Desember 2011. Sekarang menjadi bagian dari ekosistem multi-bahasa **Jupyter** (*Julia, Python, R*). Dokumen notebook (`.ipynb`) menggabungkan sel kode yang dapat dieksekusi (*Code*), narasi penjelasan matematis (*Markdown* berformat KaTeX/LaTeX), visualisasi plot grafis, hingga tabel interaktif yang dapat direplikasi secara ilmiah (*reproducible research*).
+* **Google Colaboratory (Google Colab)**: Layanan komputasi awan (*cloud notebook*) gratis yang disediakan oleh Google. Menyediakan lingkungan Python siap pakai tanpa instalasi lokal, dilengkapi akses akselerator perangkat keras **GPU (NVIDIA T4/V100)** dan **TPU (Tensor Processing Unit)**, serta integrasi langsung dengan Google Drive dan repositori GitHub.
+
+### C. Kolaborasi & Pelacakan Versi dengan Git & GitHub
+Proyek sains data menuntut pelacakan eksperimen dan kolaborasi tim yang rapi menggunakan **Git**:
+
+```mermaid
+graph LR
+    WD["📂 Working Directory<br/>(File sedang diedit)"] -->|"git add <file>"| SA["📦 Staging Area<br/>(File ditandai untuk commit)"]
+    SA -->|"git commit -m 'pesan'"| LR["🗄️ Local Repository<br/>(Tersimpan aman di database lokal)"]
+    LR -->|"git push origin main"| RR["🌐 Remote (GitHub)<br/>(Kolaborasi tim di Cloud)"]
+```
+
+#### 3 Status Utama Berkas di Git:
+1. **Modified**: Anda telah mengubah berkas di direktori kerja, namun perubahannya belum ditandai untuk disimpan ke basis data Git.
+2. **Staged**: Anda telah menandai berkas yang dimodifikasi ke dalam *Staging Area* sebagai kandidat cuplikan versi berikutnya.
+3. **Committed**: Berkas telah disimpan secara aman dan permanen di basis data repositori lokal Anda.
+
+#### Lembar Contekan Perintah Dasar Git:
+```bash
+# Inisialisasi repositori lokal baru pada branch main
+git init -b main
+
+# Memeriksa status berkas
+git status
+
+# Menambahkan berkas ke staging area
+git add .
+
+# Menyimpan perubahan dengan pesan deskriptif
+git commit -m "feat: implementasi pipeline pembersihan data imunisasi"
+
+# Menghubungkan ke repositori remote di GitHub
+git remote add origin https://github.com/mahendartea/Learn-AI.git
+
+# Mengunggah perubahan ke GitHub
+git push -u origin main
+
+# Mengambil dan menggabungkan perubahan terbaru dari rekan tim
+git pull origin main
+```
+
+---
+
+## 4. Pembedahan Mendalam 6 Pustaka Inti Sains Data
+
+Ekosistem Python untuk sains data ditopang oleh enam pilar pustaka utama:
+
+```mermaid
+graph TD
+    Stack["Python Data Science Ecosystem"]
+    
+    Stack --> NP["1. NumPy<br/>(Larik ndarray, Vektorisasi & Aljabar Linier)"]
+    Stack --> SP["2. SciPy<br/>(Algoritma Numerik, Optimasi & Kalkulus Saintifik)"]
+    Stack --> PD["3. Pandas<br/>(Dataframe Tabular & Data Wrangling)"]
+    Stack --> MP["4. Matplotlib<br/>(Visualisasi Dasar 2D & Kontrol Sumbu Grafis)"]
+    Stack --> SB["5. Seaborn<br/>(Visualisasi Statistik Estetis Tingkat Tinggi)"]
+    Stack --> SK["6. Scikit-Learn<br/>(Algoritma Machine Learning & Validasi Model)"]
+```
+
+---
+
+### A. NumPy & SciPy: Komputasi Numerik & Saintifik
+
+#### Keterbatasan Fatal Python List Biasa
+Dalam Python murni, list dirancang untuk menampung objek heterogen. Namun, operasi matematika per-elemen (*element-wise*) tidak dapat dilakukan secara langsung:
+
+```python
+height = [1.84, 1.79, 1.82, 1.90, 1.80]
+weight = [66.5, 60.3, 64.7, 89.5, 69.8]
+
+# Mencoba menghitung Indeks Massa Tubuh (BMI) langsung:
+bmi = weight / height ** 2
+# Output: TypeError: unsupported operand type(s) for ** or pow(): 'list' and 'int'
+```
+
+#### Solusi NumPy: Vektorisasi Array Homogen (`ndarray`)
+NumPy (*Numerical Python*) mengatasi hal ini dengan mengemas data numerik ke dalam larik homogen berdimensi-$n$ (`ndarray`) yang disimpan dalam blok memori C fisik yang berdampingan (*contiguous memory block*):
+
+```python
+import numpy as np
+
+np_height = np.array(height)
+np_weight = np.array(weight)
+
+# Perhitungan BMI secara Vektor (Seketika untuk jutaan data!)
+# Formula: BMI = Berat / (Tinggi^2)
+bmi = np_weight / (np_height ** 2)
+print("Indeks Massa Tubuh (BMI):", bmi.round(2))
+# Output: array([19.64, 18.82, 19.53, 24.79, 21.54])
+```
+
+#### Representasi Multimodal Data Digital di NumPy
+Apapun format data dunia nyata, semuanya ditransformasikan menjadi representasi larik numerik sebelum diolah oleh algoritma AI:
+* **Citra / Gambar Berwarna (RGB)**: Direpresentasikan sebagai tensor 3 dimensi: bidang Merah (*Red plane*), bidang Hijau (*Green plane*), dan bidang Biru (*Blue plane*). Setiap piksel memiliki intensitas warna $0 - 255$ (0 = hitam pekat, 255 = putih murni) yang kemudian dinormalisasi menjadi skala interval $[0, 1]$.
+* **Sinyal Suara / Audio**: Direpresentasikan sebagai larik 1 dimensi runtun waktu (*time-series*) yang mencatat intensitas amplitudo gelombang suara dari mikrofon pada setiap interval frekuensi cuplikan (*sampling rate*).
+
+#### Aljabar Linier & Aturan Broadcasting Matriks
+NumPy memungkinkan operasi aritmatika antara dua larik dengan dimensi (*shape*) yang berbeda tanpa perlu menyalin data secara berulang di memori RAM fisik:
 
 $$
 \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{bmatrix} + \begin{bmatrix} 10 & 20 & 30 \end{bmatrix} = \begin{bmatrix} 11 & 22 & 33 \\ 14 & 25 & 36 \\ 17 & 28 & 39 \end{bmatrix}
 $$
 
-> **Penjelasan Konseptual:**
-> - Matriks pertama memiliki dimensi $(3, 3)$.
-> - Vektor kedua memiliki dimensi $(1, 3)$.
-> - Dalam aturan aljabar linier klasik, penjumlahan ini tidak valid karena dimensi berbeda. Namun dalam **NumPy Broadcasting**, larik kedua otomatis diduplikasi secara virtual di memori untuk setiap baris, sehingga:
->   - Baris 1: $[1, 2, 3] + [10, 20, 30] = [11, 22, 33]$
->   - Baris 2: $[4, 5, 6] + [10, 20, 30] = [14, 25, 36]$
->   - Baris 3: $[7, 8, 9] + [10, 20, 30] = [17, 28, 39]$
-> - Komputasi ini berjalan di tingkat prosesor (*C-level speed*) tanpa alokasi memori berlebih.
+> **Penjelasan Konseptual Broadcasting:**
+> * Matriks pertama berukuran $3 \times 3$.
+> * Vektor kedua berukuran $1 \times 3$.
+> * Menurut kaidah aljabar matriks murni, penjumlahan ini tidak dapat dilakukan karena dimensinya tidak identik.
+> * Namun dengan **NumPy Broadcasting Rule**, larik baris kedua diregangkan (*broadcasted*) secara virtual ke seluruh baris matriks pertama, dieksekusi dengan akselerasi instruksi prosesor C/SIMD tanpa alokasi memori tambahan.
 
-
-### B. Demonstrasi Benchmark: Perulangan Python vs NumPy Vectorized
-Perhatikan perbandingan kecepatan komputasi berikut:
-
-```python
-import numpy as np
-import time
-
-n = 10_000_000
-
-# 1. Perulangan standar Python
-py_list = list(range(n))
-start_time = time.time()
-res_list = [x ** 2 for x in py_list]
-py_time = time.time() - start_time
-
-# 2. NumPy Vectorized
-np_arr = np.arange(n)
-start_time = time.time()
-res_arr = np_arr ** 2
-np_time = time.time() - start_time
-
-print(f"Waktu Python List : {py_time:.4f} detik")
-print(f"Waktu NumPy Array : {np_time:.4f} detik")
-print(f"NumPy lebih cepat : {py_time / np_time:.1f}x lipat!")
-```
-*(NumPy umumnya berjalan 50 hingga 100 kali lebih cepat dibandingkan list comprehension Python).*
+* **SciPy (*Scientific Python*)**: Dibangun di atas NumPy untuk menyediakan algoritma komputasi saintifik tingkat lanjut, meliputi kalkulus integral, diferensial, pemrosesan sinyal digital (*Fourier transform*), aljabar linier teroptimasi, dan pengujian statistika inferensial.
 
 ---
 
-## 3. Pembedahan Pandas: Manipulasi Tabular Tingkat Lanjut
+### B. Pandas: Pustaka Analisis & Manipulasi Data Tabular
 
-### A. Struktur DataFrame & Seleksi Data Presisi
-Dua metode utama pengindeksan data di Pandas:
-- `.loc[]`: Seleksi berbasis **label nama indeks** atau kondisi boolean.
-- `.iloc[]`: Seleksi berbasis **posisi integer (indeks numerik)**.
+Pandas (*Panel Data*) menyediakan dua struktur objek data utama:
+1. **Series**: Larik satu dimensi berlabel yang mampu menampung tipe data apapun.
+2. **DataFrame**: Struktur data tabular dua dimensi (menyerupai *spreadsheet* Excel atau tabel basis data SQL) yang dilengkapi indeks baris (*index*) dan label kolom (*columns*).
+
+```mermaid
+graph TD
+    subgraph StrukturDataFrame["Anatomi Objek Pandas DataFrame"]
+        Col["Kolom (Fitur / Atribut Prediktor)"]
+        Row["Baris (Sampel Data / Observasi)"]
+        Idx["Indeks (Label Pengenal Unik Baris)"]
+        Val["Nilai Sel (Tipe Data Bersifat Konsisten per Kolom)"]
+    end
+```
+
+#### Kemampuan Inti Pandas:
+* **Impor & Ekspor Multi-Format**: Membaca dan menulis berkas CSV (`pd.read_csv`), spreadsheet Excel (`pd.read_excel`), query database SQL (`pd.read_sql`), hingga format biner HDF5/Parquet.
+* **Pembersihan & Transformasi Data**: Menangani nilai kosong (`dropna`, `fillna`), menyaring baris duplikat (`drop_duplicates`), serta manipulasi teks (*string accessor* `.str`).
+* **Pengindeksan Presisi**: Akses seleksi baris dan kolom berbasis label nama (`.loc[]`) maupun berbasis indeks integer numerik (`.iloc[]`).
+* **Agregasi & Analisis Relasional**: Operasi pengelompokan canggih (`groupby`), tabel kontingensi multi-dimensi (`pivot_table`), serta penggabungan dataset (`merge`, `join`, `concat`).
+
+---
+
+### C. Matplotlib & Seaborn: Visualisasi Data 2D
+
+* **Matplotlib**: Diciptakan oleh John Hunter pada tahun 2002 sebagai pustaka visualisasi grafik 2D fundamental di Python. Mendukung kontrol penuh terhadap kanvas grafis: pembuatan sumbu (*axes*), diagram garis (*line chart* `plt.plot`), diagram sebar (*scatter plot* `plt.scatter`), dan diagram batang (*bar chart* `plt.bar`).
+* **Seaborn**: Dibangun di atas Matplotlib dengan menyediakan antarmuka tingkat tinggi (*high-level interface*) untuk menggambar grafik statistika yang jauh lebih estetis, modern, dan informatif secara otomatis (seperti *Heatmap*, *Boxplot*, *Violinplot*, dan matriks korelasi).
+
+---
+
+### D. Scikit-Learn: Pustaka Pembelajaran Mesin Terlengkap
+
+Scikit-Learn (`sklearn`) mengintegrasikan algoritma pembelajaran mesin komprehensif:
+* **Klasifikasi**: *Support Vector Machines (SVM), Decision Tree, Random Forest, Naïve Bayes, k-Nearest Neighbors (k-NN), Logistic Regression*.
+* **Regresi**: *Linear Regression, Ridge, Lasso, ElasticNet, SVR*.
+* **Klasterisasi**: *K-Means Clustering, DBSCAN, Hierarchical Clustering*.
+* **Reduksi Dimensi**: *Principal Component Analysis (PCA), t-SNE*.
+* **Seleksi Model & Evaluasi**: *Train-Test Split, K-Fold Cross-Validation, GridSearchCV, Confusion Matrix, ROC-AUC, Classification Report*.
+
+---
+
+## 5. Praktikum Terpadu & Studi Kasus Python
+
+Berikut adalah demonstrasi praktikum terpadu menggunakan modul dan dataset yang disediakan dalam pelatihan:
+
+### Hands-on 1: Operasi Larik NumPy & Komputasi Vektor
+
+```python
+import numpy as np
+
+# 1. Deklarasi array 1 dimensi dan operasi skalar
+a = np.array([1, 2, 3])
+print("Array a        :", a)
+print("Array a * 3    :", a * 3)
+print("Jumlah total a :", np.sum(a))
+
+# 2. Deklarasi array 2 dimensi (Matriks M_2x5)
+np_2d = np.array([
+    [1, 2, 3, 4, 5],
+    [6, 7, 8, 9, 10]
+])
+
+print("\nMatriks 2D:\n", np_2d)
+print("Dimensi Matriks (Shape):", np_2d.shape) # (2 baris, 5 kolom)
+print("Elemen baris ke-1, kolom ke-3:", np_2d[0, 2])
+```
+
+---
+
+### Hands-on 2: Analisis Tabular Pandas dengan Dataset `Tab.csv`
+
+Kita menggunakan dataset demografi negara di Asia Tenggara dan Asia Timur yang di-host langsung pada portal kita:
 
 ```python
 import pandas as pd
 
-df = pd.DataFrame({
-    'Nama': ['Budi', 'Siti', 'Ahmad', 'Dewi'],
-    'Departemen': ['Teknik', 'Keuangan', 'Teknik', 'Pemasaran'],
-    'Gaji': [12000000, 15000000, 11000000, 9500000],
-    'Pengalaman_Tahun': [5, 7, 3, 2]
-})
+# Membaca dataset Tab.csv dari URL publik portal Learn AI
+url_tab = "https://mahendartea.github.io/Learn-AI/data/Tab.csv"
+Tab = pd.read_csv(url_tab, index_col=0)
 
-# Filter kondisional efisien
-karyawan_senior_teknik = df.loc[(df['Departemen'] == 'Teknik') & (df['Pengalaman_Tahun'] >= 3)]
-```
+print("=== DATASET TABULAR NEGARA (Tab.csv) ===")
+print(Tab)
 
-### B. Pola Operasi Split-Apply-Combine (Groupby)
-Operasi agregasi kelompok merupakan inti dari analisis data statistik:
+# 1. Mengakses kolom atribut
+print("\nKolom Negara  :\n", Tab["Negara"])
+print("\nKolom Ibukota :\n", Tab.Ibukota)
 
-```python
-# Menghitung metrik rata-rata dan total per departemen
-ringkasan_dept = df.groupby('Departemen').agg(
-    Rata_Gaji=('Gaji', 'mean'),
-    Median_Gaji=('Gaji', 'median'),
-    Total_Karyawan=('Nama', 'count'),
-    Total_Pengalaman=('Pengalaman_Tahun', 'sum')
-).reset_index()
+# 2. Rekayasa Fitur: Menghitung Kepadatan Penduduk (Jiwa per km^2)
+# Populasi dalam jutaan jiwa, Area dalam km^2
+Tab["Kepadatan_per_km2"] = ((Tab["Populasi"] * 1_000_000) / Tab["Area"]).round(2)
 
-print(ringkasan_dept)
+print("\nTabel Lengkap dengan Fitur Kepadatan Penduduk:")
+print(Tab[["Negara", "Populasi", "Area", "Kepadatan_per_km2", "Ibukota"]])
 ```
 
 ---
 
-## 4. Teknik Optimasi Memori Pandas untuk Dataset Skala Besar
+### Hands-on 3: Visualisasi Tren Mutu Pendidikan SMP Cirebon (`pmp_2020_baru.csv`)
 
-Ketika memuat dataset puluhan gigabyte, penggunaan memori default Pandas seringkali menyebabkan *Out-Of-Memory (OOM)*.
+Menggunakan dataset historis Penjaminan Mutu Pendidikan (PMP) SMP Negeri 14 Kota Cirebon periode $2016 - 2020$:
 
-### Strategi Optimasi Memori:
-1. **Downcasting Numerik**: Mengubah tipe `int64` atau `float64` bawaan menjadi `int16`, `int32`, atau `float32` jika rentang nilainya memungkinkan.
-2. **Kategori Kategorikal (`category`)**: Mengubah kolom string dengan banyak nilai berulang menjadi tipe `category` (menghemat hingga 80% RAM).
-3. **Memuat Secara Bertahap (`chunksize`)**: Membaca file CSV berukuran raksasa dalam pecahan baris (*chunks*).
-
-### Skrip Otomasi Pengurangan Beban Memori:
 ```python
-def optimize_dataframe_memory(df):
-    """
-    Mengoptimalkan alokasi memori DataFrame Pandas hingga 50-80%
-    Disusun oleh: Mahendar Dwi Payana
-    """
-    start_mem = df.memory_usage().sum() / 1024**2
-    print(f"Penggunaan Memori Awal: {start_mem:.2f} MB")
-    
-    for col in df.columns:
-        col_type = df[col].dtypes
-        
-        if col_type != object and col_type != 'category':
-            c_min = df[col].min()
-            c_max = df[col].max()
-            
-            # Cek apakah integer
-            if str(col_type)[:3] == 'int':
-                if c_min > np.iinfo(np.int8).min and c_max < np.iinfo(np.int8).max:
-                    df[col] = df[col].astype(np.int8)
-                elif c_min > np.iinfo(np.int16).min and c_max < np.iinfo(np.int16).max:
-                    df[col] = df[col].astype(np.int16)
-                elif c_min > np.iinfo(np.int32).min and c_max < np.iinfo(np.int32).max:
-                    df[col] = df[col].astype(np.int32)
-            else:
-                if c_min > np.finfo(np.float32).min and c_max < np.finfo(np.float32).max:
-                    df[col] = df[col].astype(np.float32)
-        elif col_type == 'object':
-            num_unique = df[col].nunique()
-            num_total = len(df[col])
-            if num_unique / num_total < 0.5:
-                df[col] = df[col].astype('category')
-                
-    end_mem = df.memory_usage().sum() / 1024**2
-    reduction = 100 * (start_mem - end_mem) / start_mem
-    print(f"Penggunaan Memori Akhir: {end_mem:.2f} MB (Hemat: {reduction:.1f}%)")
-    return df
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Membaca dataset pmp_2020_baru.csv dari portal Learn AI
+url_pmp = "https://mahendartea.github.io/Learn-AI/data/pmp_2020_baru.csv"
+df_pmp = pd.read_csv(url_pmp)
+
+print("=== DATASET PENJAMINAN MUTU PENDIDIKAN (PMP) ===")
+print(df_pmp[["uraian", "pmp2016", "pmp2018", "pmp2019", "pmp2020"]].head())
+
+# Mengambil baris pertama: Standar Kompetensi Lulusan (SKL)
+row_skl = df_pmp.iloc[0]
+tahun = ['2016', '2017', '2018', '2019', '2020']
+skor_pmp = [
+    row_skl['pmp2016'], 
+    row_skl['pmp2017'], 
+    row_skl['pmp2018'], 
+    row_skl['pmp2019'], 
+    row_skl['pmp2020']
+]
+
+# Visualisasi Tren Skor Mutu Pendidikan dengan Matplotlib
+plt.figure(figsize=(8, 4.5))
+plt.plot(tahun, skor_pmp, marker='o', color='#2563eb', linewidth=2.5, markersize=8, label="Skor PMP Riil")
+plt.title(f"Tren {row_skl['uraian']}\n{row_skl['nama']}", fontsize=12, fontweight='bold')
+plt.xlabel("Tahun Evaluasi", fontsize=10)
+plt.ylabel("Skor Mutu (Skala 0 - 7)", fontsize=10)
+plt.ylim(0, 7.5)
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+# Visualisasi Tren Harga Komparatif (Demonstrasi Modul Hal. 4)
+year = [1980, 1990, 2000, 2010, 2020]
+price = [2.5, 7.6, 9.7, 15.8, 22.9]
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
+
+# Line Plot
+ax1.plot(year, price, marker='s', color='teal', linewidth=2)
+ax1.set_title("Pertumbuhan Harga (Line Plot)")
+ax1.set_xlabel("Tahun")
+ax1.set_ylabel("Harga ($)")
+ax1.grid(True, linestyle=':', alpha=0.7)
+
+# Bar Plot
+ax2.bar(year, price, width=2.5, color='coral', edgecolor='black', alpha=0.85)
+ax2.set_title("Distribusi Harga (Bar Plot)")
+ax2.set_xlabel("Tahun")
+ax2.grid(axis='y', linestyle=':', alpha=0.7)
+
+plt.tight_layout()
+plt.show()
 ```
 
 ---
 
-## 5. Latihan Mandiri & Evaluasi
+## 6. Lembar Evaluasi & Tugas Praktikum Mandiri
 
-1. Buatlah matriks numerik berukuran `1000 \times 10` menggunakan `np.random.randn()`.
-2. Lakukan normalisasi Z-Score untuk setiap kolom secara murni menggunakan operasi vectorized dan broadcasting NumPy:
-   
-```
-Z = \frac{X - \mu}{\sigma}
-```
+Berdasarkan silabus resmi Thematic Academy DTS 2021:
 
-3. Konversi matriks tersebut menjadi DataFrame Pandas, tambahkan kolom kategori buatan, dan hitung persentase penghematan memori menggunakan fungsi `optimize_dataframe_memory()` di atas.
+<Accordions>
+  <Accordion title="Tugas 1: Pengerjaan Hands-On Kursus Daring (Python for Data Science)">
+    Peserta wajib menyelesaikan modul praktikum interaktif mandiri pada salah satu penyedia kursus daring terakreditasi:
+    * Cognitive Class: *Python for Data Science* (`cognitiveclass.ai/courses/python-for-data-science`)
+    * DataCamp: *Introduction to Python for Data Science* (`datacamp.com/courses/intro-to-python-for-data-science`)
+    * Microsoft Learn: *Build real-world applications with Python* (`docs.microsoft.com/en-us/learn/paths/python-language/`)
+    * edX / Microsoft: *Introduction to Python for Data Science (DAT208x)*
+  </Accordion>
+
+  <Accordion title="Tugas 2: Eksplorasi Matriks NumPy Berdimensi-3">
+    Buatlah skrip Python untuk menghasilkan matriks acak berdimensi $3 \times 4 \times 5$ menggunakan fungsi `np.random.rand()`. Lakukan operasi pemotongan (*slicing*) untuk mengambil sub-matriks pada bidang kedua, serta hitung nilai rata-rata, nilai median, dan deviasi standarnya!
+  </Accordion>
+
+  <Accordion title="Tugas 3: Analisis Data Kependudukan & Visualisasi Batang">
+    Gunakan dataset `Tab.csv` yang disediakan. Buatlah visualisasi diagram batang horizontal (*horizontal bar chart*) yang membandingkan kepadatan penduduk per km² untuk kelima negara. Berikan anotasi teks yang menyoroti negara dengan kepadatan tertinggi dan terendah!
+  </Accordion>
+</Accordions>
+
+---
+
+## 7. Referensi Pustaka & Tautan Resmi
+
+1. **Rizal Dwi Prayogo** (2021). *Modul Pelatihan: Tools Proyek Data Science*. Thematic Academy Digital Talent Scholarship 2021, Kementerian Kominfo RI & STEI ITB.
+2. **Jake VanderPlas** (2016). *Python Data Science Handbook: Essential Tools for Working with Data*. Sebastopol, CA: O'Reilly Media.
+3. **Laura Igual & Santi Seguí** (2017). *Introduction to Data Science: A Python Approach to Concepts, Techniques and Applications*. Springer International Publishing.
+4. **Arfika Nurhudatiana** (2019). *Analisis dan Visualisasi Data Dengan Python*. Jakarta: Pintaria.
+5. **Kementerian Ketenagakerjaan RI** (2020). *SKKNI No. 299 Tahun 2020 Bidang Keahlian Artificial Intelligence Subbidang Data Science*.
