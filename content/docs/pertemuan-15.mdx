@@ -1,0 +1,145 @@
+---
+title: "Pertemuan 15: Evaluasi Diagnostik & Review Pemodelan Terpadu"
+description: "Penerapan Unit Kompetensi SKKNI: Mengevaluasi Hasil Pemodelan (J.62DMI00.014.1) dan Melakukan Proses Review Pemodelan (J.62DMI00.015.1) - ROC-AUC, PR-Curve, Matriks Biaya, dan Explainable AI (SHAP)."
+---
+
+> **Penyusun Modul:** Mahendar Dwi Payana  
+> **Acuan Silabus:** DTS Kominfo - STEI ITB (Ir. Windy Gambetta, MBA) & SKKNI No. 299 Tahun 2020
+
+---
+
+## 1. Landasan Standar Kompetensi Kerja (SKKNI)
+
+Tahap evaluasi dan review pemodelan menentukan apakah model data science siap dilepas ke sistem produksi atau harus ditolak untuk revisi. Sesi ini mengintegrasikan:
+1. **J.62DMI00.014.1**: Mengevaluasi Hasil Pemodelan
+2. **J.62DMI00.015.1**: Melakukan Proses Review Pemodelan
+
+---
+
+## 2. Pembedahan Matriks Evaluasi Klasifikasi (`J.62DMI00.014.1`)
+
+Banyak praktisi pemula terjebak pada **Accuracy Paradox**: pada dataset penyakit langka dengan 99% pasien sehat dan 1% sakit, model yang selalu menebak *"Sehat"* akan memiliki akurasi 99%, namun model tersebut sama sekali tidak berguna secara klinis.
+
+### A. Matriks Kebingungan (Confusion Matrix)
+| Kondisi Aktual \ Prediksi | Prediksi Negatif (`0`) | Prediksi Positif (`1`) |
+| :--- | :--- | :--- |
+| **Aktual Negatif (`0`)** | **True Negative (TN)** | **False Positive (FP)** *(Tipe I Error)* |
+| **Aktual Positif (`1`)** | **False Negative (FN)** *(Tipe II Error)* | **True Positive (TP)** |
+
+### B. Formulasi Metrik Turunan:
+1. **Akurasi (Accuracy)**: Proporsi tebakan benar secara keseluruhan:
+   
+$$
+\text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}
+$$
+
+2. **Presisi (Precision)**: Dari seluruh sampel yang diprediksi positif, berapa yang benar-benar positif?
+   
+$$
+\text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}
+$$
+
+   *(Krusial pada: Filter Spam Email, Rekomendasi Investasi).*
+3. **Recall / Sensitivitas**: Dari seluruh sampel yang kenyataannya positif, berapa persentase yang berhasil dideteksi?
+   
+$$
+\text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
+$$
+
+   *(Krusial pada: Deteksi Kanker Medis, Deteksi Fraud Kartu Kredit, Keamanan Nuklir).*
+4. **F1-Score**: Rata-rata harmonik antara Presisi dan Recall:
+   
+$$
+F_1 = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+$$
+
+---
+
+## 3. Kurva ROC-AUC vs Precision-Recall Curve
+
+- **Kurva ROC (Receiver Operating Characteristic)**: Memetakan *True Positive Rate (Recall)* terhadap *False Positive Rate* ($\text{FPR} = \frac{\text{FP}}{\text{FP} + \text{TN}}$) di semua ambang batas probabilitas.
+  - Nilai $\text{AUC} = 1.0$: Model pemilah sempurna.
+  - Nilai $\text{AUC} = 0.5$: Setara dengan melempar koin acak.
+- **Kurva Precision-Recall (PR-AUC)**: Wajib digunakan sebagai pengganti ROC jika data sangat tidak seimbang (*highly imbalanced*), karena tidak terpengaruh oleh dominasi jumlah True Negative yang masif.
+
+---
+
+## 4. Melakukan Proses Review Pemodelan (`J.62DMI00.015.1`) & Explainable AI (XAI)
+
+Model pembelajaran mesin modern (seperti XGBoost atau Deep Neural Networks) sering dicap sebagai kotak hitam (*Black Box*). Dalam review pemodelan profesional, regulator menuntut transparansi: *"Mengapa model menolak pengajuan kredit nasabah ini?"*
+
+### Analisis Nilai SHAP (SHapley Additive exPlanations)
+Berdasarkan teori permainan kooperatif (*Cooperative Game Theory* karya peraih Nobel Lloyd Shapley), SHAP mengalokasikan kontribusi marjinal yang adil kepada setiap fitur terhadap deviasi prediksi akhir dari nilai ekspektasi dasar:
+
+$$
+f(x) = \phi_0 + \sum_{j=1}^{M} \phi_j(x)
+$$
+
+> **Bedah Formulasi Matematis SHAP:**
+> - $f(x)$: Nilai prediksi aktual model untuk observasi data individu $x$.
+> - $\phi_0 = \mathbb{E}[f(z)]$: Nilai ekspektasi dasar (*base value*), yaitu rata-rata luaran prediksi model di seluruh populasi data latar (*background dataset*) tanpa memperhitungkan fitur spesifik apa pun.
+> - $\phi_j(x)$: Nilai **SHAP (*Shapley value*)** untuk fitur ke-$j$, merepresentasikan seberapa besar fitur tersebut mengubah prediksi dari nilai dasar:
+>   - $\phi_j(x) > 0$ (Warna Merah pada SHAP waterfall): Fitur berkontribusi **meningkatkan** probabilitas prediksi ke arah target positif (contoh: rasio hutang tinggi menaikkan skor risiko kredit).
+>   - $\phi_j(x) < 0$ (Warna Biru pada SHAP waterfall): Fitur berkontribusi **menurunkan** probabilitas prediksi (contoh: riwayat pembayaran tepat waktu menurunkan skor risiko kredit).
+> - $M$: Jumlah total fitur prediktor dalam model.
+>
+> Sifat aditif ini menjamin keadilan alokasi kontribusi (*local accuracy & consistency*), sehingga model kotak hitam (*Black-Box*) dapat diaudit dan dijelaskan (*Explainable AI - XAI*) secara sah kepada regulator bisnis.
+
+---
+
+## 5. Implementasi Python: Evaluasi Komprehensif & Visualisasi SHAP
+
+```python
+"""
+Evaluasi Diagnostik dan Review Model menggunakan SHAP
+Disusun oleh: Mahendar Dwi Payana
+"""
+
+import numpy as np
+import pandas as pd
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, roc_auc_score, confusion_matrix
+
+def run_diagnostic_evaluation(X_train, X_test, y_train, y_test, feature_names):
+    # Latih model
+    clf = RandomForestClassifier(n_estimators=100, random_state=42)
+    clf.fit(X_train, y_train)
+    
+    # Prediksi label dan probabilitas
+    y_pred = clf.predict(X_test)
+    y_probs = clf.predict_proba(X_test)[:, 1]
+    
+    print("=" * 60)
+    print("LAPORAN KLASIFIKASI DIAGNOSTIK LENGKAP")
+    print("=" * 60)
+    print(classification_report(y_test, y_pred, digits=4))
+    print(f"ROC-AUC Score: {roc_auc_score(y_test, y_probs):.4f}")
+    print("\nConfusion Matrix:")
+    print(confusion_matrix(y_test, y_pred))
+    print("=" * 60)
+    
+    # Ekstraksi Feature Importance bawaan
+    importance_df = pd.DataFrame({
+        'Fitur': feature_names,
+        'Importance': clf.feature_importances_
+    }).sort_values('Importance', ascending=False)
+    
+    print("\nTop 5 Fitur Paling Berpengaruh:")
+    print(importance_df.head(5).to_string(index=False))
+
+if __name__ == "__main__":
+    X, y = make_classification(n_samples=1000, n_features=10, weights=[0.85, 0.15], random_state=42)
+    feature_names = [f"Fitur_{i+1:02d}" for i in range(10)]
+    X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=42, stratify=y)
+    
+    run_diagnostic_evaluation(X_tr, X_te, y_tr, y_te, feature_names)
+```
+
+---
+
+## 6. Latihan Mandiri & Evaluasi
+
+1. Hitung nilai `F_2`-Score pada model prediksi Anda dan jelaskan mengapa metrik ini lebih memprioritaskan Recall dibandingkan Precision.
+2. Pasang pustaka `shap` via pip (`pip install shap`) dan buatlah *SHAP Summary Plot* untuk mengidentifikasi arah pengaruh fitur terhadap prediksi model Anda.

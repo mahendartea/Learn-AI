@@ -1,0 +1,70 @@
+---
+title: "Panduan Proyek Akhir (Capstone Project)"
+description: "Pedoman komprehensif pengerjaan Capstone Project Data Science & AI berbasis masalah riil organisasi, etika data nyata, dan deployment ke cloud publik."
+---
+
+> **Penyusun Modul:** Mahendar Dwi Payana  
+> **Acuan Silabus:** Thematic Academy DTS Kominfo RI - STEI ITB & SKKNI No. 299 Tahun 2020
+
+---
+
+## 1. Tujuan Utama Capstone Project
+
+Tugas Akhir (*Capstone Project*) adalah pembuktian integrasi seluruh 16 unit capaian pembelajaran yang telah dipelajari selama 8 minggu pelatihan.
+
+Peserta ditantang untuk menerapkan **siklus hidup sains data penuh (End-to-End Data Science Lifecycle)** untuk memecahkan permasalahan nyata yang dihadapi oleh institusi, perguruan tinggi, instansi pemerintah, atau dunia usaha industri.
+
+---
+
+## 2. Ketentuan Tim & Tata Kelola
+
+- **Formasi Kelompok**: Setiap kelompok beranggotakan **3 orang** (kecuali 1 kelompok dengan 4 orang bila jumlah peserta ganjil).
+- **Peran Anggota Tim (Disarankan)**:
+  - **Data / ML Engineer**: Bertanggung jawab atas akuisisi data, pra-pemrosesan, pipeline scaling, dan deployment API.
+  - **Data Scientist / Modeler**: Bertanggung jawab atas perumusan masalah, eksplorasi EDA, eksperimen algoritma, dan validasi tuning model.
+  - **Full-Stack / Product Lead**: Bertanggung jawab atas desain antarmuka web, integrasi visualisasi, dan laporan evaluasi bisnis.
+
+---
+
+## 3. Regulasi Etika Pemilihan Dataset (Kritis)
+
+Panitia dan kurikulum menetapkan aturan tegas terkait integritas data:
+
+### A. Data yang Diizinkan & Direkomendasikan
+1. **Data Riil Organisasi Mandiri**: Data internal dari universitas, laboratorium riset, instansi tempat bekerja, atau mitra bisnis.
+2. **Data Terbuka Nasional (Open Data)**: Data resmi dari portal pemerintah Republik Indonesia, seperti:
+   - **Portal Satu Data Indonesia**: [data.go.id](https://data.go.id/)
+   - **Open Data Provinsi/Kota**: misal [data.jakarta.go.id](https://data.jakarta.go.id/), [opendata.jabarprov.go.id](https://opendata.jabarprov.go.id/)
+3. **Etika & Anonimisasi**: Seluruh data yang mengandung identitas pribadi rahasia (*Personally Identifiable Information - PII*) wajib disamarkan atau dienkripsi sebelum digunakan.
+
+### B. Larangan Keras (Diskualifikasi Otomatis)
+> [!CAUTION]
+> Dilarang keras menggunakan dataset mainan (*toy dataset*) publik yang sudah bersih dan populer di tutorial internet, seperti:
+> - Repositori Kaggle Datasets umum (Titanic, Iris, House Prices, Credit Card Fraud umum).
+> - Repositori UCI Machine Learning Repository (`archive.ics.uci.edu`).
+> - Benchmark dataset akademis lama (MNIST murni, CIFAR-10, Boston Housing).
+
+---
+
+## 4. Jadwal Pengumpulan Milestone 8 Pekan
+
+| Pekan | Tanggal Sesi | Fokus Capaian Pembelajaran | Luaran (*Deliverable*) yang Dikumpulkan | Batas Pengumpulan |
+| :---: | :--- | :--- | :--- | :---: |
+| **1** | 31 Jul - 1 Agu | Pembentukan Tim | Formulir Daftar Anggota Kelompok & Pembagian Peran | **6 Agustus** |
+| **2** | 7 - 8 Agu | Metodologi Data Science | Draf Deskripsi Masalah & Formulasi Objektif Bisnis | **13 Agustus** |
+| **3** | 14 - 15 Agu | Business & Data Understanding | Revisi Deskripsi Masalah & Laporan Statistik Data Awal | **20 Agustus** |
+| **4** | 21 - 22 Agu | Visualisasi & Pembersihan | Laporan Analisis EDA & Log Pembersihan Data (*Cleansing*) | **27 Agustus** |
+| **5** | 28 - 29 Agu | Konstruksi & Rekayasa Fitur | Dataset Terproses (Scaling, Encoding, Feature Selection) | **3 September** |
+| **6** | 4 - 5 Sep | Model Klasifikasi & Regresi | Skrip Pelatihan Model Terawasi & Papan Skor Eksperimen | **10 September** |
+| **7** | 11 - 12 Sep | Model Klastering & ANN | Implementasi Model Segmentasi / Jaringan Saraf Tiruan | **17 September** |
+| **8** | 18 - 19 Sep | Evaluasi & Deployment | **Tautan Aplikasi Web Aktif di Cloud + Laporan Teknis** | **26 September** |
+
+---
+
+## 5. Kriteria Penilaian Akhir (Bobot 50% dari Nilai Kelulusan)
+
+1. **Relevansi Masalah Bisnis (15%)**: Ketajaman dalam memetakan problem bisnis nyata ke dalam perumusan machine learning yang dapat diukur.
+2. **Ketelitian Data Preparation & EDA (25%)**: Kebersihan data, teknik imputasi rasional, rekayasa fitur yang kreatif, dan bebas dari kebocoran data (*data leakage*).
+3. **Rigorousitas Pemodelan & Validasi (25%)**: Pemilihan metrik evaluasi yang tepat, skenario *Stratified Cross-Validation*, dan komparasi algoritma yang adil.
+4. **Kualitas Aplikasi Web Operasional (25%)**: Kemudahan antarmuka bagi pengguna awam, kestabilan inferensi prediksi, dan waktu respon layanan di cloud.
+5. **Dokumentasi & Laporan Akhir (10%)**: Kejelasan struktur repositori GitHub, README, dan paparan kesimpulan ilmiah.

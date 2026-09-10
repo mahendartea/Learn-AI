@@ -1,0 +1,204 @@
+---
+title: "Pertemuan 01: Setup Lingkungan Komputasi Data Science Modern"
+description: "Panduan komprehensif penyiapan lingkungan komputasi Python 3.10+, isolasi virtual environment, package manager (pip, conda), JupyterLab, VS Code, dan Google Colab dengan akselerasi GPU."
+---
+
+> **Penyusun Modul:** Mahendar Dwi Payana  
+> **Acuan Silabus:** DTS Kominfo - STEI ITB (Ir. Windy Gambetta, MBA) & SKKNI No. 299 Tahun 2020
+
+---
+
+## 1. Urgensi Lingkungan Komputasi yang Terisolasi
+
+Dalam siklus hidup proyek *Data Science* profesional, salah satu masalah paling fatal adalah benturan dependensi (*dependency hell*). Model *machine learning* seringkali bergantung pada versi spesifik dari pustaka seperti `numpy`, `scipy`, `pandas`, dan `scikit-learn`. 
+
+Penggunaan instalasi global tanpa isolasi menyebabkan:
+1. **Kegagalan Reproduksibilitas**: Proyek yang berjalan di komputer lokal tidak dapat dijalankan di mesin server atau cloud rekan satu tim.
+2. **Konflik Versi Pustaka**: Meng-upgrade pustaka untuk Proyek B dapat merusak kode pada Proyek A.
+3. **Pencemaran Sistem Operasi**: Menumpuk pustaka Python langsung pada direktori sistem operasi dapat mengganggu utilitas internal OS.
+
+---
+
+## 2. Taksonomi Lingkungan Pengembangan (Development Environment)
+
+Secara garis besar, praktisi sains data mengombinasikan dua jenis lingkungan:
+
+```
+Lingkungan Komputasi Data Science
+├── Lingkungan Lokal (Offline, Kontrol Penuh)
+│   ├── CLI & Package Manager: Python 3.10+, pip, venv, Conda / Mamba
+│   └── IDE / Notebook Editor: JupyterLab, Jupyter Notebook, VS Code + Python Extension
+└── Lingkungan Cloud (Awan, Zero-Config, Hardware Acceleration)
+    ├── Google Colaboratory (Gratis GPU T4/V100 & TPU)
+    ├── Kaggle Notebooks (30 jam/minggu akselerasi GPU P100/T4)
+    └── Cloud Managed Notebooks (AWS SageMaker, GCP Vertex AI Workbench)
+```
+
+---
+
+## 3. Langkah Instalasi Lingkungan Lokal (Step-by-Step)
+
+<Steps>
+  <Step>
+    ### Memastikan Pemasangan Python 3.10+
+    Unduh rilis resmi stabil dari [python.org](https://www.python.org/downloads/). Pastikan opsi **"Add Python to PATH"** dicentang pada saat proses instalasi Windows.
+
+    <Tabs items={['Windows', 'macOS', 'Linux']}>
+      <Tab value="Windows">
+        ```cmd
+        python --version
+        ```
+      </Tab>
+      <Tab value="macOS">
+        ```bash
+        brew install python@3.10
+        python3 --version
+        ```
+      </Tab>
+      <Tab value="Linux">
+        ```bash
+        sudo apt update && sudo apt install python3 python3-pip python3-venv
+        python3 --version
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+
+  <Step>
+    ### Membuat & Mengaktifkan Virtual Environment (`venv`)
+    Gunakan modul bawaan `venv` untuk membuat lingkungan mandiri tanpa mencemari sistem utama:
+
+    <Tabs items={['macOS / Linux', 'Windows (CMD)', 'Windows (PowerShell)']}>
+      <Tab value="macOS / Linux">
+        ```bash
+        mkdir -p ~/projects/learn-ai-datascience
+        cd ~/projects/learn-ai-datascience
+        python3 -m venv env-ds
+        source env-ds/bin/activate
+        ```
+      </Tab>
+      <Tab value="Windows (CMD)">
+        ```cmd
+        mkdir %USERPROFILE%\projects\learn-ai-datascience
+        cd %USERPROFILE%\projects\learn-ai-datascience
+        python -m venv env-ds
+        env-ds\Scripts\activate.bat
+        ```
+      </Tab>
+      <Tab value="Windows (PowerShell)">
+        ```powershell
+        mkdir $HOME\projects\learn-ai-datascience
+        cd $HOME\projects\learn-ai-datascience
+        python -m venv env-ds
+        env-ds\Scripts\Activate.ps1
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+
+  <Step>
+    ### Instalasi Pustaka Inti Sains Data
+    Pasang paket-paket inti data science terverifikasi dan daftarkan kernel ke Jupyter:
+
+    <Tabs items={['pip (Direkomendasikan)', 'conda']}>
+      <Tab value="pip (Direkomendasikan)">
+        ```bash
+        pip install --upgrade pip
+        pip install numpy scipy pandas matplotlib seaborn scikit-learn jupyterlab ipykernel
+        python -m ipykernel install --user --name=env-ds --display-name="Python (Learn-AI Data Science)"
+        ```
+      </Tab>
+      <Tab value="conda">
+        ```bash
+        conda create -n env-ds python=3.10 numpy scipy pandas matplotlib seaborn scikit-learn jupyterlab
+        conda activate env-ds
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+</Steps>
+
+---
+
+## 4. Bekerja dengan Google Colaboratory (Cloud GPU)
+
+Google Colaboratory adalah lingkungan Jupyter berbasis peramban yang terhubung langsung dengan Google Cloud Platform.
+
+### Fitur Kunci Google Colab:
+- **Zero-Setup**: Pustaka data science populer sudah terinstal (*pre-installed*).
+- **Akselerasi Perangkat Keras**: Akses bebas ke GPU Nvidia T4 / V100 dan Tensor Processing Unit (TPU).
+- **Integrasi Google Drive**: Menyimpan dataset dan bobot model langsung ke cloud storage.
+
+### Verifikasi Akselerasi GPU di Colab
+Jalankan cuplikan kode berikut pada cell pertama notebook Google Colab:
+
+```python
+import torch
+import sys
+
+print(f"Versi Python: {sys.version.split()[0]}")
+
+if torch.cuda.is_available():
+    print(f"Akselerasi GPU Aktif: {torch.cuda.get_device_name(0)}")
+    print(f"Alokasi Memori GPU: {torch.cuda.get_device_properties(0).total_memory / 1e9:.2f} GB")
+else:
+    print("Berjalan pada CPU Runtime. Untuk mengaktifkan GPU: Edit -> Notebook settings -> Hardware accelerator -> T4 GPU.")
+```
+
+---
+
+## 5. Script Pengujian & Verifikasi Pustaka Lengkap
+
+Buat file bernama `verify_env.py` di direktori proyek Anda dan jalankan untuk mengonfirmasi bahwa seluruh pustaka terpasang dengan versi yang tepat:
+
+```python
+"""
+Skrip Verifikasi Lingkungan Data Science Modern
+Disusun oleh: Mahendar Dwi Payana
+"""
+
+import sys
+
+def verify_ecosystem():
+    packages = [
+        "numpy",
+        "scipy",
+        "pandas",
+        "matplotlib",
+        "seaborn",
+        "sklearn",
+    ]
+    
+    print("=" * 60)
+    print("HASIL PEMERIKSAAN ENVIRONMENT SAINS DATA")
+    print(f"Versi Python Interpreter: {sys.version.split()[0]}")
+    print("=" * 60)
+    
+    success = True
+    for pkg in packages:
+        try:
+            mod = __import__(pkg)
+            version = getattr(mod, "__version__", "Terpasang (versi tidak terdeteksi)")
+            print(f"[✓ OK] {pkg:<15} : {version}")
+        except ImportError as e:
+            print(f"[✗ GAGAL] {pkg:<15} : Belum terpasang! ({e})")
+            success = False
+            
+    print("=" * 60)
+    if success:
+        print("Selamat! Seluruh ekosistem Data Science telah siap digunakan.")
+    else:
+        print("Perhatian: Mohon pasang paket yang gagal sebelum melanjutkan.")
+    print("=" * 60)
+
+if __name__ == "__main__":
+    verify_ecosystem()
+```
+
+---
+
+## 6. Latihan Mandiri & Evaluasi
+
+1. Buat notebook Jupyter baru dengan nama `01_setup_verifikasi.ipynb`.
+2. Tuliskan sel markdown yang mendokumentasikan spesifikasi perangkat keras komputer Anda (RAM, Processor, OS).
+3. Jalankan kode verifikasi di atas dan ambil tangkapan layar (*screenshot*) sebagai bukti pemenuhan syarat awal pembelajaran.

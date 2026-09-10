@@ -1,0 +1,133 @@
+---
+title: "Pertemuan 09: Konstruksi & Transformasi Data Numerik"
+description: "Penerapan Unit Kompetensi SKKNI: Mengkonstruksi Data (J.62DMI00.009.1) - Feature Scaling (MinMax, Standard, Robust Scaler) dan Transformasi Distribusi Non-Linear (Log, Box-Cox, Yeo-Johnson)."
+---
+
+> **Penyusun Modul:** Mahendar Dwi Payana  
+> **Acuan Silabus:** DTS Kominfo - STEI ITB (Ir. Windy Gambetta, MBA) & SKKNI No. 299 Tahun 2020
+
+---
+
+## 1. Urgensi Konstruksi & Transformasi Data
+
+Algoritma pembelajaran mesin tidak dapat mengonsumsi data mentah secara optimal jika terdapat ketimpangan skala atau distribusi yang menyimpang jauh dari asumsi pemodelan.
+
+Konstruksi data (*Data Construction*) bertujuan merekayasa representasi data numerik agar memfasilitasi konvergensi model yang lebih cepat, mencegah dominasi fitur berbobot besar, dan menstabilkan varians.
+
+---
+
+## 2. Sensitivitas Algoritma terhadap Skala Fitur (Feature Scale Sensitivity)
+
+| Kategori Algoritma | Terdampak Skala? | Alasan Matematis |
+| :--- | :---: | :--- |
+| **Berbasis Jarak (Distance-based)**<br />KNN, K-Means, SVM, PCA | **SANGAT TINGGI** | Perhitungan jarak Euclidean `\sqrt{\sum (x_i - y_i)^2}` akan didominasi 99% oleh fitur berskala puluhan juta (misal: Pendapatan) dibandingkan fitur berskala satuan (misal: Usia). |
+| **Berbasis Gradient Descent**<br />Linear Regression, Logistic Regression, Neural Networks (ANN) | **SANGAT TINGGI** | Permukaan kontur loss function menjadi lonjong pipih (*oscillatory steps*), memperlambat konvergensi optimizer (SGD/Adam). |
+| **Berbasis Pohon (Tree-based)**<br />Decision Tree, Random Forest, XGBoost | **TIDAK TERDAMPAK** | Pohon membelah data (*node splitting*) berbasis pemeringkatan nilai (*rank-based threshold*), bukan jarak absolut. |
+
+---
+
+## 3. Komparasi Formulasi Penskalaan Fitur (Feature Scaling)
+
+### 1. Min-Max Scaling (Normalisasi Rentang Tetap)
+Mentransformasikan seluruh nilai ke dalam interval $[0, 1]$:
+
+$$
+X_{\text{norm}} = \frac{X - X_{\text{min}}}{X_{\text{max}} - X_{\text{min}}}
+$$
+
+- *Karakter*: Mempertahankan proporsi data nol (*zero-preserving*), tetapi sangat rapuh terhadap pencilan ekstrim.
+
+### 2. Standard Scaling (Z-Score Standardization)
+Memusatkan data pada rata-rata $\mu = 0$ dan deviasi standar $\sigma = 1$:
+
+$$
+Z = \frac{X - \mu}{\sigma}
+$$
+
+- *Karakter*: Optimal untuk algoritma yang mengasumsikan data terdistribusi normal (Gaussian).
+
+### 3. Robust Scaling (Resisten Outlier)
+Menggunakan median dan Interquartile Range (IQR):
+
+$$
+X_{\text{robust}} = \frac{X - \text{Median}(X)}{Q_3 - Q_1}
+$$
+
+- *Karakter*: Sangat resisten terhadap pengaruh nilai pencilan ekstrim karena tidak melibatkan mean atau varians.
+
+---
+
+## 4. Transformasi Distribusi Non-Linear (Menormalkan Kemiringan)
+
+Data riil industri (seperti harga rumah, volume penjualan, atau saldo rekening) hampir selalu memiliki distribusi menceng ke kanan (*right-skewed*). Transformasi daya (*power transformation*) digunakan untuk menstabilkan varians:
+
+### A. Transformasi Logaritmik (`Log1p`)
+
+$$
+y = \ln(x + 1)
+$$
+
+Digunakan jika nilai data non-negatif ($x \ge 0$).
+
+### B. Transformasi Box-Cox
+Mencari nilai parameter $\lambda$ optimal secara otomatis untuk memaksimumkan normalitas:
+
+$$
+y^{(\lambda)} = \begin{cases} \frac{y^\lambda - 1}{\lambda}, & \text{jika } \lambda \neq 0 \\ \ln(y), & \text{jika } \lambda = 0 \end{cases}
+$$
+
+*(Hanya dapat diterapkan pada data bernilai positif murni $y > 0$).*
+
+### C. Transformasi Yeo-Johnson
+Penyempurnaan Box-Cox yang mendukung nilai nol maupun bilangan riil negatif.
+
+---
+
+## 5. Implementasi Python: Perbandingan Efek Transformasi
+
+```python
+"""
+Eksperimen Penskalaan dan Transformasi Distribusi Numerik
+Disusun oleh: Mahendar Dwi Payana
+"""
+
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, PowerTransformer
+
+def evaluate_scalers(data_series):
+    X = data_series.values.reshape(-1, 1)
+    
+    scalers = {
+        "MinMax": MinMaxScaler(),
+        "Standard": StandardScaler(),
+        "Robust": RobustScaler(),
+        "Yeo-Johnson": PowerTransformer(method='yeo-johnson')
+    }
+    
+    results = {"Original": data_series}
+    for name, scaler in scalers.items():
+        results[name] = scaler.fit_transform(X).flatten()
+        
+    res_df = pd.DataFrame(results)
+    
+    print("Ringkasan Statistik Setelah Transformasi:")
+    print(res_df.describe().round(3).T[['mean', 'std', 'min', '50%', 'max']])
+    return res_df
+
+# Uji coba dengan data menceng positif + pencilan
+if __name__ == "__main__":
+    np.random.seed(42)
+    skewed_data = pd.Series(np.random.exponential(scale=1000, size=500) + 10)
+    # Tambahkan pencilan buatan
+    skewed_data.iloc[0] = 50000 
+    
+    df_transformed = evaluate_scalers(skewed_data)
+```
+
+---
+
+## 6. Latihan Mandiri & Evaluasi
+
+1. Ambil fitur pendapatan pada dataset proyek Anda. Lakukan uji normalitas menggunakan `scipy.stats.shapiro()` atau `normaltest()` sebelum dan sesudah diaplikasikan `PowerTransformer(method='yeo-johnson')`.
+2. Jelaskan mengapa penskalaan data harus dipelajari hanya dari data latih (`scaler.fit(X_train)`), bukan dari keseluruhan dataset sebelum pemisahan train/test.

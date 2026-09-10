@@ -1,0 +1,143 @@
+---
+title: "Pertemuan 05: Business Understanding & Rencana Proyek Data Science"
+description: "Penerapan Unit Kompetensi SKKNI: Menentukan Objektif Bisnis (J.62DMI00.001.1), Menentukan Tujuan Teknis Data Science (J.62DMI00.002.1), dan Menyusun Rencana Proyek Data Science (J.62DMI00.003.1)."
+---
+
+> **Penyusun Modul:** Mahendar Dwi Payana  
+> **Acuan Silabus:** DTS Kominfo - STEI ITB (Ir. Windy Gambetta, MBA) & SKKNI No. 299 Tahun 2020
+
+---
+
+## 1. Landasan Standar Kompetensi Kerja (SKKNI)
+
+Pertemuan ini menjadi gerbang resmi penguasaan tiga Unit Kompetensi (UK) inti pertama dalam skema sertifikasi **Associate Data Scientist**:
+
+1. **J.62DMI00.001.1**: Menentukan Objektif Bisnis
+2. **J.62DMI00.002.1**: Menentukan Tujuan Teknis Data Science
+3. **J.62DMI00.003.1**: Membuat Rencana Proyek Data Science
+
+---
+
+## 2. Menentukan Objektif Bisnis (`J.62DMI00.001.1`)
+
+Banyak pemodelan data gagal karena praktisi tergesa-gesa melatih algoritma tanpa memahami akar persoalan bisnis (*business root cause*).
+
+### A. Alur Identifikasi Masalah Bisnis
+Untuk merumuskan objektif bisnis secara presisi, gunakan kerangka **SMART (Specific, Measurable, Achievable, Relevant, Time-bound)**:
+- **Latar Belakang Masalah**: Apa permasalahan organisasi yang dihadapi? (Contoh: *"Tingkat pembatalan langganan nasabah / customer churn naik dari 5% menjadi 14% dalam 6 bulan terakhir"*).
+- **Tujuan Bisnis Konkret**: Apa dampak finansial atau operasional yang ingin dicapai? (Contoh: *"Menurunkan tingkat churn sebesar 4% dalam kuartal mendatang dan menyelamatkan potensi pendapatan Rp 1,5 Miliar"*).
+- **Kriteria Keberhasilan Bisnis**: Nilai ambang batas (*threshold*) yang disepakati oleh pimpinan/stakeholder untuk menyatakan proyek berhasil.
+
+---
+
+## 3. Menentukan Tujuan Teknis Data Science (`J.62DMI00.002.1`)
+
+Tujuan teknis adalah menerjemahkan sasaran bisnis menjadi tugas analitik (*machine learning task*).
+
+### A. Matriks Translasi Bisnis ke Teknis
+| Permasalahan Bisnis | Tipe Tugas Data Science | Algoritma Relevan | Metrik Evaluasi Teknis |
+| :--- | :--- | :--- | :--- |
+| Memprediksi apakah nasabah akan membatalkan langganan | **Klasifikasi Biner** | Logistic Regression, Random Forest, XGBoost | Recall (Sensitivitas), PR-AUC, F1-Score |
+| Memperkirakan volume penjualan produk bulan depan | **Regresi Numerik** | Linear Regression, LightGBM Regressor | RMSE, MAE, MAPE |
+| Mengelompokkan pelanggan berdasarkan pola transaksi | **Klastering Tak Terawasi** | K-Means, DBSCAN | Silhouette Score, Davies-Bouldin |
+| Mendeteksi transaksi perbankan yang mencurigakan (*fraud*) | **Deteksi Anomali** | Isolation Forest, Autoencoder | Precision@K, False Positive Rate |
+
+### B. Analisis Biaya Asimetris (Asymmetric Cost of Error)
+Dalam bisnis riil, dampak kesalahan prediksi hampir tidak pernah simetris:
+
+$$
+\text{Total Cost} = (C_{\text{FP}} \times \text{FP}) + (C_{\text{FN}} \times \text{FN})
+$$
+
+Di mana:
+- $C_{\text{FP}}$: Biaya kerugian akibat *False Positive* (misal: voucher retensi diskon Rp 50.000 terbuang sia-sia pada nasabah yang sebenarnya loyal).
+- $\text{FP}$: Jumlah kejadian salah duga positif.
+- $C_{\text{FN}}$: Biaya kerugian akibat *False Negative* (misal: kehilangan nilai hidup nasabah / *Customer Lifetime Value* sebesar Rp 1.000.000 karena gagal mendeteksi churn).
+- $\text{FN}$: Jumlah kejadian kecolongan (*missed positive*).
+
+Ambang batas probabilitas optimal ($\theta^*$) secara teoritis dapat diturunkan melalui:
+
+$$
+\theta^* = \frac{C_{\text{FP}}}{C_{\text{FP}} + C_{\text{FN}}}
+$$
+
+- Kasus Medis / Fraud: **False Negative (FN)** jauh lebih fatal daripada **False Positive (FP)** ($C_{\text{FN}} \gg C_{\text{FP}}$). Melewatkan nasabah penipu menimbulkan kerugian miliaran, sedangkan salah mencurigai nasabah sah hanya butuh verifikasi via SMS.
+- Oleh karena itu, metrik teknis harus diprioritaskan pada **Recall** daripada sekadar akurasi biasa (*Accuracy Paradox*).
+
+---
+
+## 4. Membuat Rencana Proyek Data Science (`J.62DMI00.003.1`)
+
+Dokumen rencana kerja formal dituangkan dalam **Project Charter**.
+
+### Komponen Kunci Project Charter Data Science:
+1. **Pernyataan Masalah & Sasaran Proyek (Problem Statement & Goals)**.
+2. **Kebutuhan Data (Data Requirements)**: Ketersediaan tabel basis data, izin akses, privasi, dan kelengkapan historis.
+3. **Sumber Daya & Tim (Resources)**: Perangkat keras komputasi (GPU/Server), lisensi cloud, susunan anggota tim dan peran.
+4. **Jadwal & Milestone (Timeline)**: Pembagian sprint pengerjaan per minggu.
+5. **Mitigasi Risiko (Risk Assessment)**:
+   - *Risiko Ketiadaan Label*: Menyiapkan strategi *semi-supervised learning* atau *active labeling*.
+   - *Risiko Keterlambatan Data*: Menyiapkan data sintetik awal untuk prototyping.
+
+---
+
+## 5. Implementasi Python: Perhitungan Biaya Kerugian Model Bisnis
+
+Berikut adalah simulasi pemilihan ambang batas (*threshold tuning*) model biner yang dioptimalkan untuk meminimalkan kerugian finansial organisasi:
+
+```python
+"""
+Optimasi Threshold Prediksi Berbasis Biaya Finansial Bisnis
+Disusun oleh: Mahendar Dwi Payana
+"""
+
+import numpy as np
+
+def calculate_business_cost(y_true, y_probs, threshold, cost_fp=50_000, cost_fn=1_000_000):
+    """
+    Menghitung total kerugian finansial dari prediksi model:
+    - cost_fp: Biaya salah duga (misal: voucher retensi Rp 50.000 terbuang)
+    - cost_fn: Biaya kecolongan (misal: nasabah pergi, rugi nilai hidup nasabah Rp 1.000.000)
+    """
+    y_pred = (y_probs >= threshold).astype(int)
+    
+    fp = np.sum((y_pred == 1) & (y_true == 0))
+    fn = np.sum((y_pred == 0) & (y_true == 1))
+    tp = np.sum((y_pred == 1) & (y_true == 1))
+    tn = np.sum((y_pred == 0) & (y_true == 0))
+    
+    total_cost = (fp * cost_fp) + (fn * cost_fn)
+    return total_cost, fp, fn, tp, tn
+
+if __name__ == "__main__":
+    np.random.seed(42)
+    n_samples = 1000
+    # Simulasi 10% nasabah churn
+    y_true = np.random.binomial(1, 0.10, n_samples)
+    # Probabilitas output model
+    y_probs = np.clip(y_true * 0.7 + np.random.uniform(0, 0.4, n_samples), 0, 1)
+    
+    thresholds = [0.2, 0.3, 0.5, 0.7]
+    print(f"{'Threshold':<10} | {'FP':<6} | {'FN':<6} | {'Total Kerugian (Rp)'}")
+    print("-" * 50)
+    
+    best_thresh = 0.5
+    min_cost = float('inf')
+    
+    for th in thresholds:
+        cost, fp, fn, tp, tn = calculate_business_cost(y_true, y_probs, th)
+        print(f"{th:<10.2f} | {fp:<6} | {fn:<6} | Rp {cost:>15,}")
+        if cost < min_cost:
+            min_cost = cost
+            best_thresh = th
+            
+    print("-" * 50)
+    print(f"Ambang Batas Finansial Paling Efisien: {best_thresh} (Kerugian Terkecil: Rp {min_cost:,})")
+```
+
+---
+
+## 6. Latihan Mandiri & Evaluasi
+
+1. Unduh template Project Charter dan buatlah draf rencana proyek sains data untuk tema Capstone Project tim Anda.
+2. Identifikasi sekurang-kurangnya 3 metrik bisnis utama dan pasangkan dengan metrik teknis machine learning yang setara.

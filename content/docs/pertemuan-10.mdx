@@ -1,0 +1,171 @@
+---
+title: "Pertemuan 10: Feature Engineering, Encoding & Penentuan Label Data"
+description: "Penerapan Unit Kompetensi SKKNI: Mengkonstruksi Data (J.62DMI00.009.1) dan Menentukan Label Data (J.62DMI00.010.1) - Kategorikal Encoding, Rekayasa Fitur Domain, Feature Selection, dan Penanganan Imbalance."
+---
+
+> **Penyusun Modul:** Mahendar Dwi Payana  
+> **Acuan Silabus:** DTS Kominfo - STEI ITB (Ir. Windy Gambetta, MBA) & SKKNI No. 299 Tahun 2020
+
+---
+
+## 1. Pepatah Klasik: *"Data & Features Determine the Upper Bound"*
+
+Pakar kecerdasan buatan, **Andrew Ng**, menegaskan: *"Menerapkan machine learning pada dasarnya adalah rekayasa fitur (Feature Engineering). Model-model canggih hanya berusaha mendekati batas atas performa yang ditentukan oleh kualitas representasi fitur Anda."*
+
+Sesi ini mengombinasikan dua Unit Kompetensi penting:
+1. **J.62DMI00.009.1**: Mengkonstruksi Data (Feature Engineering & Selection)
+2. **J.62DMI00.010.1**: Menentukan Label Data
+
+---
+
+## 2. Strategi Pengkodean Data Kategorikal (Categorical Encoding)
+
+Model matematika hanya menerima bilangan numerik. Strategi konversi data string bergantung pada kardinalitas (*cardinality*) dan sifat hierarkis variabel:
+
+| Tipe Kategori | Karakteristik Data | Metode Encoding yang Tepat | Potensi Masalah |
+| :--- | :--- | :--- | :--- |
+| **Ordinal** | Memiliki urutan jelas (SD, SMP, SMA, S1) | **OrdinalEncoder** (Peta integer eksplisit) | Jangan mengacak urutan ranking logis. |
+| **Nominal Kardinalitas Rendah** (`< 10` nilai unik) | Tanpa urutan (Jenis Kelamin, Warna, Status Pernikahan) | **One-Hot Encoding (`OneHotEncoder`)** | *Dummy Variable Trap* (Gunakan `drop='first'` pada model linier). |
+| **Nominal Kardinalitas Tinggi** (`> 50` nilai unik) | Kota domisili, Kode Pos, ID Produk | **Target Encoding (Mean Encoding)** atau **Frequency Encoding** | Bahaya kebocoran target (*Target Leakage*) jika tidak dihaluskan (*smoothing*). |
+
+### Formulasi Target Encoding dengan Smoothing (M-Estimate):
+
+$$
+\hat{S}_i = \frac{n_i \cdot \bar{y}_i + m \cdot \bar{y}_{\text{global}}}{n_i + m}
+$$
+
+Di mana $n_i$ adalah frekuensi kemunculan kategori $i$, $\bar{y}_i$ adalah rata-rata target kategori, $\bar{y}_{\text{global}}$ adalah rata-rata target keseluruhan dataset, dan $m$ adalah bobot smoothing (*m-estimate*).
+
+---
+
+## 3. Rekayasa Fitur Berbasis Siklus Waktu (Cyclical Feature Encoding)
+
+Variabel waktu seperti jam (`0-23`) atau bulan (`1-12`) bersifat melingkar. Jam 23:59 berjarak sangat dekat dengan jam 00:01, namun secara numerik $23 - 0 = 23$.
+
+Untuk mempertahankan sifat siklis, fitur dipetakan ke koordinat trigonometri lingkaran:
+
+$$
+x_{\sin} = \sin\left(\frac{2\pi \cdot x}{\max(x)}\right), \quad x_{\cos} = \cos\left(\frac{2\pi \cdot x}{\max(x)}\right)
+$$
+
+
+---
+
+## 4. Teknik Seleksi Fitur (Feature Selection)
+
+Mengeliminasi fitur tidak relevan (*noise*) untuk mencegah *Curse of Dimensionality* dan mempercepat inferensi model:
+1. **Filter Methods**:
+   - `VarianceThreshold`: Menghapus fitur yang variasinya konstan atau mendekati nol.
+   - `SelectKBest` dengan uji statistik: **ANOVA F-Test** (fitur kontinu vs target kategori), **Chi-Square** (fitur kategori vs target kategori), atau **Mutual Information** (mengukur relasi non-linier umum).
+2. **Wrapper Methods**:
+   - `RFE (Recursive Feature Elimination)`: Melatih model berulang kali dan mengeliminasi fitur berbobot terlemah secara berkala.
+3. **Embedded Methods**:
+   - Penalti `L_1` (**Lasso Regression**): Memaksa koefisien fitur yang tidak signifikan menjadi tepat bernilai nol.
+   - *Feature Importance* bawaan algoritma pohon (**Random Forest / LightGBM**).
+
+---
+
+## 5. Menentukan Label Data & Penanganan Imbalance (`J.62DMI00.010.1`)
+
+Penentuan label target harus memenuhi prinsip objektivitas tanpa ambiguitas.
+
+### Tantangan Ketimpangan Kelas (Class Imbalance)
+Pada kasus fraud atau diagnosis penyakit, kelas positif seringkali hanya berjumlah `1\% - 5\%` dari keseluruhan dataset. Jika dilatih langsung, model akan bias menebak seluruh data sebagai kelas mayoritas (*Majority Guessing Paradox*).
+
+### Solusi Modern:
+1. **Algorithmic Weighting**: Menggunakan parameter `class_weight='balanced'` pada model Scikit-learn (memberikan penalti lebih tinggi ketika salah memprediksi kelas minoritas).
+2. **Synthetic Data Generation (SMOTE - Synthetic Minority Over-sampling Technique)**:
+   Membangun titik data sintetis baru yang realistis untuk kelas minoritas melalui teknik **interpolasi linier** di antara tetangga terdekat (*k-Nearest Neighbors*):
+   
+$$
+x_{\text{sintetik}} = x_i + \lambda (x_{zi} - x_i), \quad \lambda \sim U(0, 1)
+$$
+
+> **Bedah Formulasi Matematis SMOTE:**
+> - $x_i$: Titik sampel data asli yang berasal dari kelas minoritas (misal: satu baris data nasabah yang melakukan *fraud*).
+> - $x_{zi}$: Salah satu tetangga terdekat dari $x_i$ yang dipilih secara acak dari himpunan $k$-tetangga terdekat (*k-Nearest Neighbors*, default $k=5$) yang juga merupakan sesama kelas minoritas.
+> - $(x_{zi} - x_i)$: Vektor perbedaan / segmen garis yang menghubungkan titik $x_i$ ke tetangganya $x_{zi}$ dalam ruang fitur multidimensi.
+> - $\lambda \sim U(0, 1)$: Angka acak yang ditarik dari **Distribusi Seragam (Uniform Distribution)** dalam rentang $[0, 1]$ (misalnya $\lambda = 0.42$).
+> - $\lambda (x_{zi} - x_i)$: Menentukan posisi pergeseran di sepanjang garis penghubung antara kedua sampel tersebut.
+> - $x_{\text{sintetik}}$: Titik data buatan baru yang tercipta tepat di segmen garis antara $x_i$ dan $x_{zi}$.
+>
+> **Keunggulan vs Random Oversampling**:
+> Berbeda dari *Random Oversampling* klasik yang hanya melakukan *copy-paste* menduplikasi baris yang sudah ada (sehingga memicu model menghafal data / *overfitting*), SMOTE menciptakan data baru yang bervariasi namun tetap berada dalam domain distribusi kelas minoritas.
+>
+> [!CAUTION]
+> **Aturan Emas Penerapan SMOTE**: SMOTE **hanya boleh diterapkan pada data latih (Training Set)** setelah proses *Train-Test Split*. Jika SMOTE diterapkan pada seluruh dataset sebelum pemisahan, informasi data sintetis akan mencemari data uji (*Data Leakage*), menghasilkan metrik evaluasi yang palsu (*falsely optimistic*).
+
+
+---
+
+## 6. Implementasi Python: Pipeline Rekayasa Fitur Scikit-Learn
+
+```python
+"""
+Pipeline Pengkodean dan Rekayasa Fitur Otomatis
+Disusun oleh: Mahendar Dwi Payana
+"""
+
+import pandas as pd
+import numpy as np
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.feature_selection import SelectKBest, mutual_info_classif
+from sklearn.pipeline import Pipeline
+from sklearn.ensemble import RandomForestClassifier
+
+def create_feature_pipeline(numeric_features, categorical_features):
+    # Pra-pemrosesan untuk fitur numerik
+    numeric_transformer = Pipeline(steps=[
+        ('scaler', StandardScaler())
+    ])
+
+    # Pra-pemrosesan untuk fitur kategorikal
+    categorical_transformer = Pipeline(steps=[
+        ('onehot', OneHotEncoder(handle_unknown='ignore', drop='first'))
+    ])
+
+    # Menggabungkan kolom transformer
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ('num', numeric_transformer, numeric_features),
+            ('cat', categorical_transformer, categorical_features)
+        ]
+    )
+
+    # Pipeline lengkap dengan seleksi fitur dan pemodelan
+    full_pipeline = Pipeline(steps=[
+        ('preprocessor', preprocessor),
+        ('selector', SelectKBest(score_func=mutual_info_classif, k=5)),
+        ('classifier', RandomForestClassifier(n_estimators=100, class_weight='balanced', random_state=42))
+    ])
+    
+    return full_pipeline
+
+# Uji coba pipeline
+if __name__ == "__main__":
+    dummy_data = pd.DataFrame({
+        'Usia': [25, 45, 35, 50, 23, 60],
+        'Pendapatan': [5e6, 20e6, 12e6, 25e6, 4e6, 30e6],
+        'Status_Pernikahan': ['Lajang', 'Menikah', 'Menikah', 'Cerai', 'Lajang', 'Menikah'],
+        'Target_Beli': [0, 1, 1, 1, 0, 1]
+    })
+    
+    X = dummy_data.drop('Target_Beli', axis=1)
+    y = dummy_data['Target_Beli']
+    
+    pipeline = create_feature_pipeline(
+        numeric_features=['Usia', 'Pendapatan'],
+        categorical_features=['Status_Pernikahan']
+    )
+    
+    pipeline.fit(X, y)
+    print("Pipeline Feature Engineering & Model berhasil dilatih tanpa kebocoran data!")
+```
+
+---
+
+## 7. Latihan Mandiri & Evaluasi
+
+1. Ambil kolom tanggal pada dataset proyek Anda, ekstrak fitur siklis hari dalam pekan menggunakan transformasi sinus dan cosinus.
+2. Jelaskan bahaya penerapan SMOTE pada keseluruhan data sebelum dilakukan train-test split.

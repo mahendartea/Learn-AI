@@ -1,0 +1,145 @@
+---
+title: "Pertemuan 08: Data Cleansing, Imputasi & Validasi Kualitas Data"
+description: "Penerapan Unit Kompetensi SKKNI: Menentukan Objek Data (J.62DMI00.007.1), Membersihkan Data (J.62DMI00.008.1), dan Memvalidasi Data (J.62DMI00.006.1) - Penanganan Missing Value, Duplikasi, dan Deteksi Outlier."
+---
+
+> **Penyusun Modul:** Mahendar Dwi Payana  
+> **Acuan Silabus:** DTS Kominfo - STEI ITB (Ir. Windy Gambetta, MBA) & SKKNI No. 299 Tahun 2020
+
+---
+
+## 1. Landasan Standar Kompetensi Kerja (SKKNI)
+
+Tahap pembersihan data merupakan fondasi paling krusial dalam siklus *CRISP-DM*. Sesi ini mencakup tiga Unit Kompetensi integral:
+1. **J.62DMI00.007.1**: Menentukan Objek Data
+2. **J.62DMI00.008.1**: Membersihkan Data (*Data Cleansing*)
+3. **J.62DMI00.006.1**: Memvalidasi Data (*Data Validation*)
+
+---
+
+## 2. Menentukan Objek Data (`J.62DMI00.007.1`)
+
+Tidak semua data yang tersedia di database harus dimasukkan ke dalam model pembelajaran mesin. Menentukan objek data melibatkan:
+- **Seleksi Baris (*Record Filtering*)**: Menyaring populasi yang relevan dengan pertanyaan bisnis (misal: hanya nasabah aktif dalam 12 bulan terakhir).
+- **Seleksi Atribut Awal**: Menghapus kolom identitas unik tanpa bobot prediktif (seperti `User_ID`, `No_KTP`, `Nama_Lengkap`) untuk mencegah *overfitting*.
+- **Pemisahan Data Awal**: Memisahkan data uji (*Test Set*) sejak awal proses agar pembersihan data tidak memicu kebocoran data (*Data Leakage*).
+
+---
+
+## 3. Membersihkan Data: Taksonomi & Imputasi Nilai Kosong (`J.62DMI00.008.1`)
+
+Sebelum mengisi nilai kosong (*missing values*), praktisi wajib mendiagnosis mekanisme hilangnya data:
+
+### Tiga Mekanisme Missing Value:
+1. **Missing Completely at Random (MCAR)**:
+   - Data hilang murni karena faktor kebetulan acak tanpa keterkaitan dengan variabel apa pun.
+   - Contoh: Kertas kuesioner tertumpah kopi, gangguan sinyal sensor sesaat.
+   - *Solusi*: Penghapusan baris (*listwise deletion*) aman dilakukan jika persentasenya kecil (`< 5\%`).
+2. **Missing at Random (MAR)**:
+   - Peluang hilangnya data berkaitan dengan variabel lain yang teramati, tetapi tidak berkaitan dengan nilai variabel itu sendiri.
+   - Contoh: Responden wanita cenderung enggan mengisi kolom usia pada survei tertentu.
+   - *Solusi*: Imputasi berbasis model seperti **KNNImputer** atau **IterativeImputer (MICE)**.
+3. **Missing Not at Random (MNAR)**:
+   - Hilangnya data berkaitan langsung dengan nilai yang hilang itu sendiri.
+   - Contoh: Pasien dengan tingkat depresi sangat berat menolak mengisi evaluasi depresi.
+   - *Solusi*: Imputasi dengan menyertakan fitur indikator biner (*Missing Indicator*).
+
+---
+
+## 4. Deteksi & Perlakuan Nilai Ekstrim (Outliers)
+
+### A. Metode Tukey Interquartile Range (IQR)
+Batas bawah dan batas atas dihitung melalui:
+
+$$
+\text{Batas Bawah} = Q_1 - 1.5 \times \text{IQR}
+$$
+
+$$
+\text{Batas Atas} = Q_3 + 1.5 \times \text{IQR}
+$$
+
+Nilai di luar interval $[\text{Batas Bawah}, \text{Batas Atas}]$ diklasifikasikan sebagai pencilan (*outlier*).
+
+### B. Metode Skor Standar Z (Z-Score)
+
+$$
+Z = \frac{x - \mu}{\sigma}
+$$
+
+Jika $|Z| > 3$, titik data berada lebih dari 3 deviasi standar dari rata-rata (peluang $< 0.3\%$ pada distribusi normal).
+
+### Strategi Penanganan Outlier:
+- **Trimming**: Menghapus baris outlier jika terbukti merupakan kesalahan input alat ukur.
+- **Winsorization (Capping)**: Membatasi nilai ekstrim ke persentil ke-1 atau ke-99 tanpa membuang baris data.
+- **Transformasi**: Mengaplikasikan logaritma untuk merapatkan rentang ekstrim.
+
+---
+
+## 5. Implementasi Python: Pipeline Pembersihan Data Terpadu
+
+```python
+"""
+Pipeline Pembersihan dan Validasi Data Terpadu
+Disusun oleh: Mahendar Dwi Payana
+"""
+
+import pandas as pd
+import numpy as np
+from sklearn.impute import KNNImputer
+
+class DataCleanser:
+    def __init__(self, iqr_factor=1.5):
+        self.iqr_factor = iqr_factor
+        self.imputer = KNNImputer(n_neighbors=5)
+        
+    def remove_duplicates(self, df):
+        initial = len(df)
+        df_clean = df.drop_duplicates()
+        removed = initial - len(df_clean)
+        print(f"[Duplikasi] Menghapus {removed} baris duplikat identik.")
+        return df_clean
+        
+    def handle_missing_values(self, df, numeric_cols):
+        print(f"[Missing Value] Mengimputasi {df[numeric_cols].isnull().sum().sum()} nilai kosong via KNN...")
+        df[numeric_cols] = self.imputer.fit_transform(df[numeric_cols])
+        return df
+        
+    def cap_outliers_iqr(self, df, col):
+        q1 = df[col].quantile(0.25)
+        q3 = df[col].quantile(0.75)
+        iqr = q3 - q1
+        lower = q1 - (self.iqr_factor * iqr)
+        upper = q3 + (self.iqr_factor * iqr)
+        
+        # Winsorization
+        initial_outliers = ((df[col] < lower) | (df[col] > upper)).sum()
+        df[col] = np.clip(df[col], lower, upper)
+        print(f"[Outlier] Menyesuaikan {initial_outliers} nilai ekstrim pada fitur '{col}'.")
+        return df
+
+# Pengujian
+if __name__ == "__main__":
+    np.random.seed(42)
+    sample_df = pd.DataFrame({
+        'ID': [1, 2, 2, 3, 4, 5, 6],
+        'Pendapatan': [5e6, 6e6, 6e6, np.nan, 50e6, 7e6, 8e6], # Outlier 50 juta
+        'Pengeluaran': [3e6, 4e6, 4e6, 3.5e6, 25e6, np.nan, 5e6]
+    })
+    
+    cleanser = DataCleanser()
+    df_step1 = cleanser.remove_duplicates(sample_df)
+    df_step2 = cleanser.handle_missing_values(df_step1, ['Pendapatan', 'Pengeluaran'])
+    df_final = cleanser.cap_outliers_iqr(df_step2, 'Pendapatan')
+    print("\nData Setelah Pembersihan:")
+    print(df_final)
+```
+
+---
+
+## 6. Memvalidasi Data (`J.62DMI00.006.1`)
+
+Setelah dibersihkan, data divalidasi berdasarkan kriteria integritas:
+1. **Validasi Tipe Data & Skema**: Kolom numerik tidak boleh tercemar string.
+2. **Validasi Rentang Nilai Logis**: Umur tidak boleh negatif atau `>120` tahun; persentase berada dalam rentang `0 \le x \le 100`.
+3. **Validasi Konsistensi Relasional**: Total pengeluaran tidak boleh melebihi batas kredit maksimal.

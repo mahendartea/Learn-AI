@@ -1,0 +1,178 @@
+---
+title: "Pertemuan 04: Pustaka Inti: NumPy & Pandas Tingkat Lanjut"
+description: "Penguasaan komputasi larik berkecepatan tinggi dengan NumPy (vektorisasi, broadcasting, aljabar linier) dan manipulasi data tabular skala besar dengan Pandas (Groupby, MultiIndex, optimasi memori)."
+---
+
+> **Penyusun Modul:** Mahendar Dwi Payana  
+> **Acuan Silabus:** DTS Kominfo - STEI ITB (Ir. Windy Gambetta, MBA) & SKKNI No. 299 Tahun 2020
+
+---
+
+## 1. Mengapa NumPy & Pandas Mendominasi Komputasi Data?
+
+Python murni (*vanilla Python*) dirancang sebagai bahasa yang dinamis dan fleksibel. Namun, fleksibilitas tersebut dibayar dengan *overhead* memori yang besar dan eksekusi perulangan (*loops*) yang lambat akibat *Dynamic Typing* dan *Global Interpreter Lock (GIL)*.
+
+**NumPy (Numerical Python)** mengatasi kelemahan ini dengan memperkenalkan:
+1. **Homogeneous Data Arrays (`ndarray`)**: Seluruh elemen larik memiliki tipe data yang seragam dan disimpan dalam blok memori fisik yang berdampingan (*contiguous C-memory layout*).
+2. **Vectorization & SIMD**: Komputasi dipindahkan ke instruksi prosesor tingkat rendah (*Single Instruction, Multiple Data*) tanpa perulangan eksplisit di level Python.
+
+**Pandas** dibangun di atas NumPy untuk menghadirkan struktur data tabular tingkat tinggi yang fleksibel (**DataFrame** dan **Series**) dengan dukungan penanganan *missing value*, pelabelan baris/kolom, dan operasi relasional layaknya SQL.
+
+---
+
+## 2. Pembedahan NumPy: Vektorisasi, Broadcasting & Aljabar Linier
+
+### A. Konsep Broadcasting
+Broadcasting memungkinkan NumPy mengeksekusi operasi aritmatika antara dua larik dengan dimensi (*shape*) yang berbeda tanpa menduplikasi data di memori secara fisik.
+
+**Aturan Broadcasting:**
+1. Jika dua larik memiliki jumlah dimensi yang berbeda, tambahkan dimensi `1` di sebelah kiri shape larik yang lebih pendek.
+2. Dua dimensi kompatibel jika:
+   - Nilainya sama persis, ATAU
+   - Salah satu bernilai `1`.
+3. Jika pada dimensi mana pun kondisinya tidak terpenuhi, NumPy akan melempar `ValueError`.
+
+Contoh: Matriks 2D berukuran $3 \times 3$ dijumlahkan secara langsung dengan vektor 1D berukuran $1 \times 3$:
+
+$$
+\begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{bmatrix} + \begin{bmatrix} 10 & 20 & 30 \end{bmatrix} = \begin{bmatrix} 11 & 22 & 33 \\ 14 & 25 & 36 \\ 17 & 28 & 39 \end{bmatrix}
+$$
+
+> **Penjelasan Konseptual:**
+> - Matriks pertama memiliki dimensi $(3, 3)$.
+> - Vektor kedua memiliki dimensi $(1, 3)$.
+> - Dalam aturan aljabar linier klasik, penjumlahan ini tidak valid karena dimensi berbeda. Namun dalam **NumPy Broadcasting**, larik kedua otomatis diduplikasi secara virtual di memori untuk setiap baris, sehingga:
+>   - Baris 1: $[1, 2, 3] + [10, 20, 30] = [11, 22, 33]$
+>   - Baris 2: $[4, 5, 6] + [10, 20, 30] = [14, 25, 36]$
+>   - Baris 3: $[7, 8, 9] + [10, 20, 30] = [17, 28, 39]$
+> - Komputasi ini berjalan di tingkat prosesor (*C-level speed*) tanpa alokasi memori berlebih.
+
+
+### B. Demonstrasi Benchmark: Perulangan Python vs NumPy Vectorized
+Perhatikan perbandingan kecepatan komputasi berikut:
+
+```python
+import numpy as np
+import time
+
+n = 10_000_000
+
+# 1. Perulangan standar Python
+py_list = list(range(n))
+start_time = time.time()
+res_list = [x ** 2 for x in py_list]
+py_time = time.time() - start_time
+
+# 2. NumPy Vectorized
+np_arr = np.arange(n)
+start_time = time.time()
+res_arr = np_arr ** 2
+np_time = time.time() - start_time
+
+print(f"Waktu Python List : {py_time:.4f} detik")
+print(f"Waktu NumPy Array : {np_time:.4f} detik")
+print(f"NumPy lebih cepat : {py_time / np_time:.1f}x lipat!")
+```
+*(NumPy umumnya berjalan 50 hingga 100 kali lebih cepat dibandingkan list comprehension Python).*
+
+---
+
+## 3. Pembedahan Pandas: Manipulasi Tabular Tingkat Lanjut
+
+### A. Struktur DataFrame & Seleksi Data Presisi
+Dua metode utama pengindeksan data di Pandas:
+- `.loc[]`: Seleksi berbasis **label nama indeks** atau kondisi boolean.
+- `.iloc[]`: Seleksi berbasis **posisi integer (indeks numerik)**.
+
+```python
+import pandas as pd
+
+df = pd.DataFrame({
+    'Nama': ['Budi', 'Siti', 'Ahmad', 'Dewi'],
+    'Departemen': ['Teknik', 'Keuangan', 'Teknik', 'Pemasaran'],
+    'Gaji': [12000000, 15000000, 11000000, 9500000],
+    'Pengalaman_Tahun': [5, 7, 3, 2]
+})
+
+# Filter kondisional efisien
+karyawan_senior_teknik = df.loc[(df['Departemen'] == 'Teknik') & (df['Pengalaman_Tahun'] >= 3)]
+```
+
+### B. Pola Operasi Split-Apply-Combine (Groupby)
+Operasi agregasi kelompok merupakan inti dari analisis data statistik:
+
+```python
+# Menghitung metrik rata-rata dan total per departemen
+ringkasan_dept = df.groupby('Departemen').agg(
+    Rata_Gaji=('Gaji', 'mean'),
+    Median_Gaji=('Gaji', 'median'),
+    Total_Karyawan=('Nama', 'count'),
+    Total_Pengalaman=('Pengalaman_Tahun', 'sum')
+).reset_index()
+
+print(ringkasan_dept)
+```
+
+---
+
+## 4. Teknik Optimasi Memori Pandas untuk Dataset Skala Besar
+
+Ketika memuat dataset puluhan gigabyte, penggunaan memori default Pandas seringkali menyebabkan *Out-Of-Memory (OOM)*.
+
+### Strategi Optimasi Memori:
+1. **Downcasting Numerik**: Mengubah tipe `int64` atau `float64` bawaan menjadi `int16`, `int32`, atau `float32` jika rentang nilainya memungkinkan.
+2. **Kategori Kategorikal (`category`)**: Mengubah kolom string dengan banyak nilai berulang menjadi tipe `category` (menghemat hingga 80% RAM).
+3. **Memuat Secara Bertahap (`chunksize`)**: Membaca file CSV berukuran raksasa dalam pecahan baris (*chunks*).
+
+### Skrip Otomasi Pengurangan Beban Memori:
+```python
+def optimize_dataframe_memory(df):
+    """
+    Mengoptimalkan alokasi memori DataFrame Pandas hingga 50-80%
+    Disusun oleh: Mahendar Dwi Payana
+    """
+    start_mem = df.memory_usage().sum() / 1024**2
+    print(f"Penggunaan Memori Awal: {start_mem:.2f} MB")
+    
+    for col in df.columns:
+        col_type = df[col].dtypes
+        
+        if col_type != object and col_type != 'category':
+            c_min = df[col].min()
+            c_max = df[col].max()
+            
+            # Cek apakah integer
+            if str(col_type)[:3] == 'int':
+                if c_min > np.iinfo(np.int8).min and c_max < np.iinfo(np.int8).max:
+                    df[col] = df[col].astype(np.int8)
+                elif c_min > np.iinfo(np.int16).min and c_max < np.iinfo(np.int16).max:
+                    df[col] = df[col].astype(np.int16)
+                elif c_min > np.iinfo(np.int32).min and c_max < np.iinfo(np.int32).max:
+                    df[col] = df[col].astype(np.int32)
+            else:
+                if c_min > np.finfo(np.float32).min and c_max < np.finfo(np.float32).max:
+                    df[col] = df[col].astype(np.float32)
+        elif col_type == 'object':
+            num_unique = df[col].nunique()
+            num_total = len(df[col])
+            if num_unique / num_total < 0.5:
+                df[col] = df[col].astype('category')
+                
+    end_mem = df.memory_usage().sum() / 1024**2
+    reduction = 100 * (start_mem - end_mem) / start_mem
+    print(f"Penggunaan Memori Akhir: {end_mem:.2f} MB (Hemat: {reduction:.1f}%)")
+    return df
+```
+
+---
+
+## 5. Latihan Mandiri & Evaluasi
+
+1. Buatlah matriks numerik berukuran `1000 \times 10` menggunakan `np.random.randn()`.
+2. Lakukan normalisasi Z-Score untuk setiap kolom secara murni menggunakan operasi vectorized dan broadcasting NumPy:
+   
+```
+Z = \frac{X - \mu}{\sigma}
+```
+
+3. Konversi matriks tersebut menjadi DataFrame Pandas, tambahkan kolom kategori buatan, dan hitung persentase penghematan memori menggunakan fungsi `optimize_dataframe_memory()` di atas.

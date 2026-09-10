@@ -1,0 +1,159 @@
+---
+title: "Pertemuan 07: EDA & Visualisasi Data Statistik Lanjutan"
+description: "Penerapan Unit Kompetensi SKKNI: Menelaah Data dengan Teknik Visualisasi (J.62DMI00.005.1) - Analisis Univariat, Bivariat, Multivariat, Matriks Korelasi, dan Deteksi Anomali Visual."
+---
+
+> **Penyusun Modul:** Mahendar Dwi Payana  
+> **Acuan Silabus:** DTS Kominfo - STEI ITB (Ir. Windy Gambetta, MBA) & SKKNI No. 299 Tahun 2020
+
+---
+
+## 1. Filosofi Exploratory Data Analysis (EDA)
+
+Pelopor statistika modern, **John W. Tukey**, menyatakan: *"Exploratory Data Analysis bukan sekadar sekumpulan teknik grafis, melainkan sikap mental untuk membiarkan data berbicara sebelum kita memaksakan model matematika tertentu ke dalamnya."*
+
+Visualisasi data adalah alat paling tajam untuk:
+1. Menemukan pola tersembunyi yang gagal terdeteksi oleh ringkasan angka statistik (**Anscombe's Quartet & Datasaurus Dozen**).
+2. Mendeteksi inkonsistensi, pencilan, dan kesalahan pencatatan secara instan.
+3. Memilih strategi transformasi fitur dan pemodelan prediktif yang tepat.
+
+---
+
+## 2. Taksonomi Visualisasi Data Statistik
+
+```
+Eksplorasi Visual Data
+├── Analisis Univariat (Satu Variabel)
+│   ├── Numerik: Histogram, Kernel Density Estimation (KDE), Boxplot, Violin Plot
+│   └── Kategorikal: Bar Chart, Count Plot, Donut Chart
+├── Analisis Bivariat (Dua Variabel)
+│   ├── Numerik vs Numerik: Scatter Plot, Hexbin Plot, Line Plot (Runtun Waktu)
+│   ├── Kategorikal vs Numerik: Grouped Boxplot, Stripplot, Barplot
+│   └── Kategorikal vs Kategorikal: Heatmap Kontinjensi, Mosaic Plot
+└── Analisis Multivariat (Tiga atau Lebih Variabel)
+    ├── Matriks Korelasi (Pearson, Spearman)
+    └── Pairplot, FacetGrid, Bubble Chart (X, Y, Warna, Ukuran)
+```
+
+---
+
+## 3. Formulasi Korelasi Statistik
+
+Hubungan linier dan monotonik antar-variabel dievaluasi menggunakan metrik korelasi:
+
+### 1. Koefisien Korelasi Pearson ($r$)
+Mengukur keeratan **hubungan linier** antara dua variabel kontinu yang berdistribusi normal:
+
+$$
+r = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i=1}^{n} (x_i - \bar{x})^2} \sqrt{\sum_{i=1}^{n} (y_i - \bar{y})^2}}
+$$
+
+- $r = +1$: Hubungan linier positif sempurna.
+- $r = -1$: Hubungan linier negatif sempurna.
+- $r = 0$: Tidak terdapat hubungan linier.
+
+### 2. Koefisien Korelasi Peringkat Spearman ($\rho$)
+Mengukur keeratan **hubungan monotonik** (tidak harus linier lurus) dan resisten terhadap pencilan ekstrim karena bekerja pada ranking urutan:
+
+$$
+\rho = 1 - \frac{6 \sum_{i=1}^{n} d_i^2}{n(n^2 - 1)}
+$$
+
+Di mana $d_i$ adalah selisih antara peringkat $x_i$ dan $y_i$.
+
+---
+
+## 4. Jebakan Visualisasi: Paradoks Simpson (Simpson's Paradox)
+
+> [!WARNING]
+> **Paradoks Simpson**: Fenomena statistik di mana tren atau korelasi yang tampak jelas pada beberapa sub-kelompok data justru menghilang atau **berbalik arah secara dramatis** ketika kelompok-kelompok tersebut digabungkan menjadi satu kesatuan.
+>
+> *Solusi*: Selalu sertakan variabel pengelompok (*hue / segmentation*) pada visualisasi bivariat untuk memastikan tidak ada variabel pengganggu (*confounding variable*) yang terabaikan.
+
+---
+
+## 5. Implementasi Python: Modul Visualisasi EDA Komprehensif
+
+Berikut adalah skrip Python lengkap untuk menghasilkan dashboard analisis visualisasi data univariat dan multivariat:
+
+```python
+"""
+Pipeline Visualisasi Exploratory Data Analysis (EDA)
+Disusun oleh: Mahendar Dwi Payana
+"""
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+import numpy as np
+
+# Konfigurasi gaya visualisasi modern
+sns.set_theme(style="whitegrid", palette="muted")
+plt.rcParams['font.sans-serif'] = 'DejaVu Sans'
+
+def run_comprehensive_eda(df, target_col=None):
+    numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+    
+    # 1. Matriks Korelasi Heatmap
+    if len(numeric_cols) > 1:
+        plt.figure(figsize=(10, 8))
+        corr_matrix = df[numeric_cols].corr(method='spearman')
+        mask = np.triu(np.ones_like(corr_matrix, dtype=bool))
+        
+        sns.heatmap(
+            corr_matrix, 
+            mask=mask, 
+            annot=True, 
+            fmt=".2f", 
+            cmap="vlag", 
+            center=0,
+            square=True, 
+            linewidths=.5, 
+            cbar_kws={"shrink": .8}
+        )
+        plt.title("Matriks Korelasi Spearman (Resisten Outlier)", fontsize=14, pad=15)
+        plt.tight_layout()
+        plt.show()
+        
+    # 2. Distribusi & Outlier Plot (Histogram + Boxplot berdampingan)
+    for col in numeric_cols[:4]:  # Plot 4 fitur utama
+        fig, (ax_box, ax_hist) = plt.subplots(
+            2, 1, 
+            figsize=(8, 6), 
+            sharex=True, 
+            gridspec_kw={'height_ratios': [0.25, 0.75]}
+        )
+        
+        sns.boxplot(x=df[col], ax=ax_box, color="#4C72B0")
+        ax_box.set(xlabel='')
+        
+        sns.histplot(df[col], kde=True, ax=ax_hist, color="#55A868")
+        ax_hist.set_title(f"Sebaran Distribusi & Deteksi Outlier: {col}", fontsize=12)
+        
+        plt.tight_layout()
+        plt.show()
+
+# Contoh demonstrasi dengan dataset sintetis
+if __name__ == "__main__":
+    np.random.seed(42)
+    sample_data = pd.DataFrame({
+        'Pengeluaran_Iklan': np.random.uniform(10, 100, 150),
+        'Pengunjung_Web': np.random.uniform(100, 1000, 150),
+        'Nilai_Transaksi': np.random.exponential(scale=50, 150) + 20
+    })
+    # Buat korelasi buatan
+    sample_data['Penjualan'] = (
+        sample_data['Pengeluaran_Iklan'] * 1.5 + 
+        sample_data['Pengunjung_Web'] * 0.3 + 
+        np.random.normal(0, 10, 150)
+    )
+    
+    run_comprehensive_eda(sample_data)
+```
+
+---
+
+## 6. Latihan Mandiri & Evaluasi
+
+1. Buat visualisasi *Pairplot* dari dataset Anda menggunakan `sns.pairplot()` dengan menyertakan variabel target kategorikal sebagai parameter `hue`.
+2. Analisis matriks korelasi: sebutkan pasangan fitur mana yang memiliki korelasi tinggi (`|r| > 0.8`) dan diskusikan potensi terjadinya masalah multikolinearitas.

@@ -1,0 +1,161 @@
+---
+title: "Pertemuan 11: Skenario Pemodelan & Algoritma Klasifikasi Terawasi"
+description: "Penerapan Unit Kompetensi SKKNI: Membangun Skenario Model (J.62DMI00.012.1) dan Membangun Model (J.62DMI00.013.1) - Stratified Cross-Validation, Pipeline Pencegahan Data Leakage, Random Forest, dan Gradient Boosting (XGBoost)."
+---
+
+> **Penyusun Modul:** Mahendar Dwi Payana  
+> **Acuan Silabus:** DTS Kominfo - STEI ITB (Ir. Windy Gambetta, MBA) & SKKNI No. 299 Tahun 2020
+
+---
+
+## 1. Landasan Standar Kompetensi Kerja (SKKNI)
+
+Sesi ini merupakan tonggak awal tahap pemodelan (*modeling*) yang mencakup:
+1. **J.62DMI00.012.1**: Membangun Skenario Model
+2. **J.62DMI00.013.1**: Membangun Model (Fokus: Algoritma Klasifikasi)
+
+---
+
+## 2. Membangun Skenario Model (`J.62DMI00.012.1`)
+
+Skenario pemodelan dirancang untuk memastikan bahwa kemampuan generalisasi model dapat diuji secara objektif terhadap data baru yang belum pernah dilihat sebelumnya (*unseen data*).
+
+### A. Strategi Pemisahan Data (Data Splitting)
+- **Train - Validation - Test Split (70:15:15 atau 80:10:10)**:
+  - *Train Set*: Untuk mempelajari bobot dan parameter model.
+  - *Validation Set*: Untuk memilih model terbaik dan mengatur hyperparameter (*tuning*).
+  - *Test Set*: Disimpan rapat dan hanya dievaluasi satu kali di akhir sebagai simulasi performa di lingkungan produksi.
+
+### B. Validasi Silang (Cross-Validation)
+- **Stratified K-Fold Cross-Validation**:
+  Membagi data latih menjadi `K` lipatan (*folds*) sedemikian rupa sehingga proporsi persentase kelas target di setiap lipatan sama persis dengan dataset asli. Sangat krusial untuk mencegah ketimpangan kelas.
+- **Time-Series Split (Rolling Window)**:
+  Wajib digunakan untuk data runtun waktu guna mencegah kebocoran masa depan (*future leakage*).
+
+### C. Bahaya Fatal Kebocoran Data (Data Leakage)
+> [!CAUTION]
+> **Data Leakage**: Kondisi di mana informasi dari luar dataset pelatihan (khususnya data uji atau masa depan) secara tidak sengaja bocor ke dalam proses pelatihan model.
+>
+> *Penyebab Umum*: Melakukan penskalaan `StandardScaler.fit()` atau imputasi `KNNImputer.fit()` pada keseluruhan dataset sebelum pemisahan train/test.
+>
+> *Solusi*: Selalu bungkus tahap pra-pemrosesan dan algoritma ke dalam **Scikit-learn Pipeline**.
+
+---
+
+## 3. Pembedahan Algoritma Klasifikasi Terawasi (`J.62DMI00.013.1`)
+
+### 1. Regresi Logistik (Logistic Regression)
+Model linier biner yang memetakan kombinasi linier fitur ke dalam rentang probabilitas `[0, 1]` menggunakan **Fungsi Sigmoid**:
+
+$$
+P(Y=1|X) = \sigma(z) = \frac{1}{1 + e^{-z}}, \quad \text{di mana } z = \beta_0 + \sum_{j=1}^{p} \beta_j X_j
+$$
+
+
+### 2. Decision Tree (Pohon Keputusan)
+Membelah ruang fitur secara rekursif berbasis kriteria kemurnian (*impurity*):
+- **Gini Impurity**:
+  
+$$
+I_G(p) = 1 - \sum_{i=1}^{C} p_i^2
+$$
+
+- **Entropi (Information Gain)**:
+  
+$$
+H(S) = -\sum_{i=1}^{C} p_i \log_2(p_i)
+$$
+
+
+### 3. Random Forest (Ensemble Bagging)
+Menggabungkan ratusan pohon keputusan independen. Setiap pohon dilatih pada sampel acak berulang (*Bootstrap*) dan memilih subset acak fitur pada setiap pemisahan (*Feature Subspace Sampling*). Prediksi akhir ditentukan melalui pemungutan suara terbanyak (*majority voting*):
+
+$$
+\hat{y} = \text{mode}\left(T_1(x), T_2(x), \dots, T_B(x)\right)
+$$
+
+
+### 4. Gradient Boosting & XGBoost (Ensemble Boosting)
+Berbeda dengan Random Forest yang berjalan paralel, Gradient Boosting melatih pohon secara sekuensial. Setiap pohon baru dilatih untuk memprediksi **sisa galat (pseudo-residuals)** yang dibuat oleh pohon-pohon sebelumnya:
+
+$$
+F_m(x) = F_{m-1}(x) + \gamma_m h_m(x)
+$$
+
+
+---
+
+## 4. Implementasi Python: Skenario Pemodelan dengan Stratified K-Fold & Model Comparison
+
+```python
+"""
+Skenario Pemodelan Komparatif Anti-Leakage
+Disusun oleh: Mahendar Dwi Payana
+"""
+
+import numpy as np
+import pandas as pd
+from sklearn.datasets import make_classification
+from sklearn.model_selection import StratifiedKFold, cross_val_score
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+
+def run_model_comparison_scenario(X, y):
+    # Definisi 5-Fold Stratified CV
+    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    
+    models = {
+        "Logistic Regression": Pipeline([
+            ('scaler', StandardScaler()),
+            ('clf', LogisticRegression(max_iter=1000, random_state=42))
+        ]),
+        "Random Forest": Pipeline([
+            ('clf', RandomForestClassifier(n_estimators=100, max_depth=6, random_state=42))
+        ]),
+        "Gradient Boosting": Pipeline([
+            ('clf', GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, random_state=42))
+        ])
+    }
+    
+    results = []
+    print("=" * 60)
+    print("HASIL EVALUASI 5-FOLD STRATIFIED CROSS-VALIDATION")
+    print("=" * 60)
+    
+    for name, pipeline in models.items():
+        # Evaluasi berbasis metrik ROC-AUC
+        scores = cross_val_score(pipeline, X, y, cv=cv, scoring='roc_auc', n_jobs=-1)
+        mean_score = scores.mean()
+        std_score = scores.std()
+        
+        results.append({
+            "Algoritma": name,
+            "Rata-rata ROC-AUC": round(mean_score, 4),
+            "Deviasi Standar": round(std_score, 4)
+        })
+        print(f"{name:<22} : ROC-AUC = {mean_score:.4f} (± {std_score:.4f})")
+        
+    print("=" * 60)
+    return pd.DataFrame(results)
+
+if __name__ == "__main__":
+    # Buat dataset sintetis dengan ketimpangan kelas (80% vs 20%)
+    X, y = make_classification(
+        n_samples=2000, 
+        n_features=20, 
+        n_informative=10, 
+        weights=[0.8, 0.2], 
+        random_state=42
+    )
+    
+    df_comparison = run_model_comparison_scenario(X, y)
+```
+
+---
+
+## 5. Latihan Mandiri & Evaluasi
+
+1. Jelaskan perbedaan mendasar antara mekanisme perakitan model *Bagging* (Random Forest) dan *Boosting* (Gradient Boosting).
+2. Lakukan *Hyperparameter Tuning* pada Random Forest menggunakan `RandomizedSearchCV` untuk mencari parameter `max_depth`, `min_samples_split`, dan `n_estimators` paling optimal pada dataset proyek Anda.

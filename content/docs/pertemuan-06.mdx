@@ -1,0 +1,207 @@
+---
+title: "Pertemuan 06: Akuisisi Data & Telaah Statistik Deskriptif"
+description: "Penerapan Unit Kompetensi SKKNI: Mengumpulkan Data (J.62DMI00.004.1) dan Menelaah Data dengan Metode Statistik (J.62DMI00.005.1) dari berbagai sumber dan format data."
+---
+
+> **Penyusun Modul:** Mahendar Dwi Payana  
+> **Acuan Silabus:** DTS Kominfo - STEI ITB (Ir. Windy Gambetta, MBA) & SKKNI No. 299 Tahun 2020
+
+---
+
+## 1. Landasan Standar Kompetensi Kerja (SKKNI)
+
+Sesi ini mencakup implementasi dua Unit Kompetensi utama pada tahap pemahaman data:
+1. **J.62DMI00.004.1**: Mengumpulkan Data
+2. **J.62DMI00.005.1**: Menelaah Data (Fokus: Analisis Statistik Deskriptif)
+
+---
+
+## 2. Teknik Akuisisi & Pengumpulan Data (`J.62DMI00.004.1`)
+
+Data mentah di industri tersebar di berbagai silo dan format penyimpanan. Praktisi data science harus menguasai metode penarikan data dari 4 saluran primer:
+
+```
+Saluran Akuisisi Data
+├── Basis Data Relasional & SQL (PostgreSQL, MySQL, BigQuery)
+├── Antarmuka Pemrograman Aplikasi (REST API via JSON/XML)
+├── Penjelajahan Web Terprogram (Web Scraping / Crawling)
+└── Portal Data Terbuka Publik (Open Data Indonesia - data.go.id)
+```
+
+### A. Penarikan Data dari SQL Database menggunakan SQLAlchemy & Pandas
+```python
+import pandas as pd
+from sqlalchemy import create_engine
+
+# Konfigurasi koneksi database
+connection_uri = "postgresql://user:password@localhost:5432/perusahaan_db"
+engine = create_engine(connection_uri)
+
+# Eksekusi kueri SQL langsung menjadi DataFrame Pandas
+query = """
+    SELECT pelanggan_id, tanggal_transaksi, total_belanja, status_member
+    FROM transaksi
+    WHERE tanggal_transaksi >= '2023-01-01'
+"""
+df_transaksi = pd.read_sql(query, con=engine)
+```
+
+### B. Konsumsi REST API dengan Penanganan Paginasi (*Pagination*)
+```python
+import requests
+
+def fetch_open_data_indonesia(endpoint, max_pages=3):
+    all_records = []
+    base_url = f"https://data.go.id/api/v1/{endpoint}"
+    
+    for page in range(1, max_pages + 1):
+        params = {"page": page, "limit": 100}
+        response = requests.get(base_url, params=params, timeout=10)
+        
+        if response.status_code == 200:
+            data = response.json().get('data', [])
+            if not data:
+                break
+            all_records.extend(data)
+        else:
+            print(f"Peringatan: Gagal memuat halaman {page} (Status: {response.status_code})")
+            break
+            
+    return pd.DataFrame(all_records)
+```
+
+---
+
+## 3. Telaah Statistik Deskriptif (`J.62DMI00.005.1`)
+
+Menelaah data bertujuan memeriksa struktur, tipe variabel, persebaran, dan stabilitas nilai sebelum dilakukan manipulasi lebih lanjut.
+
+### A. Skala Pengukuran Variabel
+- **Kualitatif (Kategorikal)**:
+  - *Nominal*: Kategori tanpa urutan hierarkis (contoh: Golongan Darah, Kota Domisili, Jenis Kelamin).
+  - *Ordinal*: Kategori dengan tingkatan urutan tertentu (contoh: Tingkat Kepuasan: Rendah, Sedang, Tinggi; Jenjang Pendidikan: SD, SMP, SMA, S1).
+- **Kuantitatif (Numerik)**:
+  - *Diskret*: Hasil pencacahan bilangan bulat (contoh: Jumlah Pembelian Barang, Jumlah Anak).
+  - *Kontinu*: Hasil pengukuran bernilai desimal (contoh: Suhu, Pendapatan, Bobot Berat).
+
+---
+
+## 4. Formulasi Matematis Statistik Deskriptif
+
+### 1. Ukuran Pemusatan Data (Measures of Central Tendency)
+- **Mean (Rata-rata Hitung)**:
+  
+$$
+\mu = \frac{1}{N}\sum_{i=1}^{N} x_i
+$$
+
+- **Median**: Nilai tengah data setelah diurutkan secara teratur. Sangat resisten terhadap pengaruh pencilan (*outliers*).
+- **Modus**: Nilai data yang memiliki frekuensi kemunculan paling banyak.
+
+### 2. Ukuran Persebaran Data (Measures of Dispersion)
+- **Varians ($\sigma^2$) & Deviasi Standar ($\sigma$)**:
+  
+$$
+\sigma^2 = \frac{1}{N}\sum_{i=1}^{N} (x_i - \mu)^2 \quad \implies \quad \sigma = \sqrt{\sigma^2}
+$$
+
+- **Rentang Antar Kuartil (Interquartile Range - IQR)**:
+  
+$$
+\text{IQR} = Q_3 - Q_1
+$$
+
+  Mencakup 50% rentang data di area tengah, sangat berguna dalam mendeteksi batas nilai ekstrim.
+
+### 3. Ukuran Bentuk Distribusi (Shape of Distribution)
+- **Skewness (Kemiringan)**:
+  
+$$
+g_1 = \frac{\frac{1}{N}\sum_{i=1}^{N} (x_i - \mu)^3}{\sigma^3}
+$$
+
+  - $g_1 = 0$: Distribusi Simetris sempurna (Distribusi Normal).
+  - $g_1 > 0$: *Right-skewed / Positive skew* (Ekor memanjang ke arah kanan, $\text{Mean} > \text{Median}$).
+  - $g_1 < 0$: *Left-skewed / Negative skew* (Ekor memanjang ke arah kiri, $\text{Mean} < \text{Median}$).
+
+- **Kurtosis (Keruncingan / Ketebalan Ekor)**:
+  Mengukur derajat keruncingan dan ketebalan ekor data (*heavy-tailedness*) dibandingkan kurva lonceng normal:
+
+$$
+g_2 = \frac{\frac{1}{N}\sum_{i=1}^{N} (x_i - \mu)^4}{\sigma^4} - 3
+$$
+
+  - $g_2 = 0$: *Mesokurtik* (Distribusi Normal baku).
+  - $g_2 > 0$: *Leptokurtik* (Puncak tajam, peluang pencilan ekstrim tinggi).
+  - $g_2 < 0$: *Platikurtik* (Puncak tumpul mendatar, dispersi merata).
+
+---
+
+## 5. Implementasi Python: Modul Profiling Statistik Mandiri
+
+```python
+"""
+Pemeriksaan Statistik Deskriptif Komprehensif
+Disusun oleh: Mahendar Dwi Payana
+"""
+
+import numpy as np
+import pandas as pd
+from scipy import stats
+
+def generate_statistical_profile(df):
+    numeric_cols = df.select_dtypes(include=[np.number]).columns
+    report = []
+    
+    for col in numeric_cols:
+        series = df[col].dropna()
+        n_count = len(series)
+        n_missing = df[col].isnull().sum()
+        
+        mean_val = series.mean()
+        std_val = series.std()
+        median_val = series.median()
+        q1 = series.quantile(0.25)
+        q3 = series.quantile(0.75)
+        iqr_val = q3 - q1
+        skew_val = stats.skew(series)
+        kurt_val = stats.kurtosis(series)
+        
+        # Deteksi pencilan via IQR rule
+        outliers_count = ((series < (q1 - 1.5 * iqr_val)) | (series > (q3 + 1.5 * iqr_val))).sum()
+        
+        report.append({
+            "Fitur": col,
+            "Total Valid": n_count,
+            "Missing": n_missing,
+            "Mean": round(mean_val, 2),
+            "Std": round(std_val, 2),
+            "Median": round(median_val, 2),
+            "IQR": round(iqr_val, 2),
+            "Skewness": round(skew_val, 2),
+            "Kurtosis": round(kurt_val, 2),
+            "Outlier (IQR)": outliers_count
+        })
+        
+    return pd.DataFrame(report)
+
+# Demonstrasi
+if __name__ == "__main__":
+    np.random.seed(42)
+    sample_df = pd.DataFrame({
+        "Usia": np.random.randint(20, 60, size=200),
+        "Pendapatan": np.random.exponential(scale=5000000, size=200) + 3000000,
+        "Skor_Kredit": np.random.normal(loc=700, scale=50, size=200)
+    })
+    
+    profil = generate_statistical_profile(sample_df)
+    print(profil.to_string(index=False))
+```
+
+---
+
+## 6. Latihan Mandiri & Evaluasi
+
+1. Ambil salah satu dataset publik tabular dari [data.go.id](https://data.go.id/) dalam format CSV.
+2. Jalankan fungsi profiling statistik di atas untuk menelaah variabel numerik.
+3. Identifikasi kolom mana yang memiliki kemiringan (*skewness*) ekstrem (`|g_1| > 1`) dan jelaskan implikasinya jika digunakan langsung pada model linear.

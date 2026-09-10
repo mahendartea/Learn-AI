@@ -1,0 +1,11 @@
+import { defineConfig } from 'fumadocs-mdx/config';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import { remarkMdxMermaid } from 'fumadocs-core/mdx-plugins';
+
+export default defineConfig({
+  mdxOptions: {
+    remarkPlugins: [remarkMath, remarkMdxMermaid],
+    rehypePlugins: (v) => [rehypeKatex, ...v],
+  },
+});

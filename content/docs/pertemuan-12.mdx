@@ -1,0 +1,152 @@
+---
+title: "Pertemuan 12: Pemodelan Regresi Numerik & Analisis Asumsi Residual"
+description: "Penerapan Unit Kompetensi SKKNI: Membangun Model Regresi (J.62DMI00.013.1) - Ordinary Least Squares (OLS), Uji Asumsi Gauss-Markov, Regularisasi Ridge/Lasso/ElasticNet, dan Ensemble Regressors."
+---
+
+> **Penyusun Modul:** Mahendar Dwi Payana  
+> **Acuan Silabus:** DTS Kominfo - STEI ITB (Ir. Windy Gambetta, MBA) & SKKNI No. 299 Tahun 2020
+
+---
+
+## 1. Landasan Teori Pemodelan Regresi
+
+Regresi digunakan untuk memprediksi luaran bertipe kontinu (*continuous numerical target*) seperti harga komoditas, estimasi suhu, volume permintaan barang, atau proyeksi nilai seumur hidup pelanggan (*Customer Lifetime Value*).
+
+Secara umum, model **Regresi Linier Berganda (*Multiple Linear Regression*)** dinyatakan sebagai:
+
+$$
+y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_p x_{ip} + \epsilon_i
+$$
+
+> **Penjelasan Komponen Persamaan:**
+> - $y_i$: Variabel target kontinu (*dependent variable*) untuk sampel observasi ke-$i$.
+> - $\beta_0$: Titik potong (*intercept*), yaitu nilai ekspektasi $y$ ketika seluruh variabel prediktor bernilai $0$.
+> - $\beta_1, \beta_2, \dots, \beta_p$: Koefisien regresi parsial (*partial slopes*), merepresentasikan besaran perubahan rata-rata nilai $y$ untuk setiap kenaikan $1$ satuan fitur $x_j$, dengan asumsi fitur lainnya bernilai tetap (*ceteris paribus*).
+> - $x_{i1}, x_{i2}, \dots, x_{ip}$: Nilai fitur prediktor (*independent variables*) ke-$1$ hingga ke-$p$ pada observasi ke-$i$.
+> - $\epsilon_i$: Suku galat acak (*residual error*), diasumsikan berdistribusi normal independen: $\epsilon_i \sim \mathcal{N}(0, \sigma^2)$.
+
+Dalam notasi matriks:
+
+$$
+\mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}
+$$
+
+Solusi analitik persamaan normal (*Ordinary Least Squares - OLS*):
+
+$$
+\hat{\boldsymbol{\beta}} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}
+$$
+
+---
+
+## 2. Asumsi Klasik Gauss-Markov (Kelayakan Model Linier)
+
+Agar estimator OLS menjadi estimator linier tak berbias terbaik (**BLUE - Best Linear Unbiased Estimator**), model wajib memenuhi 5 asumsi klasik:
+
+1. **Linearitas Hubungan**: Hubungan antara fitur prediktor dan variabel target harus bersifat linier.
+2. **Bebas Multikolinearitas (No Multicollinearity)**: Antar fitur prediktor tidak boleh memiliki korelasi linier sempurna. Diuji melalui **Variance Inflation Factor (VIF)**:
+   
+$$
+\text{VIF}_j = \frac{1}{1 - R_j^2}
+$$
+
+   *(Jika $\text{VIF} > 5 \text{ atau } 10$, terjadi multikolinearitas parah).*
+3. **Homoskedastisitas (Homoscedasticity)**: Varians galat residual harus konstan di seluruh rentang nilai prediksi:
+   
+$$
+\text{Var}(\epsilon_i \mid \mathbf{X}) = \sigma^2
+$$
+
+   *(Jika pola sebaran residual membentuk corong/kipas, terjadi Heteroskedastisitas).*
+4. **Independensi Galat (No Autocorrelation)**: Sisaan galat tidak boleh saling berkorelasi ($\text{Cov}(\epsilon_i, \epsilon_j) = 0$). Diuji melalui uji **Durbin-Watson** ($1.5 \le d \le 2.5$).
+5. **Normalitas Residual**: Distribusi residual mendekati kurva normal Gaussian (diperiksa melalui *Q-Q Plot*).
+
+---
+
+## 3. Regularisasi Regresi: Mengatasi Overfitting & Multikolinearitas
+
+Ketika jumlah fitur $p$ sangat banyak atau saling berkorelasi tinggi, matriks $\mathbf{X}^T \mathbf{X}$ mendekati singular (tidak stabil). Regularisasi menambahkan faktor penalti pada fungsi kerugian (*Loss Function*):
+
+### 1. Ridge Regression (Penalti $L_2$)
+
+$$
+J(\beta) = \text{MSE} + \alpha \sum_{j=1}^{p} \beta_j^2
+$$
+
+- *Karakter*: Menciutkan (*shrinking*) nilai koefisien mendekati nol, sangat ampuh mereduksi varians pada masalah multikolinearitas tinggi.
+
+### 2. Lasso Regression (Penalti $L_1$)
+
+$$
+J(\beta) = \text{MSE} + \alpha \sum_{j=1}^{p} |\beta_j|
+$$
+
+- *Karakter*: Mampu memaksa koefisien fitur yang kurang penting menjadi **tepat bernilai nol**. Berfungsi sebagai penyeleksi fitur otomatis (*automatic feature selector*).
+
+### 3. ElasticNet
+Mengombinasikan penalti $L_1$ dan $L_2$ secara seimbang:
+
+$$
+J(\beta) = \text{MSE} + \alpha \left[ \rho \sum_{j=1}^{p} |\beta_j| + \frac{1 - \rho}{2} \sum_{j=1}^{p} \beta_j^2 \right]
+$$
+
+
+---
+
+## 4. Implementasi Python: Perbandingan OLS, Ridge, Lasso, dan Random Forest Regressor
+
+```python
+"""
+Pemodelan Regresi Numerik Komparatif & Diagnostik Residual
+Disusun oleh: Mahendar Dwi Payana
+"""
+
+import numpy as np
+import pandas as pd
+from sklearn.datasets import make_regression
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+
+def compare_regression_models(X_train, X_test, y_train, y_test):
+    models = {
+        "OLS Linear Regression": LinearRegression(),
+        "Ridge Regression (L2)": Ridge(alpha=10.0),
+        "Lasso Regression (L1)": Lasso(alpha=0.5),
+        "Random Forest Regressor": RandomForestRegressor(n_estimators=100, max_depth=5, random_state=42)
+    }
+    
+    records = []
+    print("=" * 65)
+    print("EVALUASI MODEL REGRESI PADA DATA TESTING")
+    print("=" * 65)
+    
+    for name, reg in models.items():
+        reg.fit(X_train, y_train)
+        y_pred = reg.predict(X_test)
+        
+        rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+        r2 = r2_score(y_test, y_pred)
+        
+        records.append({"Model": name, "RMSE": round(rmse, 3), "R2 Score": round(r2, 4)})
+        print(f"{name:<25} : RMSE = {rmse:<8.3f} | R² Score = {r2:.4f}")
+        
+    print("=" * 65)
+    return pd.DataFrame(records)
+
+if __name__ == "__main__":
+    np.random.seed(42)
+    # Buat dataset regresi dengan fitur redundan
+    X, y = make_regression(n_samples=1000, n_features=25, n_informative=8, noise=15.0, random_state=42)
+    X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)
+    
+    df_eval = compare_regression_models(X_tr, X_te, y_tr, y_te)
+```
+
+---
+
+## 5. Latihan Mandiri & Evaluasi
+
+1. Plot scatter antara nilai prediksi ($\hat{y}$) dan sisaan galat ($e_i = y_i - \hat{y}$) dari model regresi linier Anda.
+2. Analisis bentuk grafik residual tersebut: apakah memenuhi asumsi homoskedastisitas atau terdapat pola non-linier yang membutuhkan penambahan fitur polinomial?

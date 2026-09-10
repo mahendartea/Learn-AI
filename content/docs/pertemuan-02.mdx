@@ -1,0 +1,175 @@
+---
+title: "Pertemuan 02: Konsep Dasar AI, Intelligent Agents & Ekosistem Modern"
+description: "Kajian mendalam fondasi Kecerdasan Buatan (AI), arsitektur Intelligent Agent (PEAS), taksonomi AI (ANI, AGI, ASI), pergeseran paradigma dari Rule-based ke Machine Learning & Generative AI, serta arah Strategi Nasional AI Indonesia."
+---
+
+> **Penyusun Modul:** Mahendar Dwi Payana  
+> **Acuan Silabus:** DTS Kominfo - STEI ITB (Ir. Windy Gambetta, MBA) & SKKNI No. 299 Tahun 2020
+
+---
+
+## 1. Definisi & Paradigma Kecerdasan Buatan (AI)
+
+Kecerdasan Buatan (*Artificial Intelligence*) merujuk pada cabang ilmu komputer yang bertujuan menciptakan sistem perangkat lunak atau mesin yang mampu melakukan tugas-tugas yang biasanya membutuhkan kecerdasan manusia.
+
+Menurut buku babon Stuart Russell & Peter Norvig (*"Artificial Intelligence: A Modern Approach"*), AI didefinisikan ke dalam kuadran dimensi:
+
+| Dimensi | Berpikir (*Thinking*) | Bertindak (*Acting*) |
+| :--- | :--- | :--- |
+| **Sesuai Manusia (*Human-like*)** | Sistem yang berpikir seperti manusia (*Cognitive Science*) | Sistem yang bertindak seperti manusia (*Turing Test approach*) |
+| **Rasional (*Rational*)** | Sistem yang berpikir rasional (*Laws of Thought / Logika*) | **Sistem yang bertindak rasional (*Rational Agent approach*)** |
+
+Pendekatan modern berfokus pada **Rational Agent**, yaitu agen komputasi yang bertindak sedemikian rupa untuk memaksimalkan utilitas yang diharapkan berdasarkan persepsi dan pengetahuannya.
+
+---
+
+## 2. Arsitektur Agen Cerdas (Intelligent Agent) & Kerangka Kerja PEAS
+
+Suatu agen berinteraksi dengan lingkungannya melalui dua gerbang utama:
+- **Sensor**: Menerima rangsangan/persepsi (*percept*) dari lingkungan (*environment*).
+- **Aktuator**: Melakukan tindakan (*action*) yang mengubah kondisi lingkungan.
+
+```
+                  ┌───────────────────────────────┐
+                  │          LINGKUNGAN           │
+                  │         (Environment)         │
+                  └───────┬───────────────▲───────┘
+                          │ Percept       │ Action
+                          ▼               │
+                  ┌───────────────────────┴───────┐
+                  │          AGEN CERDAS          │
+                  │   ┌───────────────────────┐   │
+                  │   │   Fungsi Keputusan    │   │
+                  │   │   f: P* -> A          │   │
+                  │   └───────────────────────┘   │
+                  └───────────────────────────────┘
+```
+
+Secara matematis, perilaku agen dimodelkan sebagai fungsi agen `f`:
+
+```
+f: P^* \to A
+```
+
+
+Di mana `P^*` adalah riwayat persepsi (*percept history*) dan `A` adalah ruang aksi (*action space*).
+
+### Spesifikasi PEAS
+Untuk mendesain agen cerdas yang andal, praktisi menggunakan metodologi **PEAS**:
+1. **P - Performance Measure**: Ukuran performa/keberhasilan agen (misal: akurasi prediksi, efisiensi waktu, keuntungan investasi).
+2. **E - Environment**: Lingkungan tempat agen beroperasi (statis vs dinamis, diskret vs kontinu, teramati penuh vs sebagian).
+3. **A - Actuators**: Komponen mekanis atau perangkat lunak yang mengeksekusi aksi (tampilan layar, API endpoint, motorik fisik).
+4. **S - Sensors**: Saluran masukan informasi (kamera, mikrofon, streaming log, form input pengguna).
+
+---
+
+## 3. Taksonomi & Tingkatan Kecerdasan Buatan
+
+1. **Artificial Narrow Intelligence (ANI / Weak AI)**:
+   - AI yang terspesialisasi tinggi untuk satu tugas spesifik.
+   - Contoh: Pendeteksi kanker paru dari citra CT-Scan, mesin catur Stockfish, sistem rekomendasi e-commerce, asisten suara Siri.
+   - *Seluruh AI yang beroperasi di industri saat ini berada pada tahap ini.*
+2. **Artificial General Intelligence (AGI / Strong AI)**:
+   - Mesin hipotesis yang memiliki kemampuan kognitif setara manusia di berbagai disiplin ilmu, mampu bernalar, beradaptasi, dan belajar tanpa pelatihan awal.
+3. **Artificial Superintelligence (ASI)**:
+   - Mesin yang melampaui kemampuan intelektual manusia paling genius dalam kreativitas, penyelesaian masalah ilmiah, dan kebijaksanaan sosial.
+
+---
+
+## 4. Evolusi Paradigma: Dari Sistem Berbasis Aturan ke Machine Learning & GenAI
+
+```
+1. Pemrograman Klasik (Rule-based):
+   Aturan (Rules) + Data  ──>  [ Komputer ]  ──>  Jawaban (Answers)
+
+2. Machine Learning (Data-driven):
+   Data + Jawaban (Labels) ──>  [ Komputer ]  ──>  Model Pengetahuan (Rules)
+
+3. Generative AI & Foundation Models:
+   Miliaran Parameter + Data Skala Internet ──>  Model Fondasi  ──>  Aplikasi Multi-modal
+```
+
+### Cabang-cabang Utama Ekosistem AI Modern:
+- **Machine Learning**: Pembelajaran terawasi (*supervised*), tak terawasi (*unsupervised*), dan penguatan (*reinforcement learning*).
+- **Deep Learning**: Jaringan saraf tiruan multi-lapis untuk representasi data kompleks hierarkis.
+- **Natural Language Processing (NLP)**: Pemrosesan bahasa manusia, mesin penerjemah, sentimen analisis, hingga *Large Language Models* (LLM).
+- **Computer Vision**: Deteksi objek, segmentasi citra, pengenalan wajah (*face recognition*).
+- **Robotics & Autonomous Systems**: Navigasi kendali mandiri mobil otonom dan robot industri.
+
+---
+
+## 5. Implementasi Python: Simulasi Refleks Agen Cerdas Sederhana
+
+Berikut adalah kode demonstrasi agen pengatur suhu ruangan cerdas (*Reflex Agent with State*):
+
+```python
+"""
+Simulasi Agen Cerdas Refleks Berbasis Aturan dan Persepsi
+Disusun oleh: Mahendar Dwi Payana
+"""
+
+class SmartThermostatAgent:
+    def __init__(self, target_temp=24.0, hysteresis=1.0):
+        self.target_temp = target_temp
+        self.hysteresis = hysteresis
+        self.state = "OFF"
+        
+    def perceive_and_act(self, current_temp):
+        """
+        Fungsi agen f: Percept -> Action
+        """
+        action = "IDLE"
+        
+        if current_temp > self.target_temp + self.hysteresis:
+            self.state = "COOLING"
+            action = "Menyalakan Pendingin Ruangan (AC ON)"
+        elif current_temp < self.target_temp - self.hysteresis:
+            self.state = "HEATING"
+            action = "Menyalakan Pemanas Ruangan (HEATER ON)"
+        elif abs(current_temp - self.target_temp) <= 0.5:
+            self.state = "STANDBY"
+            action = "Suhu Nyaman Tercapai (KOMPRESOR OFF)"
+            
+        return {
+            "sensor_suhu": current_temp,
+            "status_agen": self.state,
+            "aksi_aktuator": action
+        }
+
+# Demonstrasi eksekusi agen
+if __name__ == "__main__":
+    agent = SmartThermostatAgent(target_temp=24.0)
+    readings = [28.5, 26.0, 24.2, 23.9, 21.0]
+    
+    print(f"{'Pembacaan (°C)':<18} | {'Status Agen':<12} | {'Aksi yang Dikeluarkan'}")
+    print("-" * 65)
+    for temp in readings:
+        result = agent.perceive_and_act(temp)
+        print(f"{result['sensor_suhu']:<18} | {result['status_agen']:<12} | {result['aksi_aktuator']}")
+```
+
+---
+
+## 6. Arahan Strategis Nasional AI di Indonesia
+
+Pemerintah Republik Indonesia melalui BPPT (sekarang BRIN) dan Kemenkominfo telah merilis **Strategi Nasional Kecerdasan Artifisial (Stranas KA) 2020-2045** yang memfokuskan implementasi AI pada 5 bidang prioritas nasional:
+1. **Layanan Kesehatan**: Deteksi dini penyakit, skrining massal, efisiensi manajemen rumah sakit.
+2. **Reformasi Birokrasi**: Otomasi layanan publik, pencegahan fraud, pengambilan keputusan berbasis data.
+3. **Pendidikan & Riset**: Personalisasi kurikulum digital, akselerasi riset sains.
+4. **Ketahanan Pangan**: Pertanian presisi (*precision farming*), prediksi hasil panen berbasis citra satelit.
+5. **Mobilitas & Kota Cerdas (Smart Cities)**: Manajemen lalu lintas cerdas dan tata kota berkelanjutan.
+
+Pelatihan ini diselenggarakan untuk menyiapkan dosen dan instruktur sebagai pilar utama akselerasi talenta digital di seluruh pelosok tanah air.
+
+---
+
+## 7. Tanya Jawab Kunci (*Interactive FAQ*)
+
+<Accordions>
+  <Accordion title="Mengapa industri modern beralih dari Symbolic AI (Rule-based) ke Machine Learning?">
+    Sistem berbasis aturan (*Symbolic AI*) membutuhkan pakar manusia untuk mendefinisikan aturan logika *if-else* secara eksplisit. Pendekatan ini gagal pada masalah persepsi kompleks seperti pengenalan wajah atau analisis sentimen bahasa alami, karena jumlah variasinya tak terhingga. Machine Learning membalik paradigma ini dengan membiarkan algoritma menginduksi pola keputusan langsung dari data masukan.
+  </Accordion>
+  <Accordion title="Apa perbedaan paling mendasar antara Artificial Narrow Intelligence (ANI) dan Artificial General Intelligence (AGI)?">
+    ANI (Narrow AI) bekerja sangat superior namun hanya pada satu domain tugas tertutup (seperti model pendeteksi kanker atau AlphaGo), tetapi sama sekali tidak dapat mentransfer kemampuannya ke ranah lain. Sedangkan AGI memiliki fleksibilitas kognitif, daya nalar, dan transfer belajar setara manusia di berbagai bidang tanpa memerlukan pelatihan ulang dari nol.
+  </Accordion>
+</Accordions>
