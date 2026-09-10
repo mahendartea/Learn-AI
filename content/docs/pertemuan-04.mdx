@@ -271,32 +271,71 @@ Scikit-Learn (`sklearn`) mengintegrasikan algoritma pembelajaran mesin komprehen
 * **Reduksi Dimensi**: *Principal Component Analysis (PCA), t-SNE*.
 * **Seleksi Model & Evaluasi**: *Train-Test Split, K-Fold Cross-Validation, GridSearchCV, Confusion Matrix, ROC-AUC, Classification Report*.
 
----
-
 ## 5. Praktikum Terpadu & Studi Kasus Python
 
-Berikut adalah demonstrasi praktikum terpadu menggunakan modul dan dataset yang disediakan dalam pelatihan:
+<Callout type="info" title="Unduh Berkas Praktikum Jupyter Notebook Resmi">
+Seluruh kode instruksi praktikum pada sesi ini tersedia dalam bentuk berkas Jupyter Notebook resmi pelatihan yang siap diunduh dan dijalankan di lingkungan lokal (Jupyter Lab / VS Code) maupun Google Colaboratory:
+- **Jupyter Notebook Modul 4:** [`Get Started with Python - Modul 4.ipynb`](https://github.com/mahendartea/Learn-AI/blob/main/Get%20Started%20with%20Python%20-%20Modul%204.ipynb)
+- **Dataset 1:** [`Tab.csv`](https://mahendartea.github.io/Learn-AI/data/Tab.csv) *(Data Demografi & Luas Wilayah Negara)*
+- **Dataset 2:** [`pmp_2020_baru.csv`](https://mahendartea.github.io/Learn-AI/data/pmp_2020_baru.csv) *(Data Rapor Penjaminan Mutu Pendidikan)*
+</Callout>
 
-### Hands-on 1: Operasi Larik NumPy & Komputasi Vektor
+### Hands-on 1: Komputasi Vektor NumPy vs Keterbatasan List Python
+
+Merujuk langsung pada sel kode `Get Started with Python - Modul 4.ipynb`, berikut adalah perbandingan antara list standar Python dan larik NumPy:
 
 ```python
+# ==========================================
+# 1. KETERBATASAN LIST PYTHON BIASA
+# ==========================================
+height = [1.84, 1.79, 1.82, 1.90, 1.80]
+weight = [66.5, 60.3, 64.7, 89.5, 69.8]
+
+# Data heterogen dalam list dapat digabungkan:
+famz = ["Abe", 1.84, "Beb", 1.79, "Cory", 1.82, "Dad", 1.90]
+print("Koleksi list heterogen:", famz)
+
+try:
+    # Menghitung BMI langsung pada list Python:
+    bmi = weight / height ** 2
+except TypeError as e:
+    print(f"\n[Gagal di List Python] TypeError: {e}")
+    # Output: unsupported operand type(s) for ** or pow(): 'list' and 'int'
+
+# ==========================================
+# 2. SOLUSI VEKTORISASI DENGAN NUMPY ARRAY
+# ==========================================
 import numpy as np
 
-# 1. Deklarasi array 1 dimensi dan operasi skalar
-a = np.array([1, 2, 3])
-print("Array a        :", a)
-print("Array a * 3    :", a * 3)
-print("Jumlah total a :", np.sum(a))
+np_height = np.array(height)
+np_weight = np.array(weight)
 
-# 2. Deklarasi array 2 dimensi (Matriks M_2x5)
+print("\nTipe objek np_height :", type(np_height)) # <class 'numpy.ndarray'>
+print("Tipe objek np_weight :", type(np_weight)) # <class 'numpy.ndarray'>
+
+# Perhitungan element-wise instan tanpa loop:
+bmi = np_weight / (np_height ** 2)
+print("Hasil Vektorisasi BMI:", bmi.round(2))
+# Output: [19.64, 18.82, 19.53, 24.79, 21.54]
+
+# ==========================================
+# 3. LARIK 2 DIMENSI (MATRIKS) & DIMENSI
+# ==========================================
 np_2d = np.array([
     [1, 2, 3, 4, 5],
     [6, 7, 8, 9, 10]
 ])
 
 print("\nMatriks 2D:\n", np_2d)
-print("Dimensi Matriks (Shape):", np_2d.shape) # (2 baris, 5 kolom)
-print("Elemen baris ke-1, kolom ke-3:", np_2d[0, 2])
+print("Dimensi Matriks (Shape):", np_2d.shape) # (2, 5) -> 2 baris, 5 kolom
+print("Elemen baris ke-1, kolom ke-3 (index 0, 2):", np_2d[0, 2])
+print("Seluruh elemen baris ke-2 (index 1):", np_2d[1, :])
+
+# Konsep Series (1D) dan DataFrame (2D) yang menjadi pondasi Pandas:
+arr_series = np.array([1, 2, 3, 4, 5])       # 1D Array -> Mirip Series
+arr_df = np.array([[1, 2], [3, 4]])          # 2D Array -> Mirip DataFrame
+print("\nBentuk dasar Series 1D:", arr_series.shape)
+print("Bentuk dasar DataFrame 2D:", arr_df.shape)
 ```
 
 ---
@@ -367,24 +406,30 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 
-# Visualisasi Tren Harga Komparatif (Demonstrasi Modul Hal. 4)
+# Visualisasi Tren Harga Komparatif (Notebook Modul 4 Sel 46-50)
 year = [1980, 1990, 2000, 2010, 2020]
 price = [2.5, 7.6, 9.7, 15.8, 22.9]
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(14, 4))
 
-# Line Plot
-ax1.plot(year, price, marker='s', color='teal', linewidth=2)
-ax1.set_title("Pertumbuhan Harga (Line Plot)")
+# 1. Line Plot (plt.plot)
+ax1.plot(year, price, marker='s', color='#0284c7', linewidth=2)
+ax1.set_title("1. Line Plot (plt.plot)")
 ax1.set_xlabel("Tahun")
 ax1.set_ylabel("Harga ($)")
 ax1.grid(True, linestyle=':', alpha=0.7)
 
-# Bar Plot
-ax2.bar(year, price, width=2.5, color='coral', edgecolor='black', alpha=0.85)
-ax2.set_title("Distribusi Harga (Bar Plot)")
+# 2. Scatter Plot (plt.scatter)
+ax2.scatter(year, price, color='#dc2626', s=70, edgecolor='black')
+ax2.set_title("2. Scatter Plot (plt.scatter)")
 ax2.set_xlabel("Tahun")
-ax2.grid(axis='y', linestyle=':', alpha=0.7)
+ax2.grid(True, linestyle=':', alpha=0.7)
+
+# 3. Bar Plot (plt.bar)
+ax3.bar(year, price, width=3.0, color='#16a34a', edgecolor='black', alpha=0.85)
+ax3.set_title("3. Bar Plot (plt.bar)")
+ax3.set_xlabel("Tahun")
+ax3.grid(axis='y', linestyle=':', alpha=0.7)
 
 plt.tight_layout()
 plt.show()
