@@ -59,10 +59,10 @@ const modules = [
   {
     week: 'Minggu 4',
     title: 'Visualisasi & Pembersihan Data',
-    desc: 'Visualisasi variabel vs statistik, uji ANOVA satu arah harga mobil, 5 studi kasus notebook statistik, dan penanganan integritas data.',
+    desc: 'Visualisasi variabel vs statistik, uji ANOVA satu arah mobil, 5 studi kasus notebook statistik, sampling ilmiah, penanganan imbalanced SMOTE, dan pembersihan data riil.',
     meetings: [
       { num: '07', title: 'Exploratory Data Analysis & Visualisasi Statistik', href: '/docs/pertemuan-07' },
-      { num: '08', title: 'Data Cleansing & Validasi Integritas', href: '/docs/pertemuan-08' },
+      { num: '08', title: 'Data Preparation: Penentuan Objek, Pembersihan & Validasi', href: '/docs/pertemuan-08' },
     ],
     color: 'from-amber-500/20 to-orange-500/20',
     border: 'hover:border-amber-500/50',
