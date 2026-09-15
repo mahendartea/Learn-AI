@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   BookOpen, 
   Terminal, 
@@ -128,6 +129,17 @@ export default function HomePage() {
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 mb-6">
             <User className="w-3.5 h-3.5" />
             <span>Portal Pembelajaran oleh <strong>{siteConfig.author}</strong></span>
+          </div>
+
+          <div className="flex justify-center mb-8">
+            <Image
+              src="/logo.svg"
+              alt="Learn AI"
+              width={88}
+              height={88}
+              className="w-20 h-20 md:w-[88px] md:h-[88px] rounded-2xl shadow-lg ring-1 ring-primary/20"
+              priority
+            />
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-foreground mb-6">

@@ -1,15 +1,20 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 import { gitConfig, siteConfig } from './shared';
-import { BrainCircuit, Sparkles } from 'lucide-react';
+import Image from 'next/image';
 
 export function baseOptions(): BaseLayoutProps {
   return {
     nav: {
       title: (
         <div className="flex items-center gap-2 font-bold text-sm sm:text-base tracking-tight">
-          <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center border border-primary/20 shadow-sm">
-            <BrainCircuit className="w-4 h-4" />
-          </div>
+          <Image
+            src="/logo.svg"
+            alt="Learn AI"
+            width={32}
+            height={32}
+            className="w-8 h-8 rounded-lg shadow-sm"
+            priority
+          />
           <div className="flex flex-col text-left">
             <span className="leading-none text-foreground font-extrabold flex items-center gap-1.5">
               Learn AI
