@@ -18,7 +18,7 @@ import {
   BrainCircuit,
   Binary
 } from 'lucide-react';
-import { siteConfig } from '@/lib/shared';
+import { siteConfig, logoSrc } from '@/lib/shared';
 
 const modules = [
   {
@@ -133,7 +133,7 @@ export default function HomePage() {
 
           <div className="flex justify-center mb-8">
             <Image
-              src="/logo.svg"
+              src={logoSrc}
               alt="Learn AI"
               width={88}
               height={88}

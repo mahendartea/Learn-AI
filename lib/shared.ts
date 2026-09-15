@@ -3,6 +3,12 @@ export const docsRoute = '/docs';
 export const docsImageRoute = '/og/docs';
 export const docsContentRoute = '/llms.mdx/docs';
 
+// Base path must be prefixed manually for <img>/metadata assets because
+// `output: export` + `images.unoptimized` bypasses basePath injection.
+export const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+export const logoSrc = `${basePath}/logo.svg`;
+export const appleTouchIcon = `${basePath}/apple-touch-icon.png`;
+
 // Base URL for SEO canonical, sitemap, and metadataBase
 export const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
   ? new URL(process.env.NEXT_PUBLIC_SITE_URL)

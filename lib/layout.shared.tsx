@@ -1,5 +1,5 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
-import { gitConfig, siteConfig } from './shared';
+import { gitConfig, logoSrc, siteConfig } from './shared';
 import Image from 'next/image';
 
 export function baseOptions(): BaseLayoutProps {
@@ -8,7 +8,7 @@ export function baseOptions(): BaseLayoutProps {
       title: (
         <div className="flex items-center gap-2 font-bold text-sm sm:text-base tracking-tight">
           <Image
-            src="/logo.svg"
+            src={logoSrc}
             alt="Learn AI"
             width={32}
             height={32}

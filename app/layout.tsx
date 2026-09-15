@@ -1,7 +1,7 @@
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import './global.css';
 import type { Metadata } from 'next';
-import { baseUrl, siteConfig } from '@/lib/shared';
+import { appleTouchIcon, baseUrl, logoSrc, siteConfig } from '@/lib/shared';
 
 export const metadata: Metadata = {
   metadataBase: baseUrl,
@@ -29,9 +29,12 @@ export const metadata: Metadata = {
     description: siteConfig.description,
   },
   icons: {
-    icon: [{ url: '/logo.svg', type: 'image/svg+xml' }],
-    shortcut: '/logo.svg',
-    apple: '/logo.svg',
+    icon: [
+      { url: logoSrc, type: 'image/svg+xml' },
+      { url: appleTouchIcon, type: 'image/png' },
+    ],
+    shortcut: logoSrc,
+    apple: appleTouchIcon,
   },
   twitter: {
     card: 'summary_large_image',
