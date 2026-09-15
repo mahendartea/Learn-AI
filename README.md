@@ -35,7 +35,7 @@ Materi riset dan kurikulum dasar pada portal ini disusun dan dikembangkan oleh *
 | **07** | [Pertemuan 07](https://mahendartea.github.io/Learn-AI/docs/pertemuan-07) | Exploratory Data Analysis & Visualisasi Lanjutan (`J.62DMI00.005.1`) |
 | **08** | [Pertemuan 08](https://mahendartea.github.io/Learn-AI/docs/pertemuan-08) | Data Cleansing & Deteksi Outlier (`J.62DMI00.006.1` - `008.1`) |
 | **09** | [Pertemuan 09](https://mahendartea.github.io/Learn-AI/docs/pertemuan-09) | Konstruksi & Transformasi Data Numerik (`J.62DMI00.009.1`) |
-| **10** | [Pertemuan 10](https://mahendartea.github.io/Learn-AI/docs/pertemuan-10) | Feature Engineering & Penanganan Ketimpangan SMOTE (`J.62DMI00.009.1` - `010.1`) |
+| **10** | [Pertemuan 10](https://mahendartea.github.io/Learn-AI/docs/pertemuan-10) | Feature Engineering, Encoding & Integrasi Data (`J.62DMI00.009.1` - `011.1`) |
 | **11** | [Pertemuan 11](https://mahendartea.github.io/Learn-AI/docs/pertemuan-11) | Skenario Pemodelan & Klasifikasi Terawasi (`J.62DMI00.012.1` - `013.1`) |
 | **12** | [Pertemuan 12](https://mahendartea.github.io/Learn-AI/docs/pertemuan-12) | Pemodelan Regresi & Asumsi Klasik OLS (`J.62DMI00.013.1`) |
 | **13** | [Pertemuan 13](https://mahendartea.github.io/Learn-AI/docs/pertemuan-13) | Pembelajaran Tak Terawasi: K-Means & DBSCAN (`J.62DMI00.013.1`) |
