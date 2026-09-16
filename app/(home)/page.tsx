@@ -96,7 +96,7 @@ const modules = [
   {
     week: 'Minggu 7',
     title: 'Segmentasi & Jaringan Saraf Tiruan',
-    desc: 'Unsupervised clustering (K-Means++, DBSCAN, Silhouette) dan arsitektur Deep Learning (Perceptron, Multilayer Perceptron, Backprop).',
+    desc: 'Unsupervised clustering (K-Means++, DBSCAN, Silhouette) dan arsitektur Deep Learning (Perceptron, MLP, CNN, RNN, Backprop).',
     meetings: [
       { num: '13', title: 'Klastering Tak Terawasi (K-Means/DBSCAN)', href: '/docs/pertemuan-13' },
       { num: '14', title: 'Deep Learning & Artificial Neural Networks', href: '/docs/pertemuan-14' },
@@ -108,7 +108,7 @@ const modules = [
   {
     week: 'Minggu 8',
     title: 'Evaluasi Model & MLOps Deployment',
-    desc: 'Metrik evaluasi lengkap (ROC-AUC, PR-Curve, SHAP), serialisasi model, perancangan REST API FastAPI, dan deployment web di cloud.',
+    desc: 'Metrik evaluasi lengkap (ROC-AUC, PR-Curve, SHAP), serialisasi model, deployment web Flask/Heroku & FastAPI, serta pemantauan model drift.',
     meetings: [
       { num: '15', title: 'Evaluasi Diagnostik & Interpretasi Model', href: '/docs/pertemuan-15' },
       { num: '16', title: 'Model Deployment Web di Cloud & MLOps', href: '/docs/pertemuan-16' },

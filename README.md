@@ -37,11 +37,11 @@ Materi riset dan kurikulum dasar pada portal ini disusun dan dikembangkan oleh *
 | **09** | [Pertemuan 09](https://mahendartea.github.io/Learn-AI/docs/pertemuan-09) | Konstruksi & Transformasi Data Numerik (`J.62DMI00.009.1`) |
 | **10** | [Pertemuan 10](https://mahendartea.github.io/Learn-AI/docs/pertemuan-10) | Feature Engineering, Encoding & Integrasi Data (`J.62DMI00.009.1` - `011.1`) |
 | **11** | [Pertemuan 11](https://mahendartea.github.io/Learn-AI/docs/pertemuan-11) | Skenario Pemodelan & Klasifikasi Terawasi: Iris, SVM, AdaBoost (`J.62DMI00.012.1` - `013.1`) |
-| **12** | [Pertemuan 12](https://mahendartea.github.io/Learn-AI/docs/pertemuan-12) | Pemodelan Regresi & Asumsi Klasik OLS (`J.62DMI00.013.1`) |
-| **13** | [Pertemuan 13](https://mahendartea.github.io/Learn-AI/docs/pertemuan-13) | Pembelajaran Tak Terawasi: K-Means & DBSCAN (`J.62DMI00.013.1`) |
-| **14** | [Pertemuan 14](https://mahendartea.github.io/Learn-AI/docs/pertemuan-14) | Jaringan Saraf Tiruan & Deep Learning (PyTorch MLP) (`J.62DMI00.013.1`) |
-| **15** | [Pertemuan 15](https://mahendartea.github.io/Learn-AI/docs/pertemuan-15) | Evaluasi Diagnostik & Explainable AI (SHAP) (`J.62DMI00.014.1` - `015.1`) |
-| **16** | [Pertemuan 16](https://mahendartea.github.io/Learn-AI/docs/pertemuan-16) | Deployment Microservice FastAPI & MLOps (`J.62DMI00.016.1` - `017.1`) |
+| **12** | [Pertemuan 12](https://mahendartea.github.io/Learn-AI/docs/pertemuan-12) | Pemodelan Regresi: OLS, Non-Linier, SVR, DTR, RFR (`J.62DMI00.013.1`) |
+| **13** | [Pertemuan 13](https://mahendartea.github.io/Learn-AI/docs/pertemuan-13) | Pembelajaran Tak Terawasi: K-Means, Hierarchical & DBSCAN (`J.62DMI00.013.1`) |
+| **14** | [Pertemuan 14](https://mahendartea.github.io/Learn-AI/docs/pertemuan-14) | Jaringan Saraf Tiruan: ANN, CNN & RNN (Scikit-learn & Keras) (`J.62DMI00.013.1`) |
+| **15** | [Pertemuan 15](https://mahendartea.github.io/Learn-AI/docs/pertemuan-15) | Evaluasi Model, McNemar's Test & Explainable AI (SHAP) (`J.62DMI00.014.1` - `015.1`) |
+| **16** | [Pertemuan 16](https://mahendartea.github.io/Learn-AI/docs/pertemuan-16) | Deployment Model Web (Flask/Heroku, FastAPI) & MLOps (`J.62DMI00.016.1` - `017.1`) |
 
 ---
 
