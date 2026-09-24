@@ -63,8 +63,7 @@ export const siteConfig = {
   social: {
     // Authoritative profiles used in Person structured data (schema.org sameAs).
     github: 'https://github.com/mahendartea',
-    // TODO: add your LinkedIn profile URL, e.g. 'https://www.linkedin.com/in/username'
-    linkedin: '',
+    linkedin: 'https://www.linkedin.com/in/mahendar-dwi-payana-4ba1a076/',
   },
 };
 
