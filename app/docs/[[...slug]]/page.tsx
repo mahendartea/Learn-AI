@@ -11,7 +11,7 @@ import { notFound } from 'next/navigation';
 import { getMDXComponents } from '@/components/mdx';
 import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
-import { gitConfig } from '@/lib/shared';
+import { gitConfig, personId } from '@/lib/shared';
 
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const params = await props.params;
@@ -41,10 +41,8 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
               '@type': 'TechArticle',
               headline: page.data.title,
               description: page.data.description,
-              author: {
-                '@type': 'Person',
-                name: 'Mahendar Dwi Payana',
-              },
+              author: { '@id': personId },
+              publisher: { '@id': personId },
               inLanguage: 'id',
               about: {
                 '@type': 'EducationalOccupationalCredential',

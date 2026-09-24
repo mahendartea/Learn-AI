@@ -1,7 +1,7 @@
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import './global.css';
 import type { Metadata } from 'next';
-import { appleTouchIcon, baseUrl, logoSrc, siteConfig } from '@/lib/shared';
+import { appleTouchIcon, baseUrl, logoSrc, personId, siteConfig, siteUrl, websiteId } from '@/lib/shared';
 
 export const metadata: Metadata = {
   metadataBase: baseUrl,
@@ -55,20 +55,44 @@ export const metadata: Metadata = {
   },
 };
 
+const siteRoot = siteUrl;
+const abs = (path: string) => new URL(path, `${siteRoot}/`).toString();
+
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'EducationalOccupationalProgram',
-  name: siteConfig.title,
-  description: siteConfig.description,
-  provider: {
-    '@type': 'Person',
-    name: siteConfig.author,
-    url: `https://github.com/${siteConfig.github.user}`,
-  },
-  educationalCredentialAwarded: 'Sertifikasi Associate Data Scientist (SKKNI No. 299 Tahun 2020)',
-  timeToComplete: 'P8W',
-  numberOfCredits: 96,
-  inLanguage: 'id',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': personId,
+      name: siteConfig.author,
+      alternateName: 'Mahendartea',
+      url: siteRoot,
+      image: abs('logo.png'),
+      jobTitle: siteConfig.role,
+      description: siteConfig.description,
+      knowsAbout: siteConfig.keywords,
+      sameAs: [siteConfig.social.github, siteConfig.social.linkedin].filter(Boolean),
+    },
+    {
+      '@type': 'WebSite',
+      '@id': websiteId,
+      name: siteConfig.title,
+      url: siteRoot,
+      inLanguage: ['id', 'en'],
+      author: { '@id': personId },
+      publisher: { '@id': personId },
+    },
+    {
+      '@type': 'EducationalOccupationalProgram',
+      name: siteConfig.title,
+      description: siteConfig.description,
+      provider: { '@id': personId },
+      educationalCredentialAwarded: 'Sertifikasi Associate Data Scientist (SKKNI No. 299 Tahun 2020)',
+      timeToComplete: 'P8W',
+      numberOfCredits: 96,
+      inLanguage: 'id',
+    },
+  ],
 };
 
 export default function Layout({ children }: LayoutProps<'/'>) {

@@ -19,6 +19,11 @@ export const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
         : 'http://localhost:3000'
     );
 
+// Canonical site URL (no trailing slash) and stable structured-data node IDs
+export const siteUrl = baseUrl.toString().replace(/\/$/, '');
+export const personId = `${siteUrl}/#person`;
+export const websiteId = `${siteUrl}/#website`;
+
 // Site & Author configuration
 export const siteConfig = {
   author: 'Mahendar Dwi Payana',
@@ -54,6 +59,12 @@ export const siteConfig = {
     user: 'mahendartea',
     repo: 'Learn-AI',
     branch: 'main',
+  },
+  social: {
+    // Authoritative profiles used in Person structured data (schema.org sameAs).
+    github: 'https://github.com/mahendartea',
+    // TODO: add your LinkedIn profile URL, e.g. 'https://www.linkedin.com/in/username'
+    linkedin: '',
   },
 };
 
