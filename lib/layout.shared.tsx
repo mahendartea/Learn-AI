@@ -1,8 +1,61 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 import { gitConfig, logoSrc, siteConfig } from './shared';
 import Image from 'next/image';
+import { LocaleSwitch } from '@/components/locale-switch';
 
-export function baseOptions(): BaseLayoutProps {
+type Lang = 'id' | 'en';
+
+export function baseOptions(lang: Lang = 'id'): BaseLayoutProps {
+  const isEn = lang === 'en';
+
+  const links: BaseLayoutProps['links'] = isEn
+    ? [
+        {
+          type: 'main',
+          text: 'Curriculum',
+          url: '/en/docs',
+          active: 'nested-url',
+        },
+        {
+          type: 'main',
+          text: '16-Session Syllabus',
+          url: '/en/docs/silabus-lengkap',
+        },
+        {
+          type: 'main',
+          text: 'Capstone Project',
+          url: '/en/docs/tugas-akhir-capstone',
+        },
+        {
+          type: 'main',
+          text: 'SKKNI Standard',
+          url: '/en/docs/referensi-standar',
+        },
+      ]
+    : [
+        {
+          type: 'main',
+          text: 'Materi Silabus',
+          url: '/docs',
+          active: 'nested-url',
+        },
+        {
+          type: 'main',
+          text: 'Peta 16 Sesi',
+          url: '/docs/silabus-lengkap',
+        },
+        {
+          type: 'main',
+          text: 'Capstone Project',
+          url: '/docs/tugas-akhir-capstone',
+        },
+        {
+          type: 'main',
+          text: 'Standar SKKNI',
+          url: '/docs/referensi-standar',
+        },
+      ];
+
   return {
     nav: {
       title: (
@@ -26,33 +79,12 @@ export function baseOptions(): BaseLayoutProps {
               by {siteConfig.author}
             </span>
           </div>
+          <LocaleSwitch />
         </div>
       ),
       transparentMode: 'top',
     },
-    links: [
-      {
-        type: 'main',
-        text: 'Materi Silabus',
-        url: '/docs',
-        active: 'nested-url',
-      },
-      {
-        type: 'main',
-        text: 'Peta 16 Sesi',
-        url: '/docs/silabus-lengkap',
-      },
-      {
-        type: 'main',
-        text: 'Capstone Project',
-        url: '/docs/tugas-akhir-capstone',
-      },
-      {
-        type: 'main',
-        text: 'Standar SKKNI',
-        url: '/docs/referensi-standar',
-      },
-    ],
+    links,
     githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}`,
   };
 }

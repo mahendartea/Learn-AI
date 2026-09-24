@@ -9,6 +9,8 @@ Portal dokumentasi dan pembelajaran komprehensif **Data Science & Artificial Int
 
 🌐 **Situs Resmi:** [https://mahendartea.github.io/Learn-AI/](https://mahendartea.github.io/Learn-AI/)
 
+🇬🇧 **English portal (in progress):** [https://mahendartea.github.io/Learn-AI/en/](https://mahendartea.github.io/Learn-AI/en/)
+
 ---
 
 ## 📌 Sumber & Atribusi Resmi

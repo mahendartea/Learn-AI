@@ -1,5 +1,6 @@
 export const appName = 'Learn AI • Mahendar Dwi Payana';
 export const docsRoute = '/docs';
+export const enDocsRoute = '/en/docs';
 export const docsImageRoute = '/og/docs';
 export const docsContentRoute = '/llms.mdx/docs';
 

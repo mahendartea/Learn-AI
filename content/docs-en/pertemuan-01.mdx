@@ -1,0 +1,204 @@
+---
+title: "Session 01: Modern Data Science Computing Environment Setup"
+description: "A comprehensive guide to setting up a Python 3.10+ computing environment, virtual environment isolation, package managers (pip, conda), JupyterLab, VS Code, and Google Colab with GPU acceleration."
+---
+
+> **Module Author:** Mahendar Dwi Payana  
+> **Syllabus Reference:** DTS Kominfo - STEI ITB (Ir. Windy Gambetta, MBA) & SKKNI No. 299 of 2020
+
+---
+
+## 1. Why an Isolated Computing Environment Matters
+
+In a professional *Data Science* project lifecycle, one of the most fatal problems is *dependency hell*. Machine learning models often depend on specific versions of libraries such as `numpy`, `scipy`, `pandas`, and `scikit-learn`.
+
+Using a global installation without isolation causes:
+1. **Reproducibility Failures**: A project that runs on your local machine cannot run on a teammate’s server or cloud machine.
+2. **Library Version Conflicts**: Upgrading a library for Project B can break the code in Project A.
+3. **Operating System Pollution**: Piling Python libraries directly into OS system directories can disrupt internal OS utilities.
+
+---
+
+## 2. Development Environment Taxonomy
+
+Broadly, data science practitioners combine two types of environments:
+
+```
+Data Science Computing Environment
+├── Local Environment (Offline, Full Control)
+│   ├── CLI & Package Manager: Python 3.10+, pip, venv, Conda / Mamba
+│   └── IDE / Notebook Editor: JupyterLab, Jupyter Notebook, VS Code + Python Extension
+└── Cloud Environment (Zero-Config, Hardware Acceleration)
+    ├── Google Colaboratory (Free T4/V100 GPU & TPU)
+    ├── Kaggle Notebooks (30 hours/week of P100/T4 GPU acceleration)
+    └── Cloud Managed Notebooks (AWS SageMaker, GCP Vertex AI Workbench)
+```
+
+---
+
+## 3. Step-by-Step Local Environment Setup
+
+<Steps>
+  <Step>
+    ### Ensure Python 3.10+ Is Installed
+    Download the official stable release from [python.org](https://www.python.org/downloads/). Make sure the **"Add Python to PATH"** option is checked during Windows installation.
+
+    <Tabs items={['Windows', 'macOS', 'Linux']}>
+      <Tab value="Windows">
+        ```cmd
+        python --version
+        ```
+      </Tab>
+      <Tab value="macOS">
+        ```bash
+        brew install python@3.10
+        python3 --version
+        ```
+      </Tab>
+      <Tab value="Linux">
+        ```bash
+        sudo apt update && sudo apt install python3 python3-pip python3-venv
+        python3 --version
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+
+  <Step>
+    ### Create & Activate a Virtual Environment (`venv`)
+    Use the built-in `venv` module to create a standalone environment without polluting your main system:
+
+    <Tabs items={['macOS / Linux', 'Windows (CMD)', 'Windows (PowerShell)']}>
+      <Tab value="macOS / Linux">
+        ```bash
+        mkdir -p ~/projects/learn-ai-datascience
+        cd ~/projects/learn-ai-datascience
+        python3 -m venv env-ds
+        source env-ds/bin/activate
+        ```
+      </Tab>
+      <Tab value="Windows (CMD)">
+        ```cmd
+        mkdir %USERPROFILE%\projects\learn-ai-datascience
+        cd %USERPROFILE%\projects\learn-ai-datascience
+        python -m venv env-ds
+        env-ds\Scripts\activate.bat
+        ```
+      </Tab>
+      <Tab value="Windows (PowerShell)">
+        ```powershell
+        mkdir $HOME\projects\learn-ai-datascience
+        cd $HOME\projects\learn-ai-datascience
+        python -m venv env-ds
+        env-ds\Scripts\Activate.ps1
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+
+  <Step>
+    ### Install Core Data Science Libraries
+    Install the verified core data science packages and register the kernel with Jupyter:
+
+    <Tabs items={['pip (Recommended)', 'conda']}>
+      <Tab value="pip (Recommended)">
+        ```bash
+        pip install --upgrade pip
+        pip install numpy scipy pandas matplotlib seaborn scikit-learn jupyterlab ipykernel
+        python -m ipykernel install --user --name=env-ds --display-name="Python (Learn-AI Data Science)"
+        ```
+      </Tab>
+      <Tab value="conda">
+        ```bash
+        conda create -n env-ds python=3.10 numpy scipy pandas matplotlib seaborn scikit-learn jupyterlab
+        conda activate env-ds
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+</Steps>
+
+---
+
+## 4. Working with Google Colaboratory (Cloud GPU)
+
+Google Colaboratory is a browser-based Jupyter environment connected directly to Google Cloud Platform.
+
+### Key Google Colab Features:
+- **Zero-Setup**: Popular data science libraries are already *pre-installed*.
+- **Hardware Acceleration**: Free access to Nvidia T4 / V100 GPUs and Tensor Processing Units (TPU).
+- **Google Drive Integration**: Save datasets and model weights directly to cloud storage.
+
+### Verifying GPU Acceleration in Colab
+Run the following snippet in the first cell of a Google Colab notebook:
+
+```python
+import torch
+import sys
+
+print(f"Python version: {sys.version.split()[0]}")
+
+if torch.cuda.is_available():
+    print(f"GPU acceleration active: {torch.cuda.get_device_name(0)}")
+    print(f"GPU memory allocation: {torch.cuda.get_device_properties(0).total_memory / 1e9:.2f} GB")
+else:
+    print("Running on CPU runtime. To enable GPU: Edit -> Notebook settings -> Hardware accelerator -> T4 GPU.")
+```
+
+---
+
+## 5. Full Library Verification Script
+
+Create a file named `verify_env.py` in your project directory and run it to confirm that all libraries are installed with the correct versions:
+
+```python
+"""
+Modern Data Science Environment Verification Script
+Author: Mahendar Dwi Payana
+"""
+
+import sys
+
+def verify_ecosystem():
+    packages = [
+        "numpy",
+        "scipy",
+        "pandas",
+        "matplotlib",
+        "seaborn",
+        "sklearn",
+    ]
+
+    print("=" * 60)
+    print("DATA SCIENCE ENVIRONMENT CHECK RESULT")
+    print(f"Python Interpreter Version: {sys.version.split()[0]}")
+    print("=" * 60)
+
+    success = True
+    for pkg in packages:
+        try:
+            mod = __import__(pkg)
+            version = getattr(mod, "__version__", "Installed (version not detected)")
+            print(f"[OK] {pkg:<15} : {version}")
+        except ImportError as e:
+            print(f"[FAIL] {pkg:<15} : Not installed! ({e})")
+            success = False
+
+    print("=" * 60)
+    if success:
+        print("Congratulations! The entire Data Science ecosystem is ready to use.")
+    else:
+        print("Attention: Please install the failed packages before continuing.")
+    print("=" * 60)
+
+if __name__ == "__main__":
+    verify_ecosystem()
+```
+
+---
+
+## 6. Self-Practice & Evaluation
+
+1. Create a new Jupyter notebook named `01_setup_verification.ipynb`.
+2. Write a markdown cell documenting your computer’s hardware specifications (RAM, Processor, OS).
+3. Run the verification code above and take a screenshot as proof of completing the initial learning prerequisites.
