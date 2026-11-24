@@ -11,11 +11,8 @@ export function LocaleSwitch() {
   let target: string;
   if (isEn) {
     target = pathname.replace(/^\/en/, '') || '/';
-  } else if (pathname.startsWith('/docs')) {
-    // English docs are translated progressively; land on the EN docs home.
-    target = '/en/docs';
   } else {
-    target = '/en';
+    target = pathname === '/' ? '/en' : `/en${pathname}`;
   }
 
   return (

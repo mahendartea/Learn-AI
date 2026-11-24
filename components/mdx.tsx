@@ -9,6 +9,20 @@ import { Banner } from 'fumadocs-ui/components/banner';
 import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
 import { InlineTOC } from 'fumadocs-ui/components/inline-toc';
 import { Mermaid } from '@/components/mermaid';
+import { basePath } from '@/lib/shared';
+import type { ReactNode } from 'react';
+
+function DataLink({ file, children }: { file: string; children?: ReactNode }) {
+  return (
+    <a
+      href={`${basePath}/data/${file}`}
+      download={file}
+      className="font-medium underline underline-offset-4 hover:text-primary"
+    >
+      {children ?? file}
+    </a>
+  );
+}
 
 export function getMDXComponents(components?: MDXComponents) {
   return {
@@ -27,6 +41,7 @@ export function getMDXComponents(components?: MDXComponents) {
     ImageZoom,
     InlineTOC,
     Mermaid,
+    DataLink,
     img: (props: any) => <ImageZoom {...props} />,
     ...components,
   } satisfies MDXComponents;

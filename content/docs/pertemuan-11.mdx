@@ -619,10 +619,11 @@ def label_snp(level):
     if level == 'SNP_3':   return 0
     elif level == 'SNP_4': return 1
 
-dt_pmp = dt_pmp.append(
-    dt_pmp_2018[dt_pmp_2018['level'] == 'SNP_3'], ignore_index=True
+dt_pmp = pd.concat(
+    [dt_pmp, dt_pmp_2018[dt_pmp_2018['level'] == 'SNP_3']],
+    ignore_index=True,
 )
-dt_pmp['level'] = dt_pmp.apply(lambda x: label_snp(x['level']), axis=1)
+dt_pmp['level'] = dt_pmp['level'].map(label_snp)
 ```
 
 ### C. Seleksi Fitur via Korelasi & Density Plot

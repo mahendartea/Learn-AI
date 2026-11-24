@@ -18,7 +18,7 @@ export function baseOptions(lang: Lang = 'id'): BaseLayoutProps {
         },
         {
           type: 'main',
-          text: '16-Session Syllabus',
+          text: '18-Session Syllabus',
           url: '/en/docs/silabus-lengkap',
         },
         {
@@ -41,7 +41,7 @@ export function baseOptions(lang: Lang = 'id'): BaseLayoutProps {
         },
         {
           type: 'main',
-          text: 'Peta 16 Sesi',
+          text: 'Peta 18 Sesi',
           url: '/docs/silabus-lengkap',
         },
         {

@@ -1,6 +1,6 @@
 ---
 title: "Pertemuan 16: Deployment Model Web & Fondasi MLOps"
-description: "Panduan lengkap perencanaan dan pelaksanaan deployment model ke produksi: konsep & tantangan deployment, pola static vs dynamic (on devices/server: VM, container, serverless, streaming), strategi Single/Silent/Canary, reproducibility, serialisasi model (pickle/H5), deployment Regresi Linier & ANN berbasis Flask, persiapan Anaconda/VSCode/Heroku, serta alternatif modern FastAPI + Streamlit dan pemantauan model drift."
+description: "Panduan lengkap perencanaan dan pelaksanaan deployment model ke produksi: konsep & tantangan deployment, pola static vs dynamic (on devices/server: VM, container, serverless, streaming), strategi Single/Silent/Canary, reproducibility, serialisasi model (joblib, .keras, ONNX), deployment Regresi Linier & ANN berbasis Flask dan FastAPI + Streamlit, kontainerisasi Docker ke cloud modern (Render / Hugging Face Spaces), serta pemantauan model drift."
 ---
 
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
@@ -144,44 +144,48 @@ Penyedia infrastruktur AI antara lain: **NVIDIA**, **Huawei** (full-stack AI), *
 ## 5. Menyimpan Model (Serialization)
 
 ```python
-# Model Keras / ANN
-from keras.models import load_model
-model.save('model.h5')
-model = load_model('model.h5')
+# Model Keras 3 / ANN (format standar modern .keras)
+import keras
+model.save('model.keras')
+model = keras.saving.load_model('model.keras')
 
-# Model Scikit-learn (Regresi Linier)
-import pickle
-pickle.dump(regressor, open('model.pkl', 'wb'))
-model = pickle.load(open('model.pkl', 'rb'), encoding='bytes')
+# Model Scikit-learn (direkomendasikan memakai joblib atau skops)
+import joblib
+joblib.dump(regressor, 'model.joblib', compress=3)
+model = joblib.load('model.joblib')
 ```
+
+> [!WARNING]
+> **Keamanan Serialisasi:** Hindari memuat berkas `.pkl` (`pickle.load`) dari sumber yang tidak tepercaya karena `pickle` dapat mengeksekusi kode arbitrer saat deserialisasi. Gunakan `joblib`/`skops` untuk Scikit-learn, `.keras` atau `safetensors` untuk Deep Learning, serta `ONNX` untuk inferensi lintas bahasa.
 
 ---
 
 ## 6. Persiapan Deployment
 
-| Perangkat | Fungsi |
+| Perangkat / Platform | Fungsi |
 | :--- | :--- |
-| **Anaconda** | Membuat *virtual environment* Python yang menampung seluruh dependency/library model |
-| **Visual Studio Code (VSCode)** | Membuka source code aplikasi Python & model ML yang akan dideploy |
-| **Heroku** | Platform cloud penyedia server untuk deployment (mendukung Python, Java, Node.js, dsb.) |
+| **Virtual Env (`uv` / `venv` / `conda`)** | Mengisolasi lingkungan Python 3.11+ dan menampung seluruh dependency model |
+| **Visual Studio Code (VSCode)** | Editor untuk menyusun source code API, Dockerfile, dan konfigurasi layanan |
+| **Docker & Cloud PaaS Modern** | Mengemas aplikasi menjadi container portabel dan men-deploy ke **Render**, **Railway**, **Hugging Face Spaces**, atau **Streamlit Community Cloud** *(menggantikan Heroku free tier yang telah dihentikan)* |
 
-**Alur singkat Anaconda:**
+**Alur penyiapan environment lokal:**
 
 ```bash
-conda create --name deploy-model-linreg python=3.9
+conda create --name deploy-model-linreg python=3.12 -y
 conda activate deploy-model-linreg
 pip install -r requirements.txt
 ```
 
-**Alur singkat Heroku CLI:**
+**Contoh `Dockerfile` untuk deployment cloud modern (Render / Railway / HF Spaces):**
 
-```bash
-heroku login
-git init
-heroku git:remote -a deploy-model-linreg
-git add .
-git commit -am "deployment pertama"
-git push heroku master
+```dockerfile
+FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+EXPOSE 8000
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "app:app"]
 ```
 
 ---
@@ -194,8 +198,8 @@ git push heroku master
 ├── templates/
 │   └── index.html        # Template website (form input + hasil prediksi)
 ├── app.py                # Konfigurasi route API Flask
-├── model.pkl             # Model Regresi Linier terlatih
-├── Procfile              # Konfigurasi Dyno formation Heroku
+├── model.joblib          # Model Regresi Linier terlatih
+├── Dockerfile            # Konfigurasi container untuk deployment cloud
 └── requirements.txt      # Daftar dependency Python
 ```
 
@@ -203,13 +207,12 @@ git push heroku master
 
 ```python
 from flask import Flask, request, render_template
-import pickle
+import joblib
 
 app = Flask(__name__)
 
-# Memuat model Regresi Linier yang tersimpan (pickle)
-model_file = open('model.pkl', 'rb')
-model = pickle.load(model_file, encoding='bytes')
+# Memuat model Regresi Linier yang tersimpan (joblib)
+model = joblib.load('model.joblib')
 
 @app.route('/')
 def index():
@@ -218,17 +221,19 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Ambil nilai dari form: usia, jenis kelamin, status perokok
-    age, sex, smoker = [x for x in request.form.values()]
+    # Ambil nilai dari form secara eksplisit berdasarkan key
+    age = int(request.form['Usia'])
+    sex = request.form['Jenis Kelamin']
+    smoker = request.form['Perokok']
 
-    data = [int(age)]
+    data = [age]
     # One-hot encoding jenis kelamin: [Perempuan, Laki-laki]
     data.extend([0, 1] if sex == 'Laki-laki' else [1, 0])
     # One-hot encoding perokok: [Tidak, Ya]
     data.extend([0, 1] if smoker == 'Ya' else [1, 0])
 
     prediction = model.predict([data])
-    output = round(prediction[0], 2)
+    output = round(float(prediction[0]), 2)
     return render_template('index.html', insurance_cost=output,
                            age=age, sex=sex, smoker=smoker)
 
@@ -267,13 +272,14 @@ if __name__ == '__main__':
 python app.py
 # -> http://localhost:5000/ atau http://127.0.0.1:5000/
 
-# 2. Hentikan server
-# Ctrl + C
+# 2. Uji container Docker secara lokal
+docker build -t deploy-model-linreg .
+docker run -p 8000:8000 deploy-model-linreg
 
-# 3. Deploy ke Heroku (lihat perintah Heroku CLI di §6)
+# 3. Deploy ke Cloud PaaS (hubungkan repositori GitHub ke Render / Railway / HF Spaces)
 ```
 
-> **Tugas Harian Modul 16:** (1) jalankan local server di `http://127.0.0.1:5000`, (2) deploy App ke Heroku.
+> **Latihan Praktik:** (1) jalankan local server di `http://127.0.0.1:5000`, (2) kemas aplikasi dengan `Dockerfile` dan deploy ke **Render**, **Railway**, atau **Hugging Face Spaces**.
 
 ---
 
@@ -289,40 +295,41 @@ Prosedurnya sama dengan Regresi Linier; yang berbeda hanya struktur direktori da
 ├── templates/
 │   └── index.html
 ├── app.py
-├── model.h5              # Model ANN Image Classification terlatih
-├── Procfile
+├── model.keras           # Model ANN Image Classification terlatih (Keras 3)
+├── Dockerfile
 └── requirements.txt
 ```
 
 ```python
 from flask import Flask, render_template, request, send_from_directory
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.image import img_to_array, load_img
-from tensorflow import expand_dims
-import numpy as np, os
+from werkzeug.utils import secure_filename
+import keras
+import numpy as np
+import os
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './static/uploads/'
-model = load_model('model.h5')
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+model = keras.saving.load_model('model.keras')
 class_dict = {0: 'Cat (Kucing)', 1: 'Dog (Anjing)'}
 
 def predict_label(img_path):
-    loaded_img = load_img(img_path, target_size=(256, 256))
-    img_array = img_to_array(loaded_img) / 255.0          # Normalisasi piksel
-    img_array = expand_dims(img_array, 0)                 # (1, 256, 256, 3)
-    predicted_bit = np.round(model.predict(img_array)[0][0]).astype('int')
+    loaded_img = keras.utils.load_img(img_path, target_size=(256, 256))
+    img_array = keras.utils.img_to_array(loaded_img) / 255.0  # Normalisasi piksel
+    img_array = np.expand_dims(img_array, axis=0)             # (1, 256, 256, 3)
+    predicted_bit = int(np.round(model.predict(img_array, verbose=0)[0][0]))
     return class_dict[predicted_bit]
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        if request.files:
-            image = request.files['image']
-            img_path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
-            image.save(img_path)
-            prediction = predict_label(img_path)
-            return render_template('index.html', uploaded_image=image.filename,
-                                   prediction=prediction)
+    if request.method == 'POST' and 'image' in request.files:
+        image = request.files['image']
+        filename = secure_filename(image.filename)
+        img_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        image.save(img_path)
+        prediction = predict_label(img_path)
+        return render_template('index.html', uploaded_image=filename,
+                               prediction=prediction)
     return render_template('index.html')
 
 @app.route('/display/<filename>')
@@ -333,13 +340,13 @@ if __name__ == '__main__':
     app.run(debug=True)
 ```
 
-> **Perbedaan dari Regresi Linier:** input berupa **gambar** (bukan teks), model `.h5` (Keras) bukan `.pkl`, dan ada endpoint `/display/<filename>` untuk menampilkan gambar terunggah.
+> **Perbedaan dari Regresi Linier:** input berupa **gambar** (bukan teks), model `.keras` (Keras 3) bukan `.joblib`, sanitasi nama berkas memakai `secure_filename`, dan terdapat endpoint `/display/<filename>` untuk menampilkan gambar terunggah.
 
 ---
 
 ## 9. Alternatif Modern: FastAPI + Streamlit
 
-Selain Flask + Heroku, praktik industri saat ini sering memakai **FastAPI** (backend) dan **Streamlit** (UI) dengan format model **joblib/ONNX**.
+Selain Flask, praktik industri modern paling populer untuk prototipe dan layanan produksi Python adalah **FastAPI** (backend REST API berkinerja tinggi) dan **Streamlit** (antarmuka web interaktif) dengan format model **joblib/ONNX**.
 
 ### A. Serialisasi Modern
 
@@ -431,12 +438,12 @@ Praktisi wajib menyiapkan prosedur **audit berkala** dan pipeline **retraining o
 ## 11. Lembar Evaluasi & Tugas Praktikum Mandiri
 
 <Accordions>
-  <Accordion title="Tugas 1: Deployment Model Regresi Linier (Tugas Resmi Modul 16)">
-    Ikuti langkah modul untuk men-deploy **model Regresi Linier** (prediksi biaya asuransi) berbasis **Flask**. Siapkan virtual environment Anaconda, jalankan **local server** di `http://127.0.0.1:5000`, lalu deploy ke **Heroku**. Sertakan screenshot hasil prediksi lokal dan URL aplikasi Heroku!
+  <Accordion title="Tugas 1: Deployment Model Regresi Linier dengan Flask & Docker">
+    Ikuti langkah modul untuk men-deploy **model Regresi Linier** (prediksi biaya asuransi) berbasis **Flask** dengan serialisasi `joblib`. Siapkan virtual environment Python 3.11+, jalankan **local server** di `http://127.0.0.1:5000`, lalu kemas dengan `Dockerfile` dan deploy ke **Render**, **Railway**, atau **Hugging Face Spaces**. Sertakan screenshot hasil prediksi lokal dan URL aplikasi aktif!
   </Accordion>
 
   <Accordion title="Tugas 2: Deployment Model ANN Image Classification">
-    Deploy model **ANN klasifikasi gambar kucing/anjing** (Cat vs Dog) berbasis Flask dengan model Keras `.h5`. Perhatikan penanganan upload gambar, normalisasi piksel ($\times 1/255$), dan endpoint `/display/<filename>`. Uji dengan beberapa gambar berbeda dan laporkan akurasinya!
+    Deploy model **ANN klasifikasi gambar kucing/anjing** (Cat vs Dog) berbasis Flask dengan model Keras 3 `.keras`. Perhatikan penanganan upload gambar (`secure_filename`), normalisasi piksel ($\times 1/255$), dan endpoint `/display/<filename>`. Uji dengan beberapa gambar berbeda dan laporkan akurasinya!
   </Accordion>
 
   <Accordion title="Tugas 3: Desain Rencana Deployment">
@@ -460,6 +467,7 @@ Praktisi wajib menyiapkan prosedur **audit berkala** dan pipeline **retraining o
 2. **Andriy Burkov** (2020). *Machine Learning Engineering*. True Positive Inc.
 3. **Martin Fowler** (2016). *Continuous Delivery for Machine Learning (CD4ML)*. ThoughtWorks.
 4. **Google Developers**. *MLOps: Continuous Delivery and Automation Pipelines in Machine Learning*. [developers.google.com](https://developers.google.com/machine-learning/crash-course/production-ml-systems).
-5. **Heroku Dev Center**. *Deploying Python Applications*. [devcenter.heroku.com](https://devcenter.heroku.com/).
+5. **Docker Documentation**. *Containerizing Python Applications*. [docs.docker.com](https://docs.docker.com/guides/python/).
 6. **FastAPI Documentation**. [fastapi.tiangolo.com](https://fastapi.tiangolo.com/).
 7. **Streamlit Documentation**. [docs.streamlit.io](https://docs.streamlit.io/).
+8. **Hugging Face Spaces**. *Deploying ML Apps with Docker & Streamlit*. [huggingface.co/docs/hub/spaces](https://huggingface.co/docs/hub/spaces).

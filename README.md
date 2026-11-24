@@ -5,11 +5,11 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Author](https://img.shields.io/badge/Author-Mahendar_Dwi_Payana-purple)](https://github.com/mahendartea)
 
-Portal dokumentasi dan pembelajaran komprehensif **Data Science & Artificial Intelligence** berdasarkan kurikulum 16 pertemuan (8 minggu).
+Portal dokumentasi dan pembelajaran komprehensif **Data Science & Artificial Intelligence** berdasarkan kurikulum 18 pertemuan (9 minggu).
 
 🌐 **Situs Resmi:** [https://mahendartea.github.io/Learn-AI/](https://mahendartea.github.io/Learn-AI/)
 
-🇬🇧 **English portal (in progress):** [https://mahendartea.github.io/Learn-AI/en/](https://mahendartea.github.io/Learn-AI/en/)
+🇬🇧 **English portal:** [https://mahendartea.github.io/Learn-AI/en/](https://mahendartea.github.io/Learn-AI/en/)
 
 ---
 
@@ -23,7 +23,7 @@ Materi riset dan kurikulum dasar pada portal ini disusun dan dikembangkan oleh *
 
 ---
 
-## 📚 Struktur 16 Pertemuan Silabus
+## 📚 Struktur 18 Pertemuan Silabus
 
 | Sesi | Halaman Dokumen | Topik Pembelajaran |
 | :---: | :--- | :--- |
@@ -40,9 +40,11 @@ Materi riset dan kurikulum dasar pada portal ini disusun dan dikembangkan oleh *
 | **11** | [Pertemuan 11](https://mahendartea.github.io/Learn-AI/docs/pertemuan-11) | Skenario Pemodelan & Klasifikasi Terawasi: Iris, SVM, AdaBoost |
 | **12** | [Pertemuan 12](https://mahendartea.github.io/Learn-AI/docs/pertemuan-12) | Pemodelan Regresi: OLS, Non-Linier, SVR, DTR, RFR |
 | **13** | [Pertemuan 13](https://mahendartea.github.io/Learn-AI/docs/pertemuan-13) | Pembelajaran Tak Terawasi: K-Means, Hierarchical & DBSCAN |
-| **14** | [Pertemuan 14](https://mahendartea.github.io/Learn-AI/docs/pertemuan-14) | Jaringan Saraf Tiruan: ANN, CNN & RNN (Scikit-learn & Keras) |
+| **14** | [Pertemuan 14](https://mahendartea.github.io/Learn-AI/docs/pertemuan-14) | Jaringan Saraf Tiruan: ANN, CNN & RNN (Scikit-learn, PyTorch & Keras 3) |
 | **15** | [Pertemuan 15](https://mahendartea.github.io/Learn-AI/docs/pertemuan-15) | Evaluasi Model, McNemar's Test & Explainable AI (SHAP) |
-| **16** | [Pertemuan 16](https://mahendartea.github.io/Learn-AI/docs/pertemuan-16) | Deployment Model Web (Flask/Heroku, FastAPI) & MLOps |
+| **16** | [Pertemuan 16](https://mahendartea.github.io/Learn-AI/docs/pertemuan-16) | Deployment Model Web (Flask/Docker, FastAPI/Streamlit) & MLOps |
+| **17** | [Pertemuan 17](https://mahendartea.github.io/Learn-AI/docs/pertemuan-17) | Transformer, Large Language Models (LLM) & Prompt Engineering |
+| **18** | [Pertemuan 18](https://mahendartea.github.io/Learn-AI/docs/pertemuan-18) | RAG, Function Calling, AI Agents & Evaluasi Sistem LLM |
 
 ---
 

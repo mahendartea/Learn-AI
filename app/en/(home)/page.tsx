@@ -21,10 +21,10 @@ const modules = [
   {
     week: 'Week 1',
     title: 'AI Foundations & Computing Environment',
-    desc: 'Set up a modern Python 3.10+ ecosystem, Jupyter/Colab, GPU acceleration, the four AI paradigms, PEAS agents, and Indonesia’s AI National Strategy 2020–2045.',
+    desc: 'Set up a modern Python 3.11+ ecosystem (uv/pip/conda), Jupyter/Colab, GPU acceleration, the four AI paradigms, PEAS agents, and Indonesia’s AI National Strategy 2020–2045.',
     meetings: [
       { num: '01', title: 'Modern Computing Environment Setup & AI Tools', href: '/en/docs/pertemuan-01' },
-      { num: '02', title: 'AI Fundamentals, Technology & Applications', href: '/docs/pertemuan-02' },
+      { num: '02', title: 'AI Fundamentals, Technology & Applications', href: '/en/docs/pertemuan-02' },
     ],
     color: 'from-blue-500/20 to-cyan-500/20',
     border: 'hover:border-blue-500/50',
@@ -35,8 +35,8 @@ const modules = [
     title: 'Methodology & Data Science Tools',
     desc: 'CRISP-DM lifecycle, 7 generic data science steps, Git/GitHub, the 6 core libraries, NumPy vectorization, and a real immunization dataset case study.',
     meetings: [
-      { num: '03', title: 'Data-Driven Data Science Methodology', href: '/docs/pertemuan-03' },
-      { num: '04', title: 'Tools for Data Science', href: '/docs/pertemuan-04' },
+      { num: '03', title: 'Data-Driven Data Science Methodology', href: '/en/docs/pertemuan-03' },
+      { num: '04', title: 'Tools for Data Science', href: '/en/docs/pertemuan-04' },
     ],
     color: 'from-indigo-500/20 to-purple-500/20',
     border: 'hover:border-indigo-500/50',
@@ -47,8 +47,8 @@ const modules = [
     title: 'Business & Data Understanding',
     desc: 'Asymmetric financial costs, end-to-end machine learning, Tata Global stock prediction, Stevens’ four scales, and automotive data analysis.',
     meetings: [
-      { num: '05', title: 'Business Understanding & AI Project Planning', href: '/docs/pertemuan-05' },
-      { num: '06', title: 'Data Understanding (Non-Visualization)', href: '/docs/pertemuan-06' },
+      { num: '05', title: 'Business Understanding & AI Project Planning', href: '/en/docs/pertemuan-05' },
+      { num: '06', title: 'Data Understanding (Non-Visualization)', href: '/en/docs/pertemuan-06' },
     ],
     color: 'from-emerald-500/20 to-teal-500/20',
     border: 'hover:border-emerald-500/50',
@@ -59,8 +59,8 @@ const modules = [
     title: 'Visualization & Data Cleaning',
     desc: 'Variable vs. statistical visualization, one-way ANOVA, five statistics notebooks, scientific sampling, SMOTE imbalance handling, and real messy-data cleaning.',
     meetings: [
-      { num: '07', title: 'Exploratory Data Analysis & Statistical Visualization', href: '/docs/pertemuan-07' },
-      { num: '08', title: 'Data Preparation: Object Selection, Cleaning & Validation', href: '/docs/pertemuan-08' },
+      { num: '07', title: 'Exploratory Data Analysis & Statistical Visualization', href: '/en/docs/pertemuan-07' },
+      { num: '08', title: 'Data Preparation: Object Selection, Cleaning & Validation', href: '/en/docs/pertemuan-08' },
     ],
     color: 'from-amber-500/20 to-orange-500/20',
     border: 'hover:border-amber-500/50',
@@ -71,8 +71,8 @@ const modules = [
     title: 'Data Construction & Feature Engineering',
     desc: 'Numeric scaling (MinMax/Robust/Standard), distribution transforms (Box-Cox), categorical encoding, data integration (merge/join), PCA, and feature selection.',
     meetings: [
-      { num: '09', title: 'Numeric Data Construction & Transformation', href: '/docs/pertemuan-09' },
-      { num: '10', title: 'Feature Engineering, Encoding & Data Integration', href: '/docs/pertemuan-10' },
+      { num: '09', title: 'Numeric Data Construction & Transformation', href: '/en/docs/pertemuan-09' },
+      { num: '10', title: 'Feature Engineering, Encoding & Data Integration', href: '/en/docs/pertemuan-10' },
     ],
     color: 'from-rose-500/20 to-pink-500/20',
     border: 'hover:border-rose-500/50',
@@ -83,8 +83,8 @@ const modules = [
     title: 'Supervised Learning',
     desc: 'Leakage-proof validation scenarios, classification algorithms (SVM, Decision Tree, Naive Bayes, KNN, AdaBoost) and regression (OLS, SVR, Random Forest).',
     meetings: [
-      { num: '11', title: 'Modeling Scenarios & Supervised Classification', href: '/docs/pertemuan-11' },
-      { num: '12', title: 'Numeric Regression Modeling & Residual Diagnostics', href: '/docs/pertemuan-12' },
+      { num: '11', title: 'Modeling Scenarios & Supervised Classification', href: '/en/docs/pertemuan-11' },
+      { num: '12', title: 'Numeric Regression Modeling & Residual Diagnostics', href: '/en/docs/pertemuan-12' },
     ],
     color: 'from-violet-500/20 to-purple-500/20',
     border: 'hover:border-violet-500/50',
@@ -93,10 +93,10 @@ const modules = [
   {
     week: 'Week 7',
     title: 'Clustering & Neural Networks',
-    desc: 'Unsupervised clustering (K-Means++, Hierarchical, DBSCAN, Silhouette) and deep learning architectures (Perceptron, MLP, CNN, RNN, Backpropagation).',
+    desc: 'Unsupervised clustering (K-Means++, Hierarchical, DBSCAN, Silhouette) and deep learning architectures (Perceptron, MLP, CNN, RNN with PyTorch & Keras 3).',
     meetings: [
-      { num: '13', title: 'Unsupervised Learning: K-Means, Hierarchical & DBSCAN', href: '/docs/pertemuan-13' },
-      { num: '14', title: 'Deep Learning & Artificial Neural Networks', href: '/docs/pertemuan-14' },
+      { num: '13', title: 'Unsupervised Learning: K-Means, Hierarchical & DBSCAN', href: '/en/docs/pertemuan-13' },
+      { num: '14', title: 'Deep Learning & Artificial Neural Networks', href: '/en/docs/pertemuan-14' },
     ],
     color: 'from-cyan-500/20 to-blue-500/20',
     border: 'hover:border-cyan-500/50',
@@ -105,14 +105,26 @@ const modules = [
   {
     week: 'Week 8',
     title: 'Model Evaluation & MLOps Deployment',
-    desc: 'Full evaluation metrics (ROC-AUC, PR-Curve, SHAP), model serialization, web deployment (Flask/Heroku, FastAPI/Streamlit), and model drift monitoring.',
+    desc: 'Full evaluation metrics (ROC-AUC, PR-Curve, SHAP), joblib/ONNX serialization, web deployment (Flask/Docker, FastAPI/Streamlit), and model drift monitoring.',
     meetings: [
-      { num: '15', title: 'Model Evaluation & Diagnostic Review', href: '/docs/pertemuan-15' },
-      { num: '16', title: 'Web Model Deployment & MLOps Foundations', href: '/docs/pertemuan-16' },
+      { num: '15', title: 'Model Evaluation & Diagnostic Review', href: '/en/docs/pertemuan-15' },
+      { num: '16', title: 'Web Model Deployment & MLOps Foundations', href: '/en/docs/pertemuan-16' },
     ],
     color: 'from-emerald-500/20 to-green-500/20',
     border: 'hover:border-emerald-500/50',
     icon: Cloud,
+  },
+  {
+    week: 'Week 9',
+    title: 'Generative AI, LLMs & AI Agents',
+    desc: 'Transformer & Self-Attention, Prompt Engineering (CoT, Pydantic Structured Outputs), Vector Search RAG pipelines, and Function Calling / AI Agents.',
+    meetings: [
+      { num: '17', title: 'Transformers, LLMs & Prompt Engineering', href: '/en/docs/pertemuan-17' },
+      { num: '18', title: 'RAG, AI Agents & LLM System Evaluation', href: '/en/docs/pertemuan-18' },
+    ],
+    color: 'from-fuchsia-500/20 to-violet-500/20',
+    border: 'hover:border-fuchsia-500/50',
+    icon: Sparkles,
   },
 ];
 
@@ -146,7 +158,7 @@ export default function EnHomePage() {
           </h1>
 
           <p className="max-w-3xl mx-auto text-lg sm:text-xl text-muted-foreground mb-10 leading-relaxed">
-            A complete <strong>16-session (8-week)</strong> learning path for <strong>Data Science &amp; Artificial Intelligence</strong>. Enriched with mathematical formulations, architecture diagrams, and modern applied Python code.
+            A complete <strong>18-session (9-week)</strong> learning path for <strong>Data Science, Machine Learning &amp; Modern AI</strong>. Enriched with mathematical formulations, architecture diagrams, and applied Python code.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4">
@@ -162,7 +174,7 @@ export default function EnHomePage() {
               className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border transition-all"
             >
               <Layers className="w-4 h-4" />
-              16-Session Syllabus
+              18-Session Syllabus
             </Link>
             <Link
               href="/en/docs/tugas-akhir-capstone"
@@ -175,8 +187,8 @@ export default function EnHomePage() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 pt-10 border-t border-border/60 text-left">
             <div className="p-4 rounded-xl bg-card border border-border">
-              <div className="text-2xl font-bold text-foreground">16 Full Sessions</div>
-              <div className="text-xs text-muted-foreground mt-1">8-week integrated curriculum</div>
+              <div className="text-2xl font-bold text-foreground">18 Full Sessions</div>
+              <div className="text-xs text-muted-foreground mt-1">9-week integrated curriculum</div>
             </div>
             <div className="p-4 rounded-xl bg-card border border-border">
               <div className="text-2xl font-bold text-foreground">CRISP-DM</div>
@@ -188,7 +200,7 @@ export default function EnHomePage() {
             </div>
             <div className="p-4 rounded-xl bg-card border border-border">
               <div className="text-2xl font-bold text-foreground">Hands-on Python</div>
-              <div className="text-xs text-muted-foreground mt-1">Scikit-learn, Keras &amp; FastAPI</div>
+              <div className="text-xs text-muted-foreground mt-1">Scikit-learn, PyTorch &amp; FastAPI</div>
             </div>
           </div>
         </div>
@@ -217,13 +229,10 @@ export default function EnHomePage() {
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
         <div className="text-center mb-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
-            16-Session Learning Curriculum
+            18-Session Learning Curriculum
           </h2>
           <p className="text-muted-foreground mt-2 max-w-2xl mx-auto text-sm sm:text-base">
             Each session is built in depth with industry research, theoretical formulations, and real Python implementations.
-          </p>
-          <p className="text-xs text-muted-foreground mt-3">
-            Note: English translations are in progress. Sessions not yet translated open the original Indonesian module.
           </p>
         </div>
 

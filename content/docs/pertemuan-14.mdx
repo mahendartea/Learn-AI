@@ -1,6 +1,6 @@
 ---
 title: "Pertemuan 14: Deep Learning & Artificial Neural Networks (ANN, CNN, RNN)"
-description: "Panduan pemodelan Artificial Neural Network dan Deep Learning: dari neuron biologis & perceptron (McCulloch-Pitts) hingga Multi-layer Perceptron, fungsi aktivasi (Sigmoid, Tanh, ReLU, Softmax), forward/backpropagation, gradient descent & SGD mini-batch, adaptive learning rate (Adam), regularisasi (L1/L2, Dropout, Early Stopping, Augmentasi), implementasi dengan Scikit-learn MLPClassifier & Keras/TensorFlow (Iris, MNIST), serta Convolutional Neural Network (Conv/Pooling/FC) dan Recurrent Neural Network (LSTM/GRU)."
+description: "Panduan pemodelan Artificial Neural Network dan Deep Learning: dari neuron biologis & perceptron (McCulloch-Pitts) hingga Multi-layer Perceptron, fungsi aktivasi (Sigmoid, Tanh, ReLU, Softmax), forward/backpropagation, gradient descent & SGD mini-batch, adaptive learning rate (Adam), regularisasi (L1/L2, Dropout, Early Stopping, Augmentasi), implementasi dengan Scikit-learn, PyTorch & Keras 3 (Iris, MNIST), serta Convolutional Neural Network (Conv/Pooling/FC) dan Recurrent Neural Network (LSTM/GRU)."
 ---
 
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
@@ -15,7 +15,7 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 ## 1. Tujuan Pembelajaran & Ruang Lingkup
 
-Modul ini memasuki ranah **Deep Learning**. Cakupannya meliputi *fully connected network* (FCN/MLP), **CNN**, dan **RNN**, serta penggunaan library **Scikit-learn** dan **Keras/TensorFlow**.
+Modul ini memasuki ranah **Deep Learning**. Cakupannya meliputi *fully connected network* (FCN/MLP), **CNN**, dan **RNN**, serta penggunaan library **Scikit-learn**, **PyTorch**, dan **Keras 3**.
 
 **Tujuan Pembelajaran:** peserta mampu melakukan proses pemodelan **Artificial Neural Network (ANN)**.
 
@@ -32,7 +32,7 @@ Modul ini memasuki ranah **Deep Learning**. Cakupannya meliputi *fully connected
 | Axon | Output |
 | Synapse | Weight |
 
-Konsep ANN bermula dari artikel **Waffen McCulloch & Walter Pitts (1943)** yang memformulasikan model matematis sel-sel otak manusia.
+Konsep ANN bermula dari artikel **Warren McCulloch & Walter Pitts (1943)** yang memformulasikan model matematis sel-sel otak manusia.
 
 ### A. Arsitektur Single-Layer Perceptron
 
@@ -267,7 +267,7 @@ Beberapa tahap dapat digabung menjadi satu.
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import accuracy_score, plot_confusion_matrix
+from sklearn.metrics import accuracy_score, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 
 # Load data
@@ -282,7 +282,7 @@ print('X_val', X_val.shape)
 print('X_test', X_test.shape)
 
 # Define & compile model
-mlp = MLPClassifier(hidden_layer_sizes=(64,), activation='relu', max_iter=1000, epsilon=1e-08)
+mlp = MLPClassifier(hidden_layer_sizes=(64,), activation='relu', max_iter=1000, epsilon=1e-08, random_state=42)
 
 # Fit + evaluasi validasi
 mlp.fit(X_train, Y_train)
@@ -292,35 +292,85 @@ print('Akurasi Validasi ANN:', acc_val)
 # Evaluasi data uji
 acc_test = accuracy_score(Y_test, mlp.predict(X_test))
 print('Akurasi Testing ANN:', acc_test)
-plot_confusion_matrix(mlp, X_test, Y_test)
+ConfusionMatrixDisplay.from_estimator(mlp, X_test, Y_test)
 plt.show()
 ```
 
-### B. Implementasi dengan Keras
+### B. Implementasi dengan Keras 3
 
 ```python
+import keras
 from keras.utils import to_categorical
 from keras.models import Sequential
-from keras.layers import Flatten, Dense
+from keras.layers import Input, Dense
 
 # One-hot encoding label (3 kelas)
-Y_train = to_categorical(Y_train, 3)
-Y_val = to_categorical(Y_val, 3)
-Y_test = to_categorical(Y_test, 3)
+Y_train_oh = to_categorical(Y_train, 3)
+Y_val_oh = to_categorical(Y_val, 3)
+Y_test_oh = to_categorical(Y_test, 3)
 
-model = Sequential()
-model.add(Flatten())
-model.add(Dense(64, activation='relu'))
-model.add(Dense(3, activation='softmax'))
+model = Sequential([
+    Input(shape=(4,)),
+    Dense(64, activation='relu'),
+    Dense(3, activation='softmax'),
+])
 
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-history = model.fit(X_train, Y_train, epochs=100, batch_size=5,
-                    validation_data=(X_val, Y_val))
+history = model.fit(X_train, Y_train_oh, epochs=100, batch_size=5,
+                    validation_data=(X_val, Y_val_oh), verbose=0)
 model.summary()
 
-loss, accuracy = model.evaluate(X_test, Y_test)
-print('Akurasi Testing ANN:', accuracy)
+loss, accuracy = model.evaluate(X_test, Y_test_oh, verbose=0)
+print('Akurasi Testing ANN (Keras):', accuracy)
+```
+
+### C. Implementasi dengan PyTorch
+
+**PyTorch** adalah standar industri untuk riset dan produksi *deep learning* modern dengan alur *training loop* eksplisit yang fleksibel:
+
+```python
+import torch
+import torch.nn as nn
+from torch.utils.data import TensorDataset, DataLoader
+
+# Konversi ke tensor PyTorch
+X_tr_t = torch.tensor(X_train, dtype=torch.float32)
+y_tr_t = torch.tensor(Y_train, dtype=torch.long)
+X_te_t = torch.tensor(X_test, dtype=torch.float32)
+y_te_t = torch.tensor(Y_test, dtype=torch.long)
+
+loader = DataLoader(TensorDataset(X_tr_t, y_tr_t), batch_size=16, shuffle=True)
+
+class IrisMLP(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(4, 64),
+            nn.ReLU(),
+            nn.Linear(64, 3),
+        )
+
+    def forward(self, x):
+        return self.net(x)
+
+pt_model = IrisMLP()
+criterion = nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(pt_model.parameters(), lr=1e-2)
+
+for epoch in range(100):
+    pt_model.train()
+    for xb, yb in loader:
+        optimizer.zero_grad()
+        loss = criterion(pt_model(xb), yb)
+        loss.backward()
+        optimizer.step()
+
+pt_model.eval()
+with torch.no_grad():
+    preds = pt_model(X_te_t).argmax(dim=1)
+    acc_pt = (preds == y_te_t).float().mean().item()
+print('Akurasi Testing ANN (PyTorch):', round(acc_pt, 4))
 ```
 
 ---
@@ -335,7 +385,7 @@ Dataset **MNIST** (angka tulisan tangan) dibagi menjadi **55.000 training**, **1
 import keras
 from keras.datasets import mnist
 from keras.models import Sequential
-from keras.layers import Flatten, Dense
+from keras.layers import Input, Flatten, Dense
 import matplotlib.pyplot as plt
 
 # 1. Load data
@@ -346,13 +396,15 @@ y_train = keras.utils.to_categorical(y_train, 10)
 y_test = keras.utils.to_categorical(y_test, 10)
 
 # 2. Define model (Multilayer Neural Network)
-model1 = Sequential()
-model1.add(Flatten())
-model1.add(Dense(64, activation='relu'))
-model1.add(Dense(10, activation='softmax'))
+model1 = Sequential([
+    Input(shape=(28, 28, 1)),
+    Flatten(),
+    Dense(64, activation='relu'),
+    Dense(10, activation='softmax'),
+])
 
 # 3. Compile, Fit, Evaluate
-model1.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
+model1.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 history1 = model1.fit(X_train, y_train, epochs=10, batch_size=100,
                       validation_data=(X_test, y_test))
 model1.summary()
@@ -422,16 +474,18 @@ flowchart LR
 ```python
 from keras.layers import Conv2D, MaxPooling2D
 
-model2 = Sequential()
-model2.add(Conv2D(16, (3, 3), activation='relu', input_shape=(28, 28, 1), padding='same'))
-model2.add(MaxPooling2D(2, 2))
-model2.add(Conv2D(32, (3, 3), activation='relu', padding='same'))
-model2.add(MaxPooling2D(2, 2))
-model2.add(Flatten())
-model2.add(Dense(64, activation='relu'))
-model2.add(Dense(10, activation='softmax'))
+model2 = Sequential([
+    Input(shape=(28, 28, 1)),
+    Conv2D(16, (3, 3), activation='relu', padding='same'),
+    MaxPooling2D(2, 2),
+    Conv2D(32, (3, 3), activation='relu', padding='same'),
+    MaxPooling2D(2, 2),
+    Flatten(),
+    Dense(64, activation='relu'),
+    Dense(10, activation='softmax'),
+])
 
-model2.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
+model2.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 history2 = model2.fit(X_train, y_train, epochs=10, batch_size=100,
                       validation_data=(X_test, y_test))
 model2.evaluate(X_test, y_test)
@@ -442,17 +496,19 @@ model2.evaluate(X_test, y_test)
 ```python
 from keras.layers import Dropout
 
-model3 = Sequential()
-model3.add(Conv2D(16, (3, 3), activation='relu', input_shape=(28, 28, 1), padding='same'))
-model3.add(MaxPooling2D(2, 2))
-model3.add(Conv2D(32, (3, 3), activation='relu', padding='same'))
-model3.add(MaxPooling2D(2, 2))
-model3.add(Flatten())
-model3.add(Dense(64, activation='relu'))
-model3.add(Dropout(0.5))
-model3.add(Dense(10, activation='softmax'))
+model3 = Sequential([
+    Input(shape=(28, 28, 1)),
+    Conv2D(16, (3, 3), activation='relu', padding='same'),
+    MaxPooling2D(2, 2),
+    Conv2D(32, (3, 3), activation='relu', padding='same'),
+    MaxPooling2D(2, 2),
+    Flatten(),
+    Dense(64, activation='relu'),
+    Dropout(0.5),
+    Dense(10, activation='softmax'),
+])
 
-model3.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
+model3.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 history3 = model3.fit(X_train, y_train, epochs=10, batch_size=100,
                       validation_data=(X_test, y_test))
 ```

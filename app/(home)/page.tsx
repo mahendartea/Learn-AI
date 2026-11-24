@@ -21,7 +21,7 @@ const modules = [
   {
     week: 'Minggu 1',
     title: 'Fondasi AI & Lingkungan Komputasi',
-    desc: 'Setup ekosistem Python 3.10+, Jupyter/Colab, GPU acceleration, 4 kuadran AI, arsitektur agen PEAS, dan Stranas KA Indonesia 2020-2045.',
+    desc: 'Setup ekosistem Python 3.11+ (uv/pip/conda), Jupyter/Colab, GPU acceleration, 4 kuadran AI, arsitektur agen PEAS, dan Stranas KA Indonesia 2020-2045.',
     meetings: [
       { num: '01', title: 'Setup Lingkungan Komputasi Modern & Tools AI', href: '/docs/pertemuan-01' },
       { num: '02', title: 'Konsep Dasar, Teknologi & Aplikasi AI', href: '/docs/pertemuan-02' },
@@ -93,7 +93,7 @@ const modules = [
   {
     week: 'Minggu 7',
     title: 'Segmentasi & Jaringan Saraf Tiruan',
-    desc: 'Unsupervised clustering (K-Means++, DBSCAN, Silhouette) dan arsitektur Deep Learning (Perceptron, MLP, CNN, RNN, Backprop).',
+    desc: 'Unsupervised clustering (K-Means++, DBSCAN, Silhouette) dan arsitektur Deep Learning (Perceptron, MLP, CNN, RNN dengan PyTorch & Keras 3).',
     meetings: [
       { num: '13', title: 'Klastering Tak Terawasi (K-Means/DBSCAN)', href: '/docs/pertemuan-13' },
       { num: '14', title: 'Deep Learning & Artificial Neural Networks', href: '/docs/pertemuan-14' },
@@ -105,7 +105,7 @@ const modules = [
   {
     week: 'Minggu 8',
     title: 'Evaluasi Model & MLOps Deployment',
-    desc: 'Metrik evaluasi lengkap (ROC-AUC, PR-Curve, SHAP), serialisasi model, deployment web Flask/Heroku & FastAPI, serta pemantauan model drift.',
+    desc: 'Metrik evaluasi lengkap (ROC-AUC, PR-Curve, SHAP), serialisasi joblib/ONNX, deployment web Flask/Docker & FastAPI/Streamlit, serta pemantauan model drift.',
     meetings: [
       { num: '15', title: 'Evaluasi Diagnostik & Interpretasi Model', href: '/docs/pertemuan-15' },
       { num: '16', title: 'Model Deployment Web di Cloud & MLOps', href: '/docs/pertemuan-16' },
@@ -113,6 +113,18 @@ const modules = [
     color: 'from-emerald-500/20 to-green-500/20',
     border: 'hover:border-emerald-500/50',
     icon: Cloud
+  },
+  {
+    week: 'Minggu 9',
+    title: 'Generative AI, LLM & AI Agents',
+    desc: 'Arsitektur Transformer & Self-Attention, Prompt Engineering (CoT, Structured Output JSON), RAG berbasis Vector Search, dan Function Calling / AI Agents.',
+    meetings: [
+      { num: '17', title: 'Transformer, LLM & Prompt Engineering', href: '/docs/pertemuan-17' },
+      { num: '18', title: 'RAG, AI Agents & Evaluasi Sistem LLM', href: '/docs/pertemuan-18' },
+    ],
+    color: 'from-fuchsia-500/20 to-violet-500/20',
+    border: 'hover:border-fuchsia-500/50',
+    icon: Sparkles
   },
 ];
 
@@ -147,7 +159,7 @@ export default function HomePage() {
           </h1>
 
           <p className="max-w-3xl mx-auto text-lg sm:text-xl text-muted-foreground mb-10 leading-relaxed">
-            Panduan terlengkap <strong>16 Pertemuan (8 Minggu)</strong> pembelajaran <strong>Data Science &amp; Artificial Intelligence</strong>. Diperkaya dengan formulasi matematis, diagram arsitektur, dan kode Python terapan modern.
+            Panduan terlengkap <strong>18 Pertemuan (9 Minggu)</strong> pembelajaran <strong>Data Science, Machine Learning &amp; AI Modern</strong>. Diperkaya dengan formulasi matematis, diagram arsitektur, dan kode Python terapan.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4">
@@ -163,7 +175,7 @@ export default function HomePage() {
               className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border transition-all"
             >
               <Layers className="w-4 h-4" />
-              Peta Silabus 16 Sesi
+              Peta Silabus 18 Sesi
             </Link>
             <Link
               href="/docs/tugas-akhir-capstone"
@@ -177,8 +189,8 @@ export default function HomePage() {
           {/* Quick Metrics */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 pt-10 border-t border-border/60 text-left">
             <div className="p-4 rounded-xl bg-card border border-border">
-              <div className="text-2xl font-bold text-foreground">16 Sesi Lengkap</div>
-              <div className="text-xs text-muted-foreground mt-1">8 Minggu Kurikulum Terpadu</div>
+              <div className="text-2xl font-bold text-foreground">18 Sesi Lengkap</div>
+              <div className="text-xs text-muted-foreground mt-1">9 Minggu Kurikulum Terpadu</div>
             </div>
             <div className="p-4 rounded-xl bg-card border border-border">
               <div className="text-2xl font-bold text-foreground">CRISP-DM</div>
@@ -219,7 +231,7 @@ export default function HomePage() {
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
         <div className="text-center mb-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
-            Kurikulum 16 Pertemuan Pembelajaran
+            Kurikulum 18 Pertemuan Pembelajaran
           </h2>
           <p className="text-muted-foreground mt-2 max-w-2xl mx-auto text-sm sm:text-base">
             Setiap pertemuan disusun secara mendalam dengan riset industri mutakhir, formulasi teori, dan implementasi kode Python nyata.
@@ -318,7 +330,7 @@ export default function HomePage() {
               </div>
               <div className="flex justify-between py-1">
                 <span className="text-muted-foreground">Cakupan Materi:</span>
-                <span className="font-semibold text-foreground">16 Pertemuan (8 Minggu)</span>
+                <span className="font-semibold text-foreground">18 Pertemuan (9 Minggu)</span>
               </div>
             </div>
           </div>

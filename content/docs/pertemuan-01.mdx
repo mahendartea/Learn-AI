@@ -1,6 +1,6 @@
 ---
 title: "Pertemuan 01: Setup Lingkungan Komputasi Data Science Modern"
-description: "Panduan komprehensif penyiapan lingkungan komputasi Python 3.10+, isolasi virtual environment, package manager (pip, conda), JupyterLab, VS Code, dan Google Colab dengan akselerasi GPU."
+description: "Panduan komprehensif penyiapan lingkungan komputasi Python 3.11+, isolasi virtual environment, package manager (uv, pip, conda), JupyterLab, VS Code, dan Google Colab dengan akselerasi GPU."
 ---
 
 > **Penyusun Modul:** Mahendar Dwi Payana  
@@ -26,7 +26,7 @@ Secara garis besar, praktisi sains data mengombinasikan dua jenis lingkungan:
 ```
 Lingkungan Komputasi Data Science
 ├── Lingkungan Lokal (Offline, Kontrol Penuh)
-│   ├── CLI & Package Manager: Python 3.10+, pip, venv, Conda / Mamba
+│   ├── CLI & Package Manager: Python 3.11+, uv / pip, venv, Conda / Mamba
 │   └── IDE / Notebook Editor: JupyterLab, Jupyter Notebook, VS Code + Python Extension
 └── Lingkungan Cloud (Awan, Zero-Config, Hardware Acceleration)
     ├── Google Colaboratory (Gratis GPU T4/V100 & TPU)
@@ -40,8 +40,8 @@ Lingkungan Komputasi Data Science
 
 <Steps>
   <Step>
-    ### Memastikan Pemasangan Python 3.10+
-    Unduh rilis resmi stabil dari [python.org](https://www.python.org/downloads/). Pastikan opsi **"Add Python to PATH"** dicentang pada saat proses instalasi Windows.
+    ### Memastikan Pemasangan Python 3.11+
+    Unduh rilis resmi stabil (Python 3.11 atau 3.12+) dari [python.org](https://www.python.org/downloads/). Pastikan opsi **"Add Python to PATH"** dicentang pada saat proses instalasi Windows.
 
     <Tabs items={['Windows', 'macOS', 'Linux']}>
       <Tab value="Windows">
@@ -51,7 +51,7 @@ Lingkungan Komputasi Data Science
       </Tab>
       <Tab value="macOS">
         ```bash
-        brew install python@3.10
+        brew install python@3.12
         python3 --version
         ```
       </Tab>
@@ -100,8 +100,16 @@ Lingkungan Komputasi Data Science
     ### Instalasi Pustaka Inti Sains Data
     Pasang paket-paket inti data science terverifikasi dan daftarkan kernel ke Jupyter:
 
-    <Tabs items={['pip (Direkomendasikan)', 'conda']}>
-      <Tab value="pip (Direkomendasikan)">
+    <Tabs items={['uv (Modern & Tercepat)', 'pip', 'conda']}>
+      <Tab value="uv (Modern & Tercepat)">
+        ```bash
+        # Instalasi uv (macOS/Linux): curl -LsSf https://astral.sh/uv/install.sh | sh
+        uv venv --python 3.12
+        source .venv/bin/activate
+        uv pip install numpy scipy pandas matplotlib seaborn scikit-learn jupyterlab ipykernel
+        ```
+      </Tab>
+      <Tab value="pip">
         ```bash
         pip install --upgrade pip
         pip install numpy scipy pandas matplotlib seaborn scikit-learn jupyterlab ipykernel
@@ -110,7 +118,7 @@ Lingkungan Komputasi Data Science
       </Tab>
       <Tab value="conda">
         ```bash
-        conda create -n env-ds python=3.10 numpy scipy pandas matplotlib seaborn scikit-learn jupyterlab
+        conda create -n env-ds python=3.12 numpy scipy pandas matplotlib seaborn scikit-learn jupyterlab
         conda activate env-ds
         ```
       </Tab>
@@ -126,7 +134,7 @@ Google Colaboratory adalah lingkungan Jupyter berbasis peramban yang terhubung l
 
 ### Fitur Kunci Google Colab:
 - **Zero-Setup**: Pustaka data science populer sudah terinstal (*pre-installed*).
-- **Akselerasi Perangkat Keras**: Akses bebas ke GPU Nvidia T4 / V100 dan Tensor Processing Unit (TPU).
+- **Akselerasi Perangkat Keras**: Akses gratis ke GPU NVIDIA T4 dan TPU (serta GPU L4/A100 pada paket Colab Pro).
 - **Integrasi Google Drive**: Menyimpan dataset dan bobot model langsung ke cloud storage.
 
 ### Verifikasi Akselerasi GPU di Colab
@@ -142,7 +150,7 @@ if torch.cuda.is_available():
     print(f"Akselerasi GPU Aktif: {torch.cuda.get_device_name(0)}")
     print(f"Alokasi Memori GPU: {torch.cuda.get_device_properties(0).total_memory / 1e9:.2f} GB")
 else:
-    print("Berjalan pada CPU Runtime. Untuk mengaktifkan GPU: Edit -> Notebook settings -> Hardware accelerator -> T4 GPU.")
+    print("Berjalan pada CPU Runtime. Untuk mengaktifkan GPU: Runtime -> Change runtime type -> T4 GPU.")
 ```
 
 ---
