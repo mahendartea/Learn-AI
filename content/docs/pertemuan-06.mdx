@@ -1,32 +1,15 @@
 ---
 title: "Pertemuan 06: Data Understanding (Non-Visualisasi)"
-description: "Penerapan Unit Kompetensi SKKNI No. 299 Tahun 2020: Mengumpulkan Data (J.62DMI00.004.1) dan Menelaah Data dengan Metode Statistik (J.62DMI00.005.1). Dilengkapi taksonomi tipe data dasar (Stevens 1946), model data (Tabular, Graf, Sekuens), 4 moda akuisisi data (Kaggle API, CKAN API Bandung, Web Scraping, SQL RDB), statistik deskriptif non-visual, dan 2 studi kasus implementasi Python (automobileEDA.csv & EPL Goal Scorer)."
+description: "Panduan pengumpulan dan penelaahan data dengan metode statistik: taksonomi tipe data dasar (Stevens 1946), model data (Tabular, Graf, Sekuens), 4 moda akuisisi data (Kaggle API, CKAN API Bandung, Web Scraping, SQL RDB), statistik deskriptif non-visual, dan 2 studi kasus implementasi Python (automobileEDA.csv & EPL Goal Scorer)."
 ---
 
 > **Penyusun Modul & Portal:** Mahendar Dwi Payana  
 > **Penulis Materi Pelatihan DTS 2021:** Adila Alfa Krisnadhi, Ph.D. (Universitas Indonesia)  
-> **Penyelenggara & Kurikulum:** Thematic Academy Digital Talent Scholarship (DTS) 2021, Kementerian Komunikasi dan Informatika RI (Kominfo)  
-> **Standar Rujukan:** Standar Kompetensi Kerja Nasional Indonesia (SKKNI) No. 299 Tahun 2020 — Skema *Associate Data Scientist*
+> **Penyelenggara & Kurikulum:** Thematic Academy Digital Talent Scholarship (DTS) 2021, Kementerian Komunikasi dan Informatika RI (Kominfo)
 
 ---
 
-## 1. Landasan Standar Kompetensi Kerja (SKKNI)
-
-Tahap **Data Understanding** (Pemahaman Data) adalah jembatan kritis yang menghubungkan rumusan masalah bisnis (*Business Understanding*) dengan persiapan teknis (*Data Preparation*). Mengacu pada **SKKNI No. 299 Tahun 2020**, pertemuan ini membekali peserta dengan 2 Unit Kompetensi (UK) inti:
-
-| Kode Unit | Judul Unit Kompetensi | Kriteria Unjuk Kerja (KUK) Inti |
-| :--- | :--- | :--- |
-| **J.62DMI00.004.1** | Mengumpulkan Data | 1.1 Menentukan kebutuhan data sesuai tujuan analitik.<br/>1.2 Mengambil data dari sumber internal dan terbuka (manual, API, scraping, basis data).<br/>1.3 Mengintegrasikan dan memuat data ke dalam media pemrosesan. |
-| **J.62DMI00.005.1** | Menelaah Data dengan Metoda Statistik | 2.1 Menelaah data menggunakan ukuran statistik dasar (pemusatan, penyebaran, bentuk distribusi).<br/>2.2 Menganalisis tipe, struktur, dan keterkaitan relasi data.<br/>2.3 Mengidentifikasi keanehan, anomali, serta pencilan (*outliers*). |
-
-### Metode Penilaian Uji Kompetensi
-Penguasaan materi dinilai di Tempat Uji Kompetensi (TUK) melalui:
-1. **Tes Tertulis**: Pemahaman teoretis mengenai taksonomi Stevens, perbedaan skala pengukuran, dan formulasi matematis statistik deskriptif.
-2. **Demonstrasi Praktik**: Pengambilan data secara programatik (API/SQL) dan penelaahan data non-visual menggunakan pustaka Pandas di Jupyter Notebook.
-
----
-
-## 2. Konsep & Peran Data Understanding dalam Siklus CRISP-DM
+## 1. Konsep & Peran Data Understanding dalam Siklus CRISP-DM
 
 Dalam kerangka metodologi **CRISP-DM (Cross-Industry Standard Process for Data Mining)**, data understanding dilakukan tepat setelah tujuan bisnis terdefinisi dengan jelas.
 
@@ -55,7 +38,7 @@ Data merupakan **bahan mentah** utama bagi solusi AI dan Sains Data. Data dari m
 
 ---
 
-## 3. Sumber, Susunan, Tipe, dan Model Data
+## 2. Sumber, Susunan, Tipe, dan Model Data
 
 ### A. Taksonomi Sumber Data
 * **Sumber Internal**: Berkas spreadsheet (Excel, CSV, JSON), Basis Data Relasional (PostgreSQL, MySQL, Oracle via SQL), Dokumen teks bebas, dan Berkas multimedia (audio/video).
@@ -124,7 +107,7 @@ flowchart LR
 
 ---
 
-## 4. Teknik Akuisisi & Pengambilan Data
+## 3. Teknik Akuisisi & Pengambilan Data
 
 Terdapat empat moda pengambilan data yang lazim diterapkan oleh seorang *Data Scientist*:
 
@@ -201,7 +184,7 @@ for res in resources:
 
 ---
 
-## 5. Formulasi Matematis Telaah Statistik Deskriptif
+## 4. Formulasi Matematis Telaah Statistik Deskriptif
 
 Metode penelaahan data statistik non-visual berfokus pada ringkasan karakteristik data numerik dan kategorik tanpa bergantung pada visualisasi grafik.
 
@@ -298,7 +281,7 @@ Di mana $s_x$ dan $s_y$ adalah simpangan baku sampel variabel $X$ dan $Y$.
 
 ---
 
-## 6. Studi Kasus 1: Eksplorasi Statistik Karakteristik Mobil (`automobileEDA.csv`)
+## 5. Studi Kasus 1: Eksplorasi Statistik Karakteristik Mobil (`automobileEDA.csv`)
 
 Studi kasus ini menggunakan dataset otomotif komprehensif berdimensi 201 baris dan 29 fitur. Dataset telah disediakan di direktori publik portal: [`automobileEDA.csv`](https://mahendartea.github.io/Learn-AI/data/automobileEDA.csv).
 
@@ -362,7 +345,7 @@ print(engine_loc_counts)
 
 ---
 
-## 7. Studi Kasus 2: Analisis Kinerja Pemain Liga Premier Inggris (`epl-goalScorer(20-21).csv`)
+## 6. Studi Kasus 2: Analisis Kinerja Pemain Liga Premier Inggris (`epl-goalScorer(20-21).csv`)
 
 Studi kasus ini menelaah dataset performa 522 pemain English Premier League (EPL) musim 2020/2021 berdasarkan materi pelatihan Adila Alfa Krisnadhi, Ph.D.
 
@@ -420,7 +403,7 @@ def analyze_epl_statistics(df_epl):
 
 ---
 
-## 8. Ringkasan Pustaka Fungsi Statistik Pandas
+## 7. Ringkasan Pustaka Fungsi Statistik Pandas
 
 | Nama Fungsi | Deskripsi Hasil Komputasi | Berlaku untuk Tipe Data |
 | :--- | :--- | :--- |
@@ -440,7 +423,7 @@ def analyze_epl_statistics(df_epl):
 
 ---
 
-## 9. Penugasan Praktik Mandiri (Tugas Harian)
+## 8. Penugasan Praktik Mandiri (Tugas Harian)
 
 ### Tugas 1: Otomasi Unduhan Dataset Terbuka via Kaggle API
 1. Siapkan lingkungan kerja Python dan lakukan konfigurasi token `kaggle.json`.
@@ -458,7 +441,7 @@ Gunakan dataset transaksi pelanggan perbankan / SPBU (`transaction_1k`) dari rep
 
 ---
 
-## 10. Referensi Literatur & Bacaan Lanjutan
+## 9. Referensi Literatur & Bacaan Lanjutan
 
 1. **Adila Alfa Krisnadhi, Ph.D. (Universitas Indonesia)**. *Bahan Ajar Modul Pelatihan: Data Understanding 1*. Thematic Academy Digital Talent Scholarship 2021, Kementerian Komunikasi dan Informatika RI.
 2. **Stanley S. Stevens**. *On the Theory of Scales of Measurement*. Science 103 (2684): 677–680, 1946.

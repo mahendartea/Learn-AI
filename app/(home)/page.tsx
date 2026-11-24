@@ -3,17 +3,14 @@ import Image from 'next/image';
 import { 
   BookOpen, 
   Terminal, 
-  Award, 
   Cpu, 
   Layers, 
-  CheckCircle2, 
   ExternalLink,
   ChevronRight,
   Database,
   Cloud,
   User,
   Sparkles,
-  GitBranch,
   ShieldCheck,
   BrainCircuit,
   Binary
@@ -36,7 +33,7 @@ const modules = [
   {
     week: 'Minggu 2',
     title: 'Metodologi & Kakas Proyek Sains Data',
-    desc: 'Siklus CRISP-DM, 21 Unit SKKNI 299/2020, Git/GitHub, 6 pustaka inti, vektorisasi NumPy BMI, serta studi kasus dataset imunisasi bayi DKI.',
+    desc: 'Siklus CRISP-DM, 7 langkah generik sains data, Git/GitHub, 6 pustaka inti, vektorisasi NumPy BMI, serta studi kasus dataset imunisasi bayi DKI.',
     meetings: [
       { num: '03', title: 'Metodologi Pengembangan Sains Data Berbasis Data', href: '/docs/pertemuan-03' },
       { num: '04', title: 'Kakas Proyek Sains Data (Tools for Data Science)', href: '/docs/pertemuan-04' },
@@ -150,7 +147,7 @@ export default function HomePage() {
           </h1>
 
           <p className="max-w-3xl mx-auto text-lg sm:text-xl text-muted-foreground mb-10 leading-relaxed">
-            Panduan terlengkap <strong>16 Pertemuan (8 Minggu)</strong> berbasis Standar Kompetensi Kerja Nasional Indonesia (<strong>SKKNI No. 299 Tahun 2020</strong>). Diperkaya dengan formulasi matematis, diagram arsitektur, dan kode Python terapan modern.
+            Panduan terlengkap <strong>16 Pertemuan (8 Minggu)</strong> pembelajaran <strong>Data Science &amp; Artificial Intelligence</strong>. Diperkaya dengan formulasi matematis, diagram arsitektur, dan kode Python terapan modern.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4">
@@ -184,8 +181,8 @@ export default function HomePage() {
               <div className="text-xs text-muted-foreground mt-1">8 Minggu Kurikulum Terpadu</div>
             </div>
             <div className="p-4 rounded-xl bg-card border border-border">
-              <div className="text-2xl font-bold text-foreground">SKKNI No. 299</div>
-              <div className="text-xs text-muted-foreground mt-1">Associate Data Scientist</div>
+              <div className="text-2xl font-bold text-foreground">CRISP-DM</div>
+              <div className="text-xs text-muted-foreground mt-1">Alur Proyek Terstruktur</div>
             </div>
             <div className="p-4 rounded-xl bg-card border border-border">
               <div className="text-2xl font-bold text-foreground">End-to-End MLOps</div>
@@ -309,15 +306,11 @@ export default function HomePage() {
           <div className="lg:col-span-5">
             <div className="p-6 rounded-2xl bg-card border border-border shadow-sm space-y-4 text-xs sm:text-sm">
               <div className="font-bold text-foreground border-b border-border pb-3">
-                Informasi Kepemilikan &amp; Standar
+                Informasi Portal &amp; Kurikulum
               </div>
               <div className="flex justify-between py-1 border-b border-border/40">
                 <span className="text-muted-foreground">Pemilik Website:</span>
                 <span className="font-semibold text-foreground">{siteConfig.author}</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-border/40">
-                <span className="text-muted-foreground">Standar Acuan:</span>
-                <span className="font-semibold text-foreground">SKKNI No. 299 Thn 2020</span>
               </div>
               <div className="flex justify-between py-1 border-b border-border/40">
                 <span className="text-muted-foreground">Kurikulum Dasar:</span>

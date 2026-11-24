@@ -1,6 +1,6 @@
 ---
 title: "Pertemuan 16: Deployment Model Web & Fondasi MLOps"
-description: "Penerapan Unit Kompetensi SKKNI J.62DMI00.016.1 (Membuat Rencana Deployment Model) dan J.62DMI00.017.1 (Melakukan Deployment Model): konsep & tantangan deployment, pola static vs dynamic (on devices/server: VM, container, serverless, streaming), strategi Single/Silent/Canary, reproducibility, serialisasi model (pickle/H5), deployment Regresi Linier & ANN berbasis Flask, persiapan Anaconda/VSCode/Heroku, serta alternatif modern FastAPI + Streamlit dan pemantauan model drift."
+description: "Panduan lengkap perencanaan dan pelaksanaan deployment model ke produksi: konsep & tantangan deployment, pola static vs dynamic (on devices/server: VM, container, serverless, streaming), strategi Single/Silent/Canary, reproducibility, serialisasi model (pickle/H5), deployment Regresi Linier & ANN berbasis Flask, persiapan Anaconda/VSCode/Heroku, serta alternatif modern FastAPI + Streamlit dan pemantauan model drift."
 ---
 
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
@@ -9,19 +9,13 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 > **Penyusun Modul & Portal:** Mahendar Dwi Payana  
 > **Tim Penyusun Materi Pelatihan DTS 2021:** Suryo Adhi Wibowo, Citra Yasin Ahmad Fadhlika, & Ahmad Alfan — Thematic Academy Digital Talent Scholarship 2021  
-> **Penyelenggara & Kurikulum:** Kementerian Komunikasi dan Informatika RI (Kominfo) & Sekolah Teknik Elektro dan Informatika (STEI) ITB  
-> **Standar Rujukan:** Standar Kompetensi Kerja Nasional Indonesia (SKKNI) No. 299 Tahun 2020 — Skema *Associate Data Scientist*
+> **Penyelenggara & Kurikulum:** Kementerian Komunikasi dan Informatika RI (Kominfo) & Sekolah Teknik Elektro dan Informatika (STEI) ITB
 
 ---
 
-## 1. Landasan Standar Kompetensi Kerja (SKKNI)
+## 1. Tujuan Pembelajaran & Ruang Lingkup
 
 Model yang hanya tersimpan di dalam Jupyter Notebook tidak memiliki nilai bisnis. Puncak dari seluruh rangkaian pembelajaran adalah **merilis model menjadi layanan operasional** (website) yang dapat diakses banyak orang.
-
-| Kode Unit | Elemen Kompetensi |
-| :--- | :--- |
-| **J.62DMI00.016.1**<br />*Membuat Rencana Deployment Model* | **1.** Melakukan strategi deployment<br />**2.** Menyusun instruksi deployment |
-| **J.62DMI00.017.1**<br />*Melakukan Deployment Model* | **1.** Melakukan langkah deployment sesuai instruksi<br />**2.** Membuat laporan hasil deployment |
 
 **Tujuan Pembelajaran:** peserta mampu mengimplementasikan model AI (Neural Network maupun Regresi) ke dalam **website sederhana**, memahami konsep & tipe deployment, strategi, instalasi environment, hingga implementasi.
 
@@ -445,8 +439,8 @@ Praktisi wajib menyiapkan prosedur **audit berkala** dan pipeline **retraining o
     Deploy model **ANN klasifikasi gambar kucing/anjing** (Cat vs Dog) berbasis Flask dengan model Keras `.h5`. Perhatikan penanganan upload gambar, normalisasi piksel ($\times 1/255$), dan endpoint `/display/<filename>`. Uji dengan beberapa gambar berbeda dan laporkan akurasinya!
   </Accordion>
 
-  <Accordion title="Tugas 3: Desain Rencana Deployment (SKKNI J.62DMI00.016.1)">
-    Untuk proyek akhir (Capstone) Anda, susun **rencana deployment** yang memuat: (1) pilihan pola deployment (static/dynamic on-device/on-server) beserta justifikasinya, (2) strategi deployment (Single/Silent/Canary), (3) kebutuhan resource & estimasi latensi, (4) daftar dependency & penanganan reproducibility, dan (5) instruksi deployment langkah demi langkah. Dokumentasikan sesuai SKKNI!
+  <Accordion title="Tugas 3: Desain Rencana Deployment">
+    Untuk proyek akhir (Capstone) Anda, susun **rencana deployment** yang memuat: (1) pilihan pola deployment (static/dynamic on-device/on-server) beserta justifikasinya, (2) strategi deployment (Single/Silent/Canary), (3) kebutuhan resource & estimasi latensi, (4) daftar dependency & penanganan reproducibility, dan (5) instruksi deployment langkah demi langkah. Dokumentasikan secara lengkap!
   </Accordion>
 
   <Accordion title="Tugas 4: Perbandingan Flask vs FastAPI">
@@ -463,10 +457,9 @@ Praktisi wajib menyiapkan prosedur **audit berkala** dan pipeline **retraining o
 ## 12. Referensi Pustaka & Tautan Resmi
 
 1. **Suryo Adhi Wibowo, Citra Yasin Ahmad Fadhlika, & Ahmad Alfan** (2021). *Modul Melakukan Deployment Model*. Thematic Academy Digital Talent Scholarship 2021, Kementerian Komunikasi dan Informatika RI.
-2. **Kementerian Ketenagakerjaan RI** (2020). *SKKNI No. 299 Tahun 2020 Bidang Artificial Intelligence Subbidang Data Science* (Unit `J.62DMI00.016.1` Membuat Rencana Deployment Model & `J.62DMI00.017.1` Melakukan Deployment Model).
-3. **Andriy Burkov** (2020). *Machine Learning Engineering*. True Positive Inc.
-4. **Martin Fowler** (2016). *Continuous Delivery for Machine Learning (CD4ML)*. ThoughtWorks.
-5. **Google Developers**. *MLOps: Continuous Delivery and Automation Pipelines in Machine Learning*. [developers.google.com](https://developers.google.com/machine-learning/crash-course/production-ml-systems).
-6. **Heroku Dev Center**. *Deploying Python Applications*. [devcenter.heroku.com](https://devcenter.heroku.com/).
-7. **FastAPI Documentation**. [fastapi.tiangolo.com](https://fastapi.tiangolo.com/).
-8. **Streamlit Documentation**. [docs.streamlit.io](https://docs.streamlit.io/).
+2. **Andriy Burkov** (2020). *Machine Learning Engineering*. True Positive Inc.
+3. **Martin Fowler** (2016). *Continuous Delivery for Machine Learning (CD4ML)*. ThoughtWorks.
+4. **Google Developers**. *MLOps: Continuous Delivery and Automation Pipelines in Machine Learning*. [developers.google.com](https://developers.google.com/machine-learning/crash-course/production-ml-systems).
+5. **Heroku Dev Center**. *Deploying Python Applications*. [devcenter.heroku.com](https://devcenter.heroku.com/).
+6. **FastAPI Documentation**. [fastapi.tiangolo.com](https://fastapi.tiangolo.com/).
+7. **Streamlit Documentation**. [docs.streamlit.io](https://docs.streamlit.io/).

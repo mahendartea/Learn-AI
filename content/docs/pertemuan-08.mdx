@@ -1,6 +1,6 @@
 ---
 title: "Pertemuan 08: Data Preparation — Penentuan Objek, Pembersihan & Validasi Data"
-description: "Penerapan 3 Unit Kompetensi SKKNI No. 299/2020: Menentukan Objek Data (J.62DMI00.007.1), Membersihkan Data (J.62DMI00.008.1), dan Memvalidasi Data (J.62DMI00.006.1). Menguasai strategi pembersihan data kotor, teknik sampling ilmiah (Probability vs Non-Probability), penanganan imbalanced dataset (SMOTE), 3 teknik seleksi fitur (Chi-Square, Extra Trees Classifier, Correlation Heatmap), serta praktik pembersihan dataset nyata (British Library, University Towns, Olympics)."
+description: "Panduan lengkap Data Preparation: Menentukan objek data, membersihkan data, dan memvalidasi data. Menguasai strategi pembersihan data kotor, teknik sampling ilmiah (Probability vs Non-Probability), penanganan imbalanced dataset (SMOTE), 3 teknik seleksi fitur (Chi-Square, Extra Trees Classifier, Correlation Heatmap), serta praktik pembersihan dataset nyata (British Library, University Towns, Olympics)."
 ---
 
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
@@ -9,24 +9,11 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 > **Penyusun Modul & Portal:** Mahendar Dwi Payana  
 > **Penulis Materi Pelatihan DTS 2021:** Dr. rer. nat. I Made Wiryana, S.Kom., S.Si., MAppSc, Dr. Miftah Andriansyah, dan Dr. Astie Darmayantie (Universitas Gunadarma)  
-> **Penyelenggara & Kurikulum:** Thematic Academy Digital Talent Scholarship (DTS) 2021, Kementerian Komunikasi dan Informatika RI (Kominfo)  
-> **Standar Rujukan:** Standar Kompetensi Kerja Nasional Indonesia (SKKNI) No. 299 Tahun 2020 — Skema *Associate Data Scientist*
+> **Penyelenggara & Kurikulum:** Thematic Academy Digital Talent Scholarship (DTS) 2021, Kementerian Komunikasi dan Informatika RI (Kominfo)
 
 ---
 
-## 1. Landasan Standar Kompetensi Kerja (SKKNI)
-
-Tahap penyiapan data (*Data Preparation*) merupakan fase paling padat karya dalam seluruh siklus proyek sains data. Berdasarkan **SKKNI No. 299 Tahun 2020**, modul ini mengintegrasikan secara simultan **tiga Unit Kompetensi Inti**:
-
-| Kode Unit | Judul Unit Kompetensi | Deskripsi & Kriteria Unjuk Kerja (KUK) Inti |
-| :--- | :--- | :--- |
-| **J.62DMI00.007.1** | **Menentukan Objek Data** | **1.1** Kriteria pemilihan data diidentifikasi sesuai dengan tujuan teknis dan aturan yang berlaku (volume, kualitas, otorisasi akses).<br/>**1.2** Teknik pemilihan data ditetapkan sesuai kriteria (metode *probability* atau *non-probability sampling*).<br/>**2.1** Atribut (*columns*) data diidentifikasi sesuai kriteria pemilihan data.<br/>**2.2** Rekaman (*records/rows*) data diidentifikasi sesuai kriteria pemilihan data. |
-| **J.62DMI00.008.1** | **Membersihkan Data** | **1.1** Strategi pembersihan data ditentukan berdasarkan hasil telaah data (penanganan *missing value*, koreksi data salah, normalisasi *outlier*).<br/>**1.2** Data yang kotor dikoreksi berdasarkan strategi pembersihan data.<br/>**2.1** Masalah dan teknis koreksi data dideskripsikan sesuai kondisi data.<br/>**2.2** Evaluasi dihasilkan berdasarkan analisis koreksi yang telah dilakukan.<br/>**2.3** Evaluasi proses dan hasilnya didokumentasikan secara formal. |
-| **J.62DMI00.006.1** | **Memvalidasi Data** | **1.1** Penilaian kualitas data (kebenaran, kelengkapan, konsistensi) dari hasil telaah disajikan sesuai tujuan teknis *data science*.<br/>**1.2** Penilaian tingkat kecukupan data dari hasil telaah disajikan sesuai tujuan teknis.<br/>**2.1** Rekomendasi hasil penilaian kualitas data disusun sesuai tujuan teknis.<br/>**2.2** Rekomendasi hasil penilaian kecukupan data (*resampling* / justifikasi pengambilan data ulang) disusun sesuai tujuan teknis. |
-
----
-
-## 2. Posisi Data Preparation dalam CRISP-DM & Realitas Industri
+## 1. Posisi Data Preparation dalam CRISP-DM & Realitas Industri
 
 ### A. Terminologi & Definisi Operasional
 Dalam literatur sains data internasional, penyiapan data memiliki beberapa padanan istilah yang saling melengkapi:
@@ -76,7 +63,7 @@ mindmap
 
 ---
 
-## 3. Tata Kelola & Interoperabilitas Data Multi-Sumber
+## 2. Tata Kelola & Interoperabilitas Data Multi-Sumber
 
 Dalam implementasi skala nasional maupun korporasi besar, data sains data tidak berasal dari satu berkas tunggal, melainkan tersebar di berbagai instansi atau unit kerja (*stakeholders*).
 
@@ -129,7 +116,7 @@ Dalam konteks pertukaran data cerdas, praktisi data membedakan dua paradigma pen
 
 ---
 
-## 4. Penentuan Objek Data & Metodologi Sampling Ilmiah (`J.62DMI00.007.1`)
+## 3. Penentuan Objek Data & Metodologi Sampling Ilmiah
 
 Sebelum manipulasi kode dijalankan, analis data wajib memutuskan batas populasi dan teknik pengambilan sampel untuk memastikan bahwa objek data yang dipilih benar-benar mewakili fenomena yang sedang diteliti.
 
@@ -185,7 +172,7 @@ graph TD
 
 ---
 
-## 5. Penanganan Ketimpangan Kelas (Imbalanced Dataset) & Resampling
+## 4. Penanganan Ketimpangan Kelas (Imbalanced Dataset) & Resampling
 
 Dalam aplikasi dunia nyata, distribusi kelas target sering kali tidak simetris secara ekstrem:
 * **Kasus Fraud Deteksi Perbankan**: Transaksi penipuan umumnya kurang dari $0.1\%$ hingga $1\%$ dari total jutaan transaksi harian.
@@ -246,7 +233,7 @@ graph LR
 
 ---
 
-## 6. Seleksi Fitur (Feature Selection) & Tipe Data
+## 5. Seleksi Fitur (Feature Selection) & Tipe Data
 
 Seleksi fitur adalah proses sistematis memilih sub-himpunan variabel prediktor yang paling berkontribusi terhadap variabel target, sekaligus mengeliminasi atribut yang redundan atau berupa *noise*.
 
@@ -264,7 +251,7 @@ Seleksi fitur adalah proses sistematis memilih sub-himpunan variabel prediktor y
 
 ---
 
-## 7. Validasi Data vs. Verifikasi Data (`J.62DMI00.006.1`)
+## 6. Validasi Data vs. Verifikasi Data
 
 Banyak praktisi pemula menyamakan verifikasi dan validasi. Dalam standar keteknikan dan data science, keduanya memiliki orientasi yang sangat berbeda:
 
@@ -285,7 +272,7 @@ Banyak praktisi pemula menyamakan verifikasi dan validasi. Dalam standar ketekni
 7. **Kesalahan Ketik (*Misspelling / Typo*)**: Mendeteksi variasi penulisan string (misal: `"Jakarta Selatn"` vs `"Jakarta Selatan"`).
 8. **Validitas Domain (*Domain Validity*)**: Memverifikasi kesesuaian nilai kategorikal dengan aturan resmi (misal: di Indonesia isian agama resmi hanya 6, jenis kelamin KTP hanya 2).
 
-### Parameter Standar Laporan Dokumentasi Data Cleaning (SKKNI KUK 2.1 & 2.3)
+### Parameter Standar Laporan Dokumentasi Data Cleaning
 Laporan pembersihan dan validasi data formal wajib memuat:
 1. *Dataset Description & Source*: Asal-usul, tanggal akuisisi, dan struktur awal data.
 2. *Identified Noise & Anomalies*: Rincian jumlah baris duplikat, persentase nilai null per kolom, format inkonsisten, dan data pencilan (*outlier*).
@@ -295,7 +282,7 @@ Laporan pembersihan dan validasi data formal wajib memuat:
 
 ---
 
-## 8. Praktikum Terpadu Python & Implementasi Dataset Riil
+## 7. Praktikum Terpadu Python & Implementasi Dataset Riil
 
 <Callout type="info" title="Unduh Dataset Resmi Praktikum Modul 8">
 Seluruh berkas dataset resmi yang digunakan dalam modul ini telah tersedia secara lokal pada portal Learn AI dan repositori GitHub:
@@ -547,9 +534,9 @@ print(olympics_df[cols_display].head(8).to_string(index=False))
 
 ---
 
-## 9. Lembar Evaluasi & Tugas Praktikum Mandiri
+## 8. Lembar Evaluasi & Tugas Praktikum Mandiri
 
-Berdasarkan silabus dan Kriteria Unjuk Kerja SKKNI:
+Berdasarkan silabus praktikum:
 
 <Accordions>
   <Accordion title="Tugas 1: Implementasi Penyeimbangan Dataset dengan SMOTE (Praktikum Imbalanced Data)">
@@ -560,18 +547,17 @@ Berdasarkan silabus dan Kriteria Unjuk Kerja SKKNI:
     Diberikan kolom teks tidak terstruktur yang berisi alamat dan nomor telepon campuran: `"Jl. Jend. Sudirman No. 45, Jakarta Selatan (021-5551234)"`. Buat fungsi ekstraksi berbasis Regular Expression (`re`) untuk memisahkan teks tersebut menjadi 4 kolom bersih: `Nama_Jalan`, `Nomor_Bangunan`, `Kota`, dan `Nomor_Telepon`!
   </Accordion>
 
-  <Accordion title="Tugas 3: Penyusunan Dokumen Laporan Pembersihan & Validasi Data Standar SKKNI">
-    Pilihlah salah satu dataset yang Anda gunakan dalam proyek akhir (Capstone). Susun laporan dokumentasi formal berformat tabel yang mencakup 5 parameter standar SKKNI: Deskripsi dataset, jenis noise teridentifikasi, pendekatan perbaikan yang diambil, atribut/baris yang dieksklusikan, serta ringkasan evaluasi kualitas data pasca-pembersihan!
+  <Accordion title="Tugas 3: Penyusunan Dokumen Laporan Pembersihan & Validasi Data">
+    Pilihlah salah satu dataset yang Anda gunakan dalam proyek akhir (Capstone). Susun laporan dokumentasi formal berformat tabel yang mencakup 5 parameter standar dokumentasi: Deskripsi dataset, jenis noise teridentifikasi, pendekatan perbaikan yang diambil, atribut/baris yang dieksklusikan, serta ringkasan evaluasi kualitas data pasca-pembersihan!
   </Accordion>
 </Accordions>
 
 ---
 
-## 10. Referensi Pustaka & Tautan Resmi
+## 9. Referensi Pustaka & Tautan Resmi
 
 1. **I Made Wiryana, Miftah Andriansyah, & Astie Darmayantie** (2021). *Modul Pelatihan Data Preparation: Penentuan Objek, Pembersihan dan Validasi Data*. Thematic Academy Digital Talent Scholarship 2021, Kementerian Komunikasi dan Informatika RI & Universitas Gunadarma.
-2. **Kementerian Ketenagakerjaan RI** (2020). *Keputusan Menteri Ketenagakerjaan RI No. 299 Tahun 2020 tentang Penetapan SKKNI Bidang Keahlian Artificial Intelligence Subbidang Data Science*.
-3. **Nitesh V. Chawla, Kevin W. Bowyer, Lawrence O. Hall, & W. Philip Kegelmeyer** (2002). *SMOTE: Synthetic Minority Over-sampling Technique*. Journal of Artificial Intelligence Research (JAIR), 16, 321-357.
-4. **Gil Press** (2016). *Cleaning Big Data: Most Time-Consuming, Least Enjoyable Data Science Task, Survey Says*. Forbes Insights & CrowdFlower.
-5. **Ilker Etikan & Kabiru Bala** (2017). *Sampling and Sampling Methods*. Biometrics & Biostatistics International Journal, 5(6), MedCrave Publishing.
-6. **Real Python** (2018). *Python Data Cleaning: NumPy, Pandas, and Python's Built-in Methods*. Real Python Tutorials.
+2. **Nitesh V. Chawla, Kevin W. Bowyer, Lawrence O. Hall, & W. Philip Kegelmeyer** (2002). *SMOTE: Synthetic Minority Over-sampling Technique*. Journal of Artificial Intelligence Research (JAIR), 16, 321-357.
+3. **Gil Press** (2016). *Cleaning Big Data: Most Time-Consuming, Least Enjoyable Data Science Task, Survey Says*. Forbes Insights & CrowdFlower.
+4. **Ilker Etikan & Kabiru Bala** (2017). *Sampling and Sampling Methods*. Biometrics & Biostatistics International Journal, 5(6), MedCrave Publishing.
+5. **Real Python** (2018). *Python Data Cleaning: NumPy, Pandas, and Python's Built-in Methods*. Real Python Tutorials.

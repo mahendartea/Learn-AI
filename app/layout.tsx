@@ -87,7 +87,6 @@ const jsonLd = {
       name: siteConfig.title,
       description: siteConfig.description,
       provider: { '@id': personId },
-      educationalCredentialAwarded: 'Sertifikasi Associate Data Scientist (SKKNI No. 299 Tahun 2020)',
       timeToComplete: 'P8W',
       numberOfCredits: 96,
       inLanguage: 'id',

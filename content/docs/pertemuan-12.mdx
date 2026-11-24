@@ -1,6 +1,6 @@
 ---
 title: "Pertemuan 12: Pemodelan Regresi Numerik & Diagnostik Residual"
-description: "Penerapan Unit Kompetensi SKKNI J.62DMI00.013.1 (Membangun Model) untuk target kontinu: Regresi Linier Sederhana & Variabel Jamak (OLS, Gradient Descent), Regresi Polinomial dan Non-Linier (China GDP, curve_fit), Support Vector Regression (ε-tube, efek C), Decision Tree Regression, Random Forest Regression, asumsi klasik Gauss-Markov, regularisasi Ridge/Lasso/ElasticNet, serta metrik evaluasi MAE, MSE, RMSE, dan R²."
+description: "Panduan pemodelan regresi untuk target kontinu: Regresi Linier Sederhana & Variabel Jamak (OLS, Gradient Descent), Regresi Polinomial dan Non-Linier (China GDP, curve_fit), Support Vector Regression (ε-tube, efek C), Decision Tree Regression, Random Forest Regression, asumsi klasik Gauss-Markov, regularisasi Ridge/Lasso/ElasticNet, serta metrik evaluasi MAE, MSE, RMSE, dan R²."
 ---
 
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
@@ -9,19 +9,13 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 > **Penyusun Modul & Portal:** Mahendar Dwi Payana  
 > **Penulis Materi Pelatihan DTS 2021:** Noor Akhmad Setiawan, S.T., M.T., Ph.D. — Thematic Academy Digital Talent Scholarship 2021  
-> **Penyelenggara & Kurikulum:** Kementerian Komunikasi dan Informatika RI (Kominfo) & Sekolah Teknik Elektro dan Informatika (STEI) ITB  
-> **Standar Rujukan:** Standar Kompetensi Kerja Nasional Indonesia (SKKNI) No. 299 Tahun 2020 — Skema *Associate Data Scientist*
+> **Penyelenggara & Kurikulum:** Kementerian Komunikasi dan Informatika RI (Kominfo) & Sekolah Teknik Elektro dan Informatika (STEI) ITB
 
 ---
 
-## 1. Landasan Standar Kompetensi Kerja (SKKNI)
+## 1. Tujuan Pembelajaran & Dataset Praktikum
 
-Modul ini adalah **bagian kedua dari pemodelan** (lanjutan Pertemuan 11) yang berfokus pada target **kontinu** (regresi). Unit yang dinilai:
-
-| Kode Unit | Elemen Kompetensi | Kriteria Unjuk Kerja (KUK) Inti |
-| :--- | :--- | :--- |
-| **J.62DMI00.013.1**<br />*Membangun Model* | **1. Menyiapkan parameter model** | **1.1** Parameter yang sesuai dengan model diidentifikasi.<br/>**1.2** Nilai toleransi parameter evaluasi pengujian ditetapkan sesuai tujuan teknis. |
-| | **2. Menggunakan tools pemodelan** | **2.1** Tools untuk membuat model diidentifikasi.<br/>**2.2** Algoritma pemodelan dibangun menggunakan tools yang dipilih.<br/>**2.3** Algoritma pemodelan dieksekusi sesuai skenario pengujian.<br/>**2.4** Parameter model dioptimasi untuk menghasilkan nilai evaluasi yang sesuai skenario. |
+Modul ini adalah **bagian kedua dari pemodelan** (lanjutan Pertemuan 11) yang berfokus pada target **kontinu** (regresi).
 
 **Tujuan Pembelajaran** — peserta mampu menjelaskan, menyiapkan, dan mengimplementasikan model regresi dengan algoritma:
 
@@ -497,11 +491,11 @@ for name, reg in models.items():
 ## 13. Lembar Evaluasi & Tugas Praktikum Mandiri
 
 <Accordions>
-  <Accordion title="Tugas 1: Regresi Linier Sederhana vs Variabel Jamak (KUK 013.1)">
+  <Accordion title="Tugas 1: Regresi Linier Sederhana vs Variabel Jamak">
     Gunakan `FuelConsumption.csv`. Bangun (a) regresi linier sederhana dengan `ENGINESIZE` dan (b) regresi variabel jamak dengan `ENGINESIZE`, `CYLINDERS`, dan `FUELCONSUMPTION_COMB` untuk memprediksi `CO2EMISSIONS`. Bandingkan MAE, MSE, dan R² kedua model pada data uji yang sama. Apakah penambahan fitur selalu meningkatkan R²? Jelaskan!
   </Accordion>
 
-  <Accordion title="Tugas 2: Regresi Non-Linier PDB Tiongkok (KUK 013.1)">
+  <Accordion title="Tugas 2: Regresi Non-Linier PDB Tiongkok">
     Reproduksi lab `china_gdp.csv` dengan fungsi logistik dan `curve_fit`. Bandingkan performa (MAE, R²) model sigmoid terhadap model regresi **linier** sederhana pada data yang sama. Jelaskan mengapa model non-linier lebih tepat berdasarkan visualisasi scatter!
   </Accordion>
 
@@ -513,8 +507,8 @@ for name, reg in models.items():
     Untuk model regresi variabel jamak pada Tugas 1, lakukan uji asumsi: (a) hitung VIF antar-prediktor, (b) plot residual vs nilai prediksi untuk memeriksa homoskedastisitas, (c) hitung statistik Durbin-Watson, dan (d) buat Q-Q Plot residual. Simpulkan apakah model memenuhi asumsi BLUE!
   </Accordion>
 
-  <Accordion title="Tugas 5: Dokumentasi Pemodelan Regresi Formal (KUK 013.1)">
-    Susun laporan pemodelan regresi untuk proyek akhir (Capstone) Anda: (1) karakteristik data & tipe target, (2) algoritma yang dipilih beserta justifikasi, (3) parameter dan nilai toleransi evaluasi, (4) tabel perbandingan metrik MAE/MSE/RMSE/R², serta (5) rekomendasi model final. Dokumentasikan sesuai SOP SKKNI!
+  <Accordion title="Tugas 5: Dokumentasi Pemodelan Regresi Formal">
+    Susun laporan pemodelan regresi untuk proyek akhir (Capstone) Anda: (1) karakteristik data & tipe target, (2) algoritma yang dipilih beserta justifikasi, (3) parameter dan nilai toleransi evaluasi, (4) tabel perbandingan metrik MAE/MSE/RMSE/R², serta (5) rekomendasi model final. Dokumentasikan secara formal!
   </Accordion>
 </Accordions>
 
@@ -523,9 +517,8 @@ for name, reg in models.items():
 ## 14. Referensi Pustaka & Tautan Resmi
 
 1. **Noor Akhmad Setiawan, S.T., M.T., Ph.D.** (2021). *Modul 12 — Regresi*. Thematic Academy Digital Talent Scholarship 2021, Kementerian Komunikasi dan Informatika RI.
-2. **Kementerian Ketenagakerjaan RI** (2020). *SKKNI No. 299 Tahun 2020 Bidang Artificial Intelligence Subbidang Data Science* (Unit `J.62DMI00.013.1` — Membangun Model).
-3. **F. Pedregosa, G. Varoquaux, A. Gramfort, et al.** (2011). *Scikit-learn: Machine Learning in Python*. Journal of Machine Learning Research, 12, 2825–2830.
-4. **G. Varoquaux, L. Buitinck, G. Louppe, O. Grisel, F. Pedregosa, & A. Mueller** (2015). *Scikit-learn: Machine Learning Without Learning the Machinery*. GetMobile: Mobile Computing and Communications, 19(1), 29–33.
-5. **Christopher M. Bishop** (2006). *Pattern Recognition and Machine Learning*. Springer. *(Dasar teoretis SVR & regresi)*.
-6. **Alex J. Smola & Bernhard Schölkopf** (2004). *A Tutorial on Support Vector Regression*. Statistics and Computing, 14(3), 199–222.
-7. **Scikit-learn Developers**. *Supervised Learning — Linear Models & Support Vector Machines*. [scikit-learn.org](https://scikit-learn.org/stable/supervised_learning.html).
+2. **F. Pedregosa, G. Varoquaux, A. Gramfort, et al.** (2011). *Scikit-learn: Machine Learning in Python*. Journal of Machine Learning Research, 12, 2825–2830.
+3. **G. Varoquaux, L. Buitinck, G. Louppe, O. Grisel, F. Pedregosa, & A. Mueller** (2015). *Scikit-learn: Machine Learning Without Learning the Machinery*. GetMobile: Mobile Computing and Communications, 19(1), 29–33.
+4. **Christopher M. Bishop** (2006). *Pattern Recognition and Machine Learning*. Springer. *(Dasar teoretis SVR & regresi)*.
+5. **Alex J. Smola & Bernhard Schölkopf** (2004). *A Tutorial on Support Vector Regression*. Statistics and Computing, 14(3), 199–222.
+6. **Scikit-learn Developers**. *Supervised Learning — Linear Models & Support Vector Machines*. [scikit-learn.org](https://scikit-learn.org/stable/supervised_learning.html).

@@ -28,7 +28,7 @@ export function baseOptions(lang: Lang = 'id'): BaseLayoutProps {
         },
         {
           type: 'main',
-          text: 'SKKNI Standard',
+          text: 'References',
           url: '/en/docs/referensi-standar',
         },
       ]
@@ -51,7 +51,7 @@ export function baseOptions(lang: Lang = 'id'): BaseLayoutProps {
         },
         {
           type: 'main',
-          text: 'Standar SKKNI',
+          text: 'Referensi',
           url: '/docs/referensi-standar',
         },
       ];

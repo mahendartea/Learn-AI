@@ -1,6 +1,6 @@
 ---
 title: "Pertemuan 13: Pembelajaran Tak Terawasi & Analisis Klastering"
-description: "Penerapan Unit Kompetensi SKKNI J.62DMI00.013.1 (Membangun Model) untuk klastering: taksonomi Partition/Hierarchical/Density-based, algoritma K-Means (WCSS, Elbow Method, K-Means++), Hierarchical Clustering (Agglomerative vs Divisive, Dendrogram), DBSCAN (eps, minPts, Core/Border/Noise, Density Reachability), serta metrik evaluasi Silhouette, Homogeneity, Completeness, V-measure, ARI, dan AMI pada studi kasus pelanggan department store."
+description: "Panduan pemodelan klastering tak terawasi: taksonomi Partition/Hierarchical/Density-based, algoritma K-Means (WCSS, Elbow Method, K-Means++), Hierarchical Clustering (Agglomerative vs Divisive, Dendrogram), DBSCAN (eps, minPts, Core/Border/Noise, Density Reachability), serta metrik evaluasi Silhouette, Homogeneity, Completeness, V-measure, ARI, dan AMI pada studi kasus pelanggan department store."
 ---
 
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
@@ -9,19 +9,13 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 > **Penyusun Modul & Portal:** Mahendar Dwi Payana  
 > **Penulis Materi Pelatihan DTS 2021:** Dr. Berlian Al Kindhi, S.ST., MT. — Thematic Academy Digital Talent Scholarship 2021  
-> **Penyelenggara & Kurikulum:** Kementerian Komunikasi dan Informatika RI (Kominfo) & Sekolah Teknik Elektro dan Informatika (STEI) ITB  
-> **Standar Rujukan:** Standar Kompetensi Kerja Nasional Indonesia (SKKNI) No. 299 Tahun 2020 — Skema *Associate Data Scientist*
+> **Penyelenggara & Kurikulum:** Kementerian Komunikasi dan Informatika RI (Kominfo) & Sekolah Teknik Elektro dan Informatika (STEI) ITB
 
 ---
 
-## 1. Landasan Standar Kompetensi Kerja (SKKNI)
+## 1. Tujuan Pembelajaran
 
-Modul ini melanjutkan pemodelan ke ranah **pembelajaran tak terawasi (*unsupervised learning*)** dengan unit kompetensi yang sama seperti pertemuan pemodelan sebelumnya:
-
-| Kode Unit | Elemen Kompetensi | Kriteria Unjuk Kerja (KUK) Inti |
-| :--- | :--- | :--- |
-| **J.62DMI00.013.1**<br />*Membangun Model* | **1. Menyiapkan parameter model** | **1.1** Parameter yang sesuai dengan model diidentifikasi.<br/>**1.2** Nilai toleransi parameter evaluasi pengujian ditetapkan sesuai tujuan teknis. |
-| | **2. Menggunakan tools pemodelan** | **2.1** Tools untuk membuat model diidentifikasi.<br/>**2.2** Algoritma pemodelan dibangun menggunakan tools yang dipilih.<br/>**2.3** Algoritma pemodelan dieksekusi sesuai skenario pengujian.<br/>**2.4** Parameter model dioptimasi untuk menghasilkan nilai evaluasi yang sesuai skenario. |
+Modul ini melanjutkan pemodelan ke ranah **pembelajaran tak terawasi (*unsupervised learning*)**.
 
 **Tujuan Pembelajaran:**
 
@@ -395,10 +389,9 @@ print("AMI                :", metrics.adjusted_mutual_info_score(y, y_pred))
 ## 9. Referensi Pustaka & Tautan Resmi
 
 1. **Dr. Berlian Al Kindhi, S.ST., MT.** (2021). *Modul 13 — Clustering*. Thematic Academy Digital Talent Scholarship 2021, Kementerian Komunikasi dan Informatika RI.
-2. **Kementerian Ketenagakerjaan RI** (2020). *SKKNI No. 299 Tahun 2020 Bidang Artificial Intelligence Subbidang Data Science* (Unit `J.62DMI00.013.1` — Membangun Model).
-3. **Ethem Alpaydin** (2020). *Introduction to Machine Learning* (4th ed.). MIT Press.
-4. **Zhi-Hua Zhou** (2021). *Machine Learning*. Springer.
-5. **Charu C. Aggarwal & Chandan K. Reddy** (2013). *Data Clustering: Algorithms and Applications*. Chapman and Hall/CRC.
-6. **Anil K. Jain & Richard C. Dubes** (1988). *Algorithms for Clustering Data*. Prentice Hall.
-7. **Martin Ester, Hans-Peter Kriegel, Jörg Sander, & Xiaowei Xu** (1996). *A Density-Based Algorithm for Discovering Clusters in Large Spatial Databases with Noise*. Proceedings of KDD-96. *(Algoritma DBSCAN)*.
-8. **Scikit-learn Developers**. *Clustering & Clustering Performance Evaluation*. [scikit-learn.org](https://scikit-learn.org/stable/modules/clustering.html).
+2. **Ethem Alpaydin** (2020). *Introduction to Machine Learning* (4th ed.). MIT Press.
+3. **Zhi-Hua Zhou** (2021). *Machine Learning*. Springer.
+4. **Charu C. Aggarwal & Chandan K. Reddy** (2013). *Data Clustering: Algorithms and Applications*. Chapman and Hall/CRC.
+5. **Anil K. Jain & Richard C. Dubes** (1988). *Algorithms for Clustering Data*. Prentice Hall.
+6. **Martin Ester, Hans-Peter Kriegel, Jörg Sander, & Xiaowei Xu** (1996). *A Density-Based Algorithm for Discovering Clusters in Large Spatial Databases with Noise*. Proceedings of KDD-96. *(Algoritma DBSCAN)*.
+7. **Scikit-learn Developers**. *Clustering & Clustering Performance Evaluation*. [scikit-learn.org](https://scikit-learn.org/stable/modules/clustering.html).

@@ -1,6 +1,6 @@
 ---
 title: "Pertemuan 11: Skenario Pemodelan & Algoritma Klasifikasi Terawasi"
-description: "Penerapan Unit Kompetensi SKKNI J.62DMI00.012.1 (Membangun Skenario Model) dan J.62DMI00.013.1 (Membangun Model): Train-Validation-Test Split, Model Selection vs Assessment, K-Fold Cross-Validation, strategi pencarian parameter (Best Guess, OFAT, Grid Search), pencegahan Data Leakage via Pipeline, serta komparasi algoritma klasifikasi (k-NN, Decision Tree, Naive Bayes, SVM, Logistic Regression, Random Forest, AdaBoost, XGBoost) lengkap dengan kelebihan/kekurangan dan parameter tuning pada dataset Iris."
+description: "Panduan perancangan skenario model dan pemodelan klasifikasi: Train-Validation-Test Split, Model Selection vs Assessment, K-Fold Cross-Validation, strategi pencarian parameter (Best Guess, OFAT, Grid Search), pencegahan Data Leakage via Pipeline, serta komparasi algoritma klasifikasi (k-NN, Decision Tree, Naive Bayes, SVM, Logistic Regression, Random Forest, AdaBoost, XGBoost) lengkap dengan kelebihan/kekurangan dan parameter tuning pada dataset Iris."
 ---
 
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
@@ -9,22 +9,13 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 > **Penyusun Modul & Portal:** Mahendar Dwi Payana  
 > **Penulis Materi Pelatihan DTS 2021:** Afiahayati, S.Kom., M.Cs., Ph.D. — Thematic Academy Digital Talent Scholarship 2021  
-> **Penyelenggara & Kurikulum:** Kementerian Komunikasi dan Informatika RI (Kominfo) & Sekolah Teknik Elektro dan Informatika (STEI) ITB  
-> **Standar Rujukan:** Standar Kompetensi Kerja Nasional Indonesia (SKKNI) No. 299 Tahun 2020 — Skema *Associate Data Scientist*
+> **Penyelenggara & Kurikulum:** Kementerian Komunikasi dan Informatika RI (Kominfo) & Sekolah Teknik Elektro dan Informatika (STEI) ITB
 
 ---
 
-## 1. Landasan Standar Kompetensi Kerja (SKKNI)
+## 1. Tujuan Pembelajaran & Ruang Lingkup
 
 Modul ini adalah **bagian pertama dari pemodelan**. Materi mencakup **merancang skenario model** dan **membangun model klasifikasi** (pemodelan regresi menyusul pada Pertemuan 12).
-
-| Kode Unit | Elemen Kompetensi | Kriteria Unjuk Kerja (KUK) Inti |
-| :--- | :--- | :--- |
-| **J.62DMI00.012.1**<br />*Membangun Skenario Model* | **1. Mengidentifikasi teknik pemodelan** | **1.1** Asumsi spesifik mengenai data diidentifikasi sesuai karakteristik data.<br/>**1.2** Teknik-teknik pemodelan data diidentifikasi sesuai karakteristik data dan tujuan teknis. |
-| | **2. Menentukan teknik pemodelan** | **2.1** Teknik pemodelan yang sesuai karakteristik data ditentukan.<br/>**2.2** Deskripsi teknik pemodelan yang dipilih didokumentasikan sesuai SOP. |
-| | **3. Menyiapkan skenario pengujian** | **3.1** Skenario uji yang mungkin diterapkan ditentukan sesuai tujuan teknis.<br/>**3.2** Metrik evaluasi pengujian diidentifikasi sesuai skenario uji.<br/>**3.3** Skenario uji yang dipilih didokumentasikan sesuai standar. |
-| **J.62DMI00.013.1**<br />*Membangun Model* | **1. Menyiapkan parameter model** | **1.1** Parameter yang sesuai dengan model diidentifikasi.<br/>**1.2** Nilai toleransi parameter evaluasi pengujian ditetapkan sesuai tujuan teknis. |
-| | **2. Menggunakan tools pemodelan** | **2.1** Tools untuk membuat model diidentifikasi.<br/>**2.2** Algoritma pemodelan dibangun menggunakan tools yang dipilih.<br/>**2.3** Algoritma pemodelan dieksekusi sesuai skenario pengujian.<br/>**2.4** Parameter model dioptimasi untuk menghasilkan nilai evaluasi yang sesuai skenario. |
 
 ### Tujuan Pembelajaran Modul
 
@@ -50,7 +41,7 @@ Modul 11 (Membangun Model dan Studi Kasus) menggunakan **dataset Iris** dengan p
 
 ---
 
-## 2. Membangun Skenario Pemodelan (`J.62DMI00.012.1`)
+## 2. Membangun Skenario Pemodelan
 
 Perancangan skenario eksperimen dilakukan **sebelum** model dibangun, dan terdiri atas tiga keputusan penting: pembagian data, langkah eksperimen, dan parameter evaluasi.
 
@@ -178,7 +169,7 @@ $$
 
 ---
 
-## 3. Membangun Model Klasifikasi (`J.62DMI00.013.1`)
+## 3. Membangun Model Klasifikasi
 
 ### 3.1 Logistic Regression (Baseline Linier)
 
@@ -600,7 +591,7 @@ print(f"Akurasi AdaBoost: {acc_ab:.4f}")
 
 Studi kasus kelompok (UGM03) memodelkan **Standar Nasional Pendidikan (SNP)** sekolah SMP di Kabupaten Bogor dari data Dapodik (hasil integrasi Pertemuan 10). Delapan standar (S1–S8) dianalisis untuk memprediksi level SNP.
 
-### A. Pelabelan Target (Labeling, SKKNI `010.1`)
+### A. Pelabelan Target (Labeling)
 
 Nilai SNP = rata-rata delapan standar, lalu dikelompokkan menjadi level ordinal:
 
@@ -747,7 +738,7 @@ $$
 ## 9. Lembar Evaluasi & Tugas Praktikum Mandiri
 
 <Accordions>
-  <Accordion title="Tugas 1: Komparasi Algoritma & Parameter Tuning (KUK 013.1)">
+  <Accordion title="Tugas 1: Komparasi Algoritma & Parameter Tuning">
     Gunakan dataset Iris dengan split 70:30. Latih minimal **lima** algoritma klasifikasi (k-NN, Decision Tree, Naive Bayes, SVM, Logistic Regression) dengan `Pipeline` + `StandardScaler`. Lakukan `GridSearchCV` untuk masing-masing. Sajikan tabel akurasi uji, akurasi CV-5, dan hyperparameter terbaik. Simpulkan algoritma terbaik dan mengapa!
   </Accordion>
 
@@ -755,7 +746,7 @@ $$
     Terapkan `AdaBoostClassifier` pada dataset Iris dan bandingkan terhadap metode klasifikasi terbaik dari Tugas 1. Eksperimen dengan `n_estimators` (10, 50, 100) dan `learning_rate` (0,1; 0,5; 1,0). Plot kurva akurasi terhadap jumlah estimator dan jelaskan mengapa boosting tidak selalu mengalahkan model tunggal pada dataset kecil!
   </Accordion>
 
-  <Accordion title="Tugas 3: Demonstrasi Bahaya Data Leakage (KUK 012.1)">
+  <Accordion title="Tugas 3: Demonstrasi Bahaya Data Leakage">
     Buat dua skenario: (a) `StandardScaler` di-fit pada **seluruh** dataset sebelum `train_test_split`, dan (b) scaler di dalam `Pipeline`. Bandingkan akurasi keduanya pada data uji yang sama. Jelaskan mengapa skenario (a) menghasilkan estimasi yang terlalu optimistis (*falsely optimistic*)!
   </Accordion>
 
@@ -763,7 +754,7 @@ $$
     Diberikan data latih kecil dengan 3 atribut dan target biner. Hitung Gini Index masing-masing atribut secara manual (weighted average GI anak node), tentukan atribut root, lalu verifikasi hasilnya dengan `DecisionTreeClassifier` + `plot_tree`. Jelaskan mengapa atribut dengan GI terkecil dipilih sebagai root!
   </Accordion>
 
-  <Accordion title="Tugas 5: Perancangan Skenario Pengujian Formal (KUK 012.1 Elemen 3)">
+  <Accordion title="Tugas 5: Perancangan Skenario Pengujian Formal">
     Untuk dataset proyek akhir (Capstone) Anda, susun dokumen skenario pengujian yang memuat: (1) asumsi spesifik data, (2) teknik pemodelan yang dipilih beserta justifikasi, (3) strategi validasi (Stratified K-Fold vs Time-Series Split), (4) metrik evaluasi utama dan ambang toleransinya, serta (5) protokol pencegahan kebocoran data. Dokumentasikan sesuai SOP!
   </Accordion>
 </Accordions>
@@ -773,10 +764,9 @@ $$
 ## 10. Referensi Pustaka & Tautan Resmi
 
 1. **Afiahayati, S.Kom., M.Cs., Ph.D.** (2021). *Modul 11 — Membangun Model dan Studi Kasus*. Thematic Academy Digital Talent Scholarship 2021, Kementerian Komunikasi dan Informatika RI.
-2. **Kementerian Ketenagakerjaan RI** (2020). *SKKNI No. 299 Tahun 2020 Bidang Artificial Intelligence Subbidang Data Science* (Unit `J.62DMI00.012.1` Membangun Skenario Model & `J.62DMI00.013.1` Membangun Model).
-3. **Christopher M. Bishop** (2006). *Pattern Recognition and Machine Learning*. Springer.
-4. **Ronald A. Fisher** (1936). *The Use of Multiple Measurements in Taxonomic Problems*. Annals of Eugenics, 7(2), 179–188. *(Dataset Iris)*.
-5. **Corinna Cortes & Vladimir Vapnik** (1995). *Support-Vector Networks*. Machine Learning, 20(3), 273–297. *(SVM & Kernel Trick)*.
-6. **Yoav Freund & Robert E. Schapire** (1997). *A Decision-Theoretic Generalization of On-Line Learning and an Application to Boosting*. Journal of Computer and System Sciences, 55(1), 119–139. *(Algoritma AdaBoost)*.
-7. **J. P. Guilford** (1956). *Fundamental Statistics in Psychology and Education* (3rd ed.). McGraw-Hill. *(Kriteria interpretasi koefisien korelasi)*.
-8. **F. Pedregosa et al.** (2011). *Scikit-learn: Machine Learning in Python*. Journal of Machine Learning Research, 12, 2825–2830.
+2. **Christopher M. Bishop** (2006). *Pattern Recognition and Machine Learning*. Springer.
+3. **Ronald A. Fisher** (1936). *The Use of Multiple Measurements in Taxonomic Problems*. Annals of Eugenics, 7(2), 179–188. *(Dataset Iris)*.
+4. **Corinna Cortes & Vladimir Vapnik** (1995). *Support-Vector Networks*. Machine Learning, 20(3), 273–297. *(SVM & Kernel Trick)*.
+5. **Yoav Freund & Robert E. Schapire** (1997). *A Decision-Theoretic Generalization of On-Line Learning and an Application to Boosting*. Journal of Computer and System Sciences, 55(1), 119–139. *(Algoritma AdaBoost)*.
+6. **J. P. Guilford** (1956). *Fundamental Statistics in Psychology and Education* (3rd ed.). McGraw-Hill. *(Kriteria interpretasi koefisien korelasi)*.
+7. **F. Pedregosa et al.** (2011). *Scikit-learn: Machine Learning in Python*. Journal of Machine Learning Research, 12, 2825–2830.

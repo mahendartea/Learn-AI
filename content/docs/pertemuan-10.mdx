@@ -1,6 +1,6 @@
 ---
 title: "Pertemuan 10: Feature Engineering, Encoding & Integrasi Data"
-description: "Penerapan Unit Kompetensi SKKNI J.62DMI00.009.1 (Mengkonstruksi Data) dan J.62DMI00.010.1 (Menentukan Label Data), didukung J.62DMI00.011.1 (Mengintegrasikan Data): pengkodean kategorikal (Label, One-Hot, Dummy, Target Encoding), integrasi tabel (Merge & Join relasional), ekstraksi fitur dengan PCA, Pseudo-Labelling semi-supervisi, fitur siklis, seleksi fitur, serta penanganan ketimpangan kelas."
+description: "Panduan lengkap konstruksi fitur, pelabelan, dan integrasi data: pengkodean kategorikal (Label, One-Hot, Dummy, Target Encoding), integrasi tabel (Merge & Join relasional), ekstraksi fitur dengan PCA, Pseudo-Labelling semi-supervisi, fitur siklis, seleksi fitur, serta penanganan ketimpangan kelas."
 ---
 
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
@@ -9,23 +9,13 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 > **Penyusun Modul & Portal:** Mahendar Dwi Payana  
 > **Penulis Materi Pelatihan DTS 2021:** Tim Universitas Gunadarma — Thematic Academy Digital Talent Scholarship 2021  
-> **Penyelenggara & Kurikulum:** Kementerian Komunikasi dan Informatika RI (Kominfo) & Sekolah Teknik Elektro dan Informatika (STEI) ITB  
-> **Standar Rujukan:** Standar Kompetensi Kerja Nasional Indonesia (SKKNI) No. 299 Tahun 2020 — Skema *Associate Data Scientist*
+> **Penyelenggara & Kurikulum:** Kementerian Komunikasi dan Informatika RI (Kominfo) & Sekolah Teknik Elektro dan Informatika (STEI) ITB
 
 ---
 
-## 1. Landasan Standar Kompetensi Kerja (SKKNI)
+## 1. Pengantar & Cakupan Praktikum
 
-Modul ini adalah kelanjutan langsung dari Pertemuan 09. Jika Pertemuan 09 bertransformasi pada **nilai numerik** (imputasi, binning, scaling), maka Pertemuan 10 merekayasa **struktur fitur** dan **integrasi antar-tabel**. Materi menyentuh tiga unit kompetensi:
-
-| Kode Unit | Elemen Kompetensi | Kriteria Unjuk Kerja (KUK) Inti |
-| :--- | :--- | :--- |
-| **J.62DMI00.009.1**<br />*Mengkonstruksi Data* | **1. Menganalisis teknik transformasi data** | **1.1** Analisis data untuk menentukan representasi fitur data awal.<br/>**1.2** Analisis representasi fitur data awal untuk menentukan teknik rekayasa fitur (*feature engineering*) yang diperlukan bagi pembangunan model. |
-| | **2. Melakukan transformasi data** | **2.1** Transformasi dilakukan untuk mendapatkan fitur data awal.<br/>**2.2** Rekayasa fitur data dilakukan untuk mendapatkan fitur baru yang diperlukan bagi pembangunan model. |
-| | **3. Membuat dokumentasi konstruksi data** | **3.1** Teknis transformasi data dijabarkan secara tertulis.<br/>**3.2** Hasil transformasi data dan rekomendasinya dituangkan secara tertulis. |
-| **J.62DMI00.010.1**<br />*Menentukan Label Data* | **1. Melakukan pelabelan data** | **1.1** Analisis hasil pelabelan data sejenis yang sudah ada diuraikan kesesuaiannya dengan *Standard Operating Procedure* (SOP) pelabelan.<br/>**1.2** Pelabelan data dilakukan sesuai dengan SOP pelabelan. |
-| | **2. Membuat laporan hasil pelabelan data** | **2.1** Statistik hasil pelabelan diuraikan pada laporan.<br/>**2.2** Evaluasi proses pelabelan diuraikan pada laporan. |
-| **J.62DMI00.011.1**<br />*Mengintegrasikan Data* | *Pelengkap praktik integrasi tabel* | Unit ini mencakup pemetaan sumber ke target data, pemilihan model interaksi antar-data, serta pemeriksaan integritas hasil penggabungan (*join/merge*). |
+Modul ini adalah kelanjutan langsung dari Pertemuan 09. Jika Pertemuan 09 bertransformasi pada **nilai numerik** (imputasi, binning, scaling), maka Pertemuan 10 merekayasa **struktur fitur**, **integrasi antar-tabel**, dan **pelabelan data**.
 
 <Callout type="info" title="Cakupan Praktikum Modul 10">
 Modul 10 (Feature Engineering dan Integrasi Data) melatih lima laboratorium:
@@ -287,7 +277,7 @@ print(X_train_enc.head())
 
 ---
 
-## 5. Integrasi Data: Merge & Join Relasional (`J.62DMI00.011.1`)
+## 5. Integrasi Data: Merge & Join Relasional
 
 Fitur terbaik sering kali tidak berada dalam satu tabel, melainkan tersebar di beberapa sumber. **`pd.merge()`** mengimplementasikan operasi **aljabar relasional** — fondasi yang sama yang dipakai basis data SQL.
 
@@ -469,7 +459,7 @@ Setelah jumlah komponen ditetapkan (misal 4), `pca.components_` menunjukkan **bo
 
 ---
 
-## 7. Pseudo-Labelling: Pelabelan Semisupervisi (`J.62DMI00.010.1`)
+## 7. Pseudo-Labelling: Pelabelan Semisupervisi
 
 **Pseudo-Labelling** adalah teknik semi-supervisi: model dilatih pada data berlabel, lalu **memprediksi label data tak berlabel (samar)** dan menggabungkannya kembali sebagai data latih tambahan. Berguna ketika data berlabel mahal tetapi data mentah melimpah.
 
@@ -579,7 +569,7 @@ print("Fitur terpilih:", X.columns[selector.get_support()])
 
 ---
 
-## 10. Menentukan Label Data & Penanganan Ketimpangan Kelas (`J.62DMI00.010.1`)
+## 10. Menentukan Label Data & Penanganan Ketimpangan Kelas
 
 Penentuan label target harus memenuhi prinsip objektivitas tanpa ambiguitas, dengan mempertimbangkan SOP pelabelan yang berlaku.
 
@@ -683,24 +673,24 @@ print("Pipeline Feature Engineering berhasil dilatih tanpa kebocoran data!")
 ## 12. Lembar Evaluasi & Tugas Praktikum Mandiri
 
 <Accordions>
-  <Accordion title="Tugas 1: Komparasi Tiga Teknik Encoding pada creditApprovalUCI.csv (KUK 1.1 & 2.1)">
+  <Accordion title="Tugas 1: Komparasi Tiga Teknik Encoding pada creditApprovalUCI.csv">
     Bandingkan performa model `LogisticRegression` menggunakan tiga strategi encoding pada kolom kategorikal: (a) Label Encoding, (b) One-Hot penuh ($k$ kolom), dan (c) Dummy Encoding ($k-1$ kolom). Laporkan metrik **akurasi, F1-Score, dan jumlah fitur** yang dihasilkan. Jelaskan mengapa One-Hot penuh dapat menyebabkan masalah pada regresi logistik!
   </Accordion>
 
-  <Accordion title="Tugas 2: Integrasi Data & Validasi Kardinalitas (KUK Integrasi 011.1)">
+  <Accordion title="Tugas 2: Integrasi Data & Validasi Kardinalitas">
     Diberikan dua tabel: `orders` (order_id, customer_id, amount) dan `customers` (customer_id, city, segment). Lakukan: (a) inner join, (b) left join, dan (c) outer join. Untuk masing-masing, laporkan jumlah baris hasil dan jumlah nilai `NaN`. Lalu gunakan parameter `validate='many_to_one'` dan jelaskan pelanggaran kardinalitas yang terdeteksi!
   </Accordion>
 
-  <Accordion title="Tugas 3: Ekstraksi Fitur dengan PCA (KUK 1.2)">
+  <Accordion title="Tugas 3: Ekstraksi Fitur dengan PCA">
     Gunakan dataset numerik (misal `diabetes.csv` dari Pertemuan 09). Terapkan `StandardScaler` lalu `PCA`. Tentukan jumlah komponen minimum yang menutup **90% varians**. Bandingkan akurasi `RandomForestClassifier` menggunakan (a) seluruh fitur asli dan (b) komponen PCA terpilih. Sertakan grafik *scree plot*!
   </Accordion>
 
-  <Accordion title="Tugas 4: Pseudo-Labelling & Pemanfaatan Data Tak Berlabel (KUK 010.1)">
+  <Accordion title="Tugas 4: Pseudo-Labelling & Pemanfaatan Data Tak Berlabel">
     Bagi dataset menjadi tiga bagian: latih berlabel (60%), tak berlabel (20%), dan uji (20%). Latih model XGBoost/Random Forest tanpa pseudo-label, lalu kombinasikan dengan pseudo-label pada `sample_rate` 0.1 hingga 0.5. Plot kurva RMSE terhadap `sample_rate` dan simpulkan *sample rate* optimum serta risikonya!
   </Accordion>
 
-  <Accordion title="Tugas 5: Dokumentasi Feature Engineering Formal (KUK 3.1 & 3.2)">
-    Susun laporan konstruksi fitur untuk dataset Capstone Anda yang memuat: (1) representasi fitur awal, (2) teknik encoding & integrasi yang dipilih beserta justifikasinya, (3) tabel hasil transformasi (jumlah fitur & tipe), dan (4) evaluasi dampak terhadap performa model baseline. Dokumentasikan sesuai standar SKKNI!
+  <Accordion title="Tugas 5: Dokumentasi Feature Engineering Formal">
+    Susun laporan konstruksi fitur untuk dataset Capstone Anda yang memuat: (1) representasi fitur awal, (2) teknik encoding & integrasi yang dipilih beserta justifikasinya, (3) tabel hasil transformasi (jumlah fitur & tipe), dan (4) evaluasi dampak terhadap performa model baseline. Dokumentasikan secara terstruktur!
   </Accordion>
 </Accordions>
 
@@ -709,10 +699,9 @@ print("Pipeline Feature Engineering berhasil dilatih tanpa kebocoran data!")
 ## 13. Referensi Pustaka & Tautan Resmi
 
 1. **Tim Universitas Gunadarma** (2021). *Modul 10 — Feature Engineering dan Integrasi Data*. Thematic Academy Digital Talent Scholarship 2021, Kementerian Komunikasi dan Informatika RI.
-2. **Kementerian Ketenagakerjaan RI** (2020). *SKKNI No. 299 Tahun 2020 Bidang Artificial Intelligence Subbidang Data Science* (Unit `J.62DMI00.009.1` Mengkonstruksi Data, `J.62DMI00.010.1` Menentukan Label Data, `J.62DMI00.011.1` Mengintegrasikan Data).
-3. **Alice Zheng & Amanda Casari** (2018). *Feature Engineering for Machine Learning: Principles and Techniques for Data Scientists*. O'Reilly Media.
-4. **Jake VanderPlas** (2016). *Python Data Science Handbook: Combining Datasets — Merge and Join*. O'Reilly Media. [jakevdp.github.io](https://jakevdp.github.io/PythonDataScienceHandbook/).
-5. **Sinno Jialin Pan & Qiang Yang** (2010). *A Survey on Transfer Learning*. IEEE Transactions on Knowledge and Data Engineering, 22(10). *(Konsep pseudo-labelling / self-training)*.
-6. **Scikit-learn Developers**. *Preprocessing: Encoding Categorical Features & Principal Component Analysis*. [scikit-learn.org](https://scikit-learn.org/stable/modules/preprocessing.html).
-7. **Feature-engine Documentation**. *Categorical Encoders*. [feature-engine.trainindata.com](https://feature-engine.trainindata.com).
-8. **Analytics Vidhya** (2020). *Types of Categorical Data Encoding*. [analyticsvidhya.com](https://www.analyticsvidhya.com/blog/2020/08/types-of-categorical-data-encoding/).
+2. **Alice Zheng & Amanda Casari** (2018). *Feature Engineering for Machine Learning: Principles and Techniques for Data Scientists*. O'Reilly Media.
+3. **Jake VanderPlas** (2016). *Python Data Science Handbook: Combining Datasets — Merge and Join*. O'Reilly Media. [jakevdp.github.io](https://jakevdp.github.io/PythonDataScienceHandbook/).
+4. **Sinno Jialin Pan & Qiang Yang** (2010). *A Survey on Transfer Learning*. IEEE Transactions on Knowledge and Data Engineering, 22(10). *(Konsep pseudo-labelling / self-training)*.
+5. **Scikit-learn Developers**. *Preprocessing: Encoding Categorical Features & Principal Component Analysis*. [scikit-learn.org](https://scikit-learn.org/stable/modules/preprocessing.html).
+6. **Feature-engine Documentation**. *Categorical Encoders*. [feature-engine.trainindata.com](https://feature-engine.trainindata.com).
+7. **Analytics Vidhya** (2020). *Types of Categorical Data Encoding*. [analyticsvidhya.com](https://www.analyticsvidhya.com/blog/2020/08/types-of-categorical-data-encoding/).

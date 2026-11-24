@@ -1,6 +1,6 @@
 ---
 title: "Pertemuan 14: Deep Learning & Artificial Neural Networks (ANN, CNN, RNN)"
-description: "Penerapan Unit Kompetensi SKKNI J.62DMI00.013.1 (Membangun Model): dari neuron biologis & perceptron (McCulloch-Pitts) hingga Multi-layer Perceptron, fungsi aktivasi (Sigmoid, Tanh, ReLU, Softmax), forward/backpropagation, gradient descent & SGD mini-batch, adaptive learning rate (Adam), regularisasi (L1/L2, Dropout, Early Stopping, Augmentasi), implementasi dengan Scikit-learn MLPClassifier & Keras/TensorFlow (Iris, MNIST), serta Convolutional Neural Network (Conv/Pooling/FC) dan Recurrent Neural Network (LSTM/GRU)."
+description: "Panduan pemodelan Artificial Neural Network dan Deep Learning: dari neuron biologis & perceptron (McCulloch-Pitts) hingga Multi-layer Perceptron, fungsi aktivasi (Sigmoid, Tanh, ReLU, Softmax), forward/backpropagation, gradient descent & SGD mini-batch, adaptive learning rate (Adam), regularisasi (L1/L2, Dropout, Early Stopping, Augmentasi), implementasi dengan Scikit-learn MLPClassifier & Keras/TensorFlow (Iris, MNIST), serta Convolutional Neural Network (Conv/Pooling/FC) dan Recurrent Neural Network (LSTM/GRU)."
 ---
 
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
@@ -9,19 +9,13 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 > **Penyusun Modul & Portal:** Mahendar Dwi Payana  
 > **Penulis Materi Pelatihan DTS 2021:** Dr. Eng. Chastine Fatichah, S.Kom, M.Kom — Institut Teknologi Sepuluh Nopember (ITS)  
-> **Penyelenggara & Kurikulum:** Kementerian Komunikasi dan Informatika RI (Kominfo) & Sekolah Teknik Elektro dan Informatika (STEI) ITB  
-> **Standar Rujukan:** Standar Kompetensi Kerja Nasional Indonesia (SKKNI) No. 299 Tahun 2020 — Skema *Associate Data Scientist*
+> **Penyelenggara & Kurikulum:** Kementerian Komunikasi dan Informatika RI (Kominfo) & Sekolah Teknik Elektro dan Informatika (STEI) ITB
 
 ---
 
-## 1. Landasan Standar Kompetensi Kerja (SKKNI)
+## 1. Tujuan Pembelajaran & Ruang Lingkup
 
-Modul ini memasuki ranah **Deep Learning** dengan unit yang sama seperti pertemuan pemodelan (Membangun Model). Cakupannya: *fully connected network* (FCN/MLP), **CNN**, dan **RNN**, serta penggunaan library **Scikit-learn** dan **Keras/TensorFlow**.
-
-| Kode Unit | Elemen Kompetensi | Kriteria Unjuk Kerja (KUK) Inti |
-| :--- | :--- | :--- |
-| **J.62DMI00.013.1**<br />*Membangun Model* | **1. Menyiapkan parameter model** | **1.1** Parameter yang sesuai dengan model diidentifikasi.<br/>**1.2** Nilai toleransi parameter evaluasi pengujian ditetapkan sesuai tujuan teknis. |
-| | **2. Menggunakan tools pemodelan** | **2.1** Tools untuk membuat model diidentifikasi.<br/>**2.2** Algoritma pemodelan dibangun menggunakan tools yang dipilih.<br/>**2.3** Algoritma pemodelan dieksekusi sesuai skenario pengujian.<br/>**2.4** Parameter model dioptimasi untuk menghasilkan nilai evaluasi yang sesuai skenario. |
+Modul ini memasuki ranah **Deep Learning**. Cakupannya meliputi *fully connected network* (FCN/MLP), **CNN**, dan **RNN**, serta penggunaan library **Scikit-learn** dan **Keras/TensorFlow**.
 
 **Tujuan Pembelajaran:** peserta mampu melakukan proses pemodelan **Artificial Neural Network (ANN)**.
 
@@ -537,11 +531,10 @@ $$
 ## 15. Referensi Pustaka & Tautan Resmi
 
 1. **Dr. Eng. Chastine Fatichah, S.Kom, M.Kom** (2021). *Modul 14 — Membangun Model Artificial Neural Network (ANN)*. Thematic Academy Digital Talent Scholarship 2021, Kementerian Komunikasi dan Informatika RI.
-2. **Kementerian Ketenagakerjaan RI** (2020). *SKKNI No. 299 Tahun 2020 Bidang Artificial Intelligence Subbidang Data Science* (Unit `J.62DMI00.013.1` — Membangun Model).
-3. **Warren S. McCulloch & Walter Pitts** (1943). *A Logical Calculus of the Ideas Immanent in Nervous Activity*. Bulletin of Mathematical Biophysics, 5(4), 115–133.
-4. **Michael Negnevitsky** (2005). *Artificial Intelligence: A Guide to Intelligent Systems* (2nd ed.). Addison Wesley.
-5. **Diederik P. Kingma & Jimmy Ba** (2015). *Adam: A Method for Stochastic Optimization*. ICLR 2015.
-6. **Yann LeCun, Léon Bottou, Yoshua Bengio, & Patrick Haffner** (1998). *Gradient-Based Learning Applied to Document Recognition*. Proceedings of the IEEE, 86(11), 2278–2324. *(LeNet-5 & MNIST)*.
-7. **Alexander Amini & Ava Amini** (2021). *Intro to Deep Learning (MIT 6.S191)*. MIT.
-8. **TensorFlow/Keras Documentation**. [tensorflow.org](https://www.tensorflow.org/overview/), [keras.io](https://keras.io/).
-9. **TensorFlow Playground** — simulasi arsitektur ANN interaktif: [playground.tensorflow.org](https://playground.tensorflow.org/).
+2. **Warren S. McCulloch & Walter Pitts** (1943). *A Logical Calculus of the Ideas Immanent in Nervous Activity*. Bulletin of Mathematical Biophysics, 5(4), 115–133.
+3. **Michael Negnevitsky** (2005). *Artificial Intelligence: A Guide to Intelligent Systems* (2nd ed.). Addison Wesley.
+4. **Diederik P. Kingma & Jimmy Ba** (2015). *Adam: A Method for Stochastic Optimization*. ICLR 2015.
+5. **Yann LeCun, Léon Bottou, Yoshua Bengio, & Patrick Haffner** (1998). *Gradient-Based Learning Applied to Document Recognition*. Proceedings of the IEEE, 86(11), 2278–2324. *(LeNet-5 & MNIST)*.
+6. **Alexander Amini & Ava Amini** (2021). *Intro to Deep Learning (MIT 6.S191)*. MIT.
+7. **TensorFlow/Keras Documentation**. [tensorflow.org](https://www.tensorflow.org/overview/), [keras.io](https://keras.io/).
+8. **TensorFlow Playground** — simulasi arsitektur ANN interaktif: [playground.tensorflow.org](https://playground.tensorflow.org/).

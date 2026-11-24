@@ -1,6 +1,6 @@
 ---
 title: "Pertemuan 15: Evaluasi Model & Review Diagnostik Pemodelan"
-description: "Penerapan Unit Kompetensi SKKNI J.62DMI00.014.1 (Mengevaluasi Hasil Pemodelan) dan J.62DMI00.015.1 (Melakukan Proses Review Pemodelan): Akurasi & keterbatasannya, Confusion Matrix, metrik biner (Precision, Recall, Specificity, NPV, F1), ROC-AUC & PR-Curve, Log Loss, evaluasi segmentasi (Jaccard/Dice), evaluasi regresi (MAE, MSE, RMSE, MAPE, R²), evaluasi clustering (Silhouette, Davies-Bouldin, Dunn), perbandingan model dengan McNemar's Test, Explainable AI (SHAP), dan Google ML Test Score."
+description: "Panduan lengkap evaluasi hasil pemodelan dan proses review pemodelan: Akurasi & keterbatasannya, Confusion Matrix, metrik biner (Precision, Recall, Specificity, NPV, F1), ROC-AUC & PR-Curve, Log Loss, evaluasi segmentasi (Jaccard/Dice), evaluasi regresi (MAE, MSE, RMSE, MAPE, R²), evaluasi clustering (Silhouette, Davies-Bouldin, Dunn), perbandingan model dengan McNemar's Test, Explainable AI (SHAP), dan Google ML Test Score."
 ---
 
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
@@ -9,21 +9,13 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 > **Penyusun Modul & Portal:** Mahendar Dwi Payana  
 > **Penulis Materi Pelatihan DTS 2021:** Ir. Agus Pratondo, S.T., M.T., Ph.D. — Thematic Academy Digital Talent Scholarship 2021  
-> **Penyelenggara & Kurikulum:** Kementerian Komunikasi dan Informatika RI (Kominfo) & Sekolah Teknik Elektro dan Informatika (STEI) ITB  
-> **Standar Rujukan:** Standar Kompetensi Kerja Nasional Indonesia (SKKNI) No. 299 Tahun 2020 — Skema *Associate Data Scientist*
+> **Penyelenggara & Kurikulum:** Kementerian Komunikasi dan Informatika RI (Kominfo) & Sekolah Teknik Elektro dan Informatika (STEI) ITB
 
 ---
 
-## 1. Landasan Standar Kompetensi Kerja (SKKNI)
+## 1. Tujuan Pembelajaran & Ruang Lingkup Evaluasi
 
-Evaluasi menentukan apakah model **layak digunakan atau tidak**. Sesi ini mengintegrasikan dua unit kompetensi:
-
-| Kode Unit | Elemen Kompetensi | Kriteria Unjuk Kerja (KUK) Inti |
-| :--- | :--- | :--- |
-| **J.62DMI00.014.1**<br />*Mengevaluasi Hasil Pemodelan* | **1. Menggunakan model dengan data riil** | **1.1** Data baru untuk evaluasi dikumpulkan sesuai parameter evaluasi.<br/>**1.2** Model diuji dengan data riil yang telah dikumpulkan. |
-| | **2. Menilai hasil pemodelan** | **2.1** Keluaran pengujian model dinilai berdasarkan metrik kesuksesan.<br/>**2.2** Hasil penilaian didokumentasikan sesuai standar. |
-| **J.62DMI00.015.1**<br />*Melakukan Proses Review Pemodelan* | **1. Menilai kesesuaian proses** | **1.1** Proses pemodelan diperiksa kesesuaiannya dengan tahapan yang ditentukan.<br/>**1.2** Tindak lanjut ditentukan berdasarkan hasil pemeriksaan. |
-| | **2. Menilai kualitas proses** | **2.1** Proses pemodelan dinilai berdasarkan rencana pelaksanaan.<br/>**2.2** Hasil penilaian didokumentasikan sesuai standar. |
+Evaluasi menentukan apakah model **layak digunakan atau tidak**. Sesi ini membahas evaluasi hasil pemodelan secara kuantitatif serta proses review kualitas dan kesesuaian pemodelan.
 
 **Tujuan Pembelajaran:** peserta mampu menghitung berbagai pengukuran performansi model *machine learning* dan mengimplementasikannya pada bahasa pemrograman.
 
@@ -279,7 +271,7 @@ else:
 
 ## 11. Review Pemodelan & Explainable AI (SHAP)
 
-Unit `J.62DMI00.015.1` menuntut penilaian **kesesuaian** dan **kualitas** proses pemodelan. Model modern (XGBoost, Deep Neural Networks) sering dianggap **kotak hitam (*black box*)**; regulator menuntut transparansi: *"Mengapa model menolak pengajuan kredit nasabah ini?"*
+Proses review pemodelan menuntut penilaian **kesesuaian** dan **kualitas** tahapan pemodelan. Model modern (XGBoost, Deep Neural Networks) sering dianggap **kotak hitam (*black box*)**; regulator menuntut transparansi: *"Mengapa model menolak pengajuan kredit nasabah ini?"*
 
 **SHAP (*SHapley Additive exPlanations*)** — berbasis teori permainan kooperatif (Shapley) — mengalokasikan kontribusi adil tiap fitur terhadap deviasi prediksi dari nilai dasar:
 
@@ -386,7 +378,7 @@ flowchart LR
   </Accordion>
 
   <Accordion title="Tugas 5: Review Pemodelan & Explainable AI (SHAP)">
-    Pilih model terbaik dari proyek akhir (Capstone) Anda. Buat **SHAP Summary Plot** dan **SHAP Waterfall Plot** untuk satu prediksi individu. Susun laporan review pemodelan yang memuat: (1) kesesuaian tahapan proses, (2) metrik evaluasi kunci, (3) interpretasi fitur terpenting, dan (4) rekomendasi tindak lanjut. Dokumentasikan sesuai standar SKKNI `J.62DMI00.015.1`!
+    Pilih model terbaik dari proyek akhir (Capstone) Anda. Buat **SHAP Summary Plot** dan **SHAP Waterfall Plot** untuk satu prediksi individu. Susun laporan review pemodelan yang memuat: (1) kesesuaian tahapan proses, (2) metrik evaluasi kunci, (3) interpretasi fitur terpenting, dan (4) rekomendasi tindak lanjut. Dokumentasikan dalam laporan review formal!
   </Accordion>
 </Accordions>
 
@@ -395,11 +387,10 @@ flowchart LR
 ## 15. Referensi Pustaka & Tautan Resmi
 
 1. **Ir. Agus Pratondo, S.T., M.T., Ph.D.** (2021). *Modul Model Evaluasi (Pertemuan 15)*. Thematic Academy Digital Talent Scholarship 2021, Kementerian Komunikasi dan Informatika RI.
-2. **Kementerian Ketenagakerjaan RI** (2020). *SKKNI No. 299 Tahun 2020 Bidang Artificial Intelligence Subbidang Data Science* (Unit `J.62DMI00.014.1` Mengevaluasi Hasil Pemodelan & `J.62DMI00.015.1` Melakukan Proses Review Pemodelan).
-3. **Thomas G. Dietterich** (1998). *Approximate Statistical Tests for Comparing Supervised Classification Learning Algorithms*. Neural Computation, 10(7), 1895–1923. *(McNemar's Test & 5×2cv)*.
-4. **Scott M. Lundberg & Su-In Lee** (2017). *A Unified Approach to Interpreting Model Predictions*. NeurIPS 2017. *(SHAP)*.
-5. **Alberto Fernández, Salvador García, Mikel Galar, Ronaldo C. Prati, Bartosz Krawczyk, & Francisco Herrera** (2018). *Learning from Imbalanced Data Sets*. Springer.
-6. **E. T. Whittaker, G. F. R. Ellis, et al.** — Jaccard Index & Dice Coefficient (metrik kesamaan himpunan).
-7. **Google Research** (2019). *The ML Test Score: A Rubric for ML Production Readiness and Technical Debt Reduction*. Google.
-8. **Scikit-learn Developers**. *Model Evaluation & Metrics*. [scikit-learn.org](https://scikit-learn.org/stable/modules/model_evaluation.html).
-9. **Analytics Vidhya** (2020). *Quick Guide to Evaluation Metrics for Supervised and Unsupervised Machine Learning*.
+2. **Thomas G. Dietterich** (1998). *Approximate Statistical Tests for Comparing Supervised Classification Learning Algorithms*. Neural Computation, 10(7), 1895–1923. *(McNemar's Test & 5×2cv)*.
+3. **Scott M. Lundberg & Su-In Lee** (2017). *A Unified Approach to Interpreting Model Predictions*. NeurIPS 2017. *(SHAP)*.
+4. **Alberto Fernández, Salvador García, Mikel Galar, Ronaldo C. Prati, Bartosz Krawczyk, & Francisco Herrera** (2018). *Learning from Imbalanced Data Sets*. Springer.
+5. **E. T. Whittaker, G. F. R. Ellis, et al.** — Jaccard Index & Dice Coefficient (metrik kesamaan himpunan).
+6. **Google Research** (2019). *The ML Test Score: A Rubric for ML Production Readiness and Technical Debt Reduction*. Google.
+7. **Scikit-learn Developers**. *Model Evaluation & Metrics*. [scikit-learn.org](https://scikit-learn.org/stable/modules/model_evaluation.html).
+8. **Analytics Vidhya** (2020). *Quick Guide to Evaluation Metrics for Supervised and Unsupervised Machine Learning*.

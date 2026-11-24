@@ -4,7 +4,6 @@ import {
   BookOpen,
   Terminal,
   Layers,
-  CheckCircle2,
   ExternalLink,
   ChevronRight,
   Database,
@@ -34,7 +33,7 @@ const modules = [
   {
     week: 'Week 2',
     title: 'Methodology & Data Science Tools',
-    desc: 'CRISP-DM lifecycle, 21 SKKNI 299/2020 units, Git/GitHub, the 6 core libraries, NumPy vectorization, and a real immunization dataset case study.',
+    desc: 'CRISP-DM lifecycle, 7 generic data science steps, Git/GitHub, the 6 core libraries, NumPy vectorization, and a real immunization dataset case study.',
     meetings: [
       { num: '03', title: 'Data-Driven Data Science Methodology', href: '/docs/pertemuan-03' },
       { num: '04', title: 'Tools for Data Science', href: '/docs/pertemuan-04' },
@@ -147,7 +146,7 @@ export default function EnHomePage() {
           </h1>
 
           <p className="max-w-3xl mx-auto text-lg sm:text-xl text-muted-foreground mb-10 leading-relaxed">
-            A complete <strong>16-session (8-week)</strong> learning path aligned with Indonesia’s National Work Competency Standard (<strong>SKKNI No. 299/2020</strong>). Enriched with mathematical formulations, architecture diagrams, and modern applied Python code.
+            A complete <strong>16-session (8-week)</strong> learning path for <strong>Data Science &amp; Artificial Intelligence</strong>. Enriched with mathematical formulations, architecture diagrams, and modern applied Python code.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4">
@@ -180,8 +179,8 @@ export default function EnHomePage() {
               <div className="text-xs text-muted-foreground mt-1">8-week integrated curriculum</div>
             </div>
             <div className="p-4 rounded-xl bg-card border border-border">
-              <div className="text-2xl font-bold text-foreground">SKKNI No. 299</div>
-              <div className="text-xs text-muted-foreground mt-1">Associate Data Scientist</div>
+              <div className="text-2xl font-bold text-foreground">CRISP-DM</div>
+              <div className="text-xs text-muted-foreground mt-1">Structured Project Lifecycle</div>
             </div>
             <div className="p-4 rounded-xl bg-card border border-border">
               <div className="text-2xl font-bold text-foreground">End-to-End MLOps</div>

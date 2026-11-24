@@ -44,10 +44,6 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
               author: { '@id': personId },
               publisher: { '@id': personId },
               inLanguage: 'id',
-              about: {
-                '@type': 'EducationalOccupationalCredential',
-                name: 'SKKNI No. 299 Tahun 2020 Data Science',
-              },
             }),
           }}
         />

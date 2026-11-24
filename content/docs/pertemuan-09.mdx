@@ -1,6 +1,6 @@
 ---
 title: "Pertemuan 09: Konstruksi & Transformasi Data Numerik"
-description: "Penerapan Unit Kompetensi SKKNI J.62DMI00.009.1 (Mengkonstruksi Data): Strategi imputasi nilai hilang (Mean, Median, Arbitrary, End of Tail, Modus, Random Sample, Regresi Deterministik & Stokastik), penanganan pencilan (Trimming vs Winsorizing), diskretisasi (Binning dengan cut, qcut, interval_range), serta penskalaan fitur (Normalizer L2, Normalisasi, Standardisasi, Robust Scaling) dan transformasi distribusi (Log, Box-Cox, Yeo-Johnson)."
+description: "Panduan konstruksi dan transformasi data numerik: Strategi imputasi nilai hilang (Mean, Median, Arbitrary, End of Tail, Modus, Random Sample, Regresi Deterministik & Stokastik), penanganan pencilan (Trimming vs Winsorizing), diskretisasi (Binning dengan cut, qcut, interval_range), serta penskalaan fitur (Normalizer L2, Normalisasi, Standardisasi, Robust Scaling) dan transformasi distribusi (Log, Box-Cox, Yeo-Johnson)."
 ---
 
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
@@ -9,22 +9,15 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 > **Penyusun Modul & Portal:** Mahendar Dwi Payana  
 > **Penulis Materi Pelatihan DTS 2021:** Tim Universitas Gunadarma — Thematic Academy Digital Talent Scholarship 2021  
-> **Penyelenggara & Kurikulum:** Kementerian Komunikasi dan Informatika RI (Kominfo) & Sekolah Teknik Elektro dan Informatika (STEI) ITB  
-> **Standar Rujukan:** Standar Kompetensi Kerja Nasional Indonesia (SKKNI) No. 299 Tahun 2020 — Skema *Associate Data Scientist*
+> **Penyelenggara & Kurikulum:** Kementerian Komunikasi dan Informatika RI (Kominfo) & Sekolah Teknik Elektro dan Informatika (STEI) ITB
 
 ---
 
-## 1. Landasan Standar Kompetensi Kerja (SKKNI `J.62DMI00.009.1`)
+## 1. Tujuan Pembelajaran & Ruang Lingkup
 
-Setelah data dibersihkan dan divalidasi pada pertemuan sebelumnya, data mentah (*raw data*) belum tentu berada dalam representasi numerik yang optimal untuk proses pemodelan. Modul ini menuntaskan **Unit Kompetensi Mengkonstruksi Data (*Data Construction*)** yang mencakup tiga elemen kompetensi formal:
+Setelah data dibersihkan dan divalidasi pada pertemuan sebelumnya, data mentah (*raw data*) belum tentu berada dalam representasi numerik yang optimal untuk proses pemodelan. Modul ini membahas teknik **Konstruksi Data (*Data Construction*)** mulai dari analisis transformasi data, penerapannya pada fitur numerik, hingga dokumentasi hasil transformasi.
 
-| Kode Unit | Elemen Kompetensi | Kriteria Unjuk Kerja (KUK) Inti |
-| :--- | :--- | :--- |
-| **J.62DMI00.009.1** | **1. Menganalisis Teknik Transformasi Data** | **1.1** Analisis data untuk menentukan representasi fitur data awal.<br/>**1.2** Analisis representasi fitur data awal untuk menentukan teknik rekayasa fitur (*feature engineering*) yang diperlukan bagi pembangunan model data science. |
-| | **2. Melakukan Transformasi Data** | **2.1** Transformasi dilakukan untuk mendapatkan fitur data awal.<br/>**2.2** Rekayasa fitur data dilakukan untuk mendapatkan fitur baru yang diperlukan bagi pembangunan model data science. |
-| | **3. Membuat Dokumentasi Konstruksi Data** | **3.1** Teknis transformasi data dijabarkan dalam bentuk tertulis.<br/>**3.2** Hasil transformasi data dan rekomendasi hasil transformasi dituangkan dalam bentuk tertulis. |
-
-> **Catatan Cakupan:** Pertemuan 09 berfokus pada **transformasi representasi nilai** (imputasi, diskretisasi, penskalaan, penormalan distribusi). Adapun **pembentukan fitur baru secara substantif** (encoding kategorikal, fitur siklis, interaksi domain) dibahas pada **Pertemuan 10**, meskipun keduanya berbagi kode unit yang sama.
+> **Catatan Cakupan:** Pertemuan 09 berfokus pada **transformasi representasi nilai** (imputasi, diskretisasi, penskalaan, penormalan distribusi). Adapun **pembentukan fitur baru secara substantif** (encoding kategorikal, fitur siklis, interaksi domain) dibahas pada **Pertemuan 10**.
 
 ---
 
@@ -38,7 +31,7 @@ flowchart LR
         Raw["Raw Data\n(Kotor • Kosong • Berskala Aneh)"] --> Clean["Data Cleansing\n• Missing Value\n• Duplikasi\n• Koreksi Tipe"]
     end
 
-    subgraph Construction ["Fase Konstruksi Data (Pertemuan 09) — J.62DMI00.009.1"]
+    subgraph Construction ["Fase Konstruksi Data (Pertemuan 09)"]
         Clean --> Imp["1. Imputasi Nilai Hilang"]
         Imp --> Out["2. Penanganan Pencilan\n(Trimming / Winsorizing)"]
         Out --> Bin["3. Diskretisasi / Binning"]
@@ -744,22 +737,20 @@ print(scaled.describe().round(3).loc[["mean", "std"]])
 
 ## 9. Lembar Evaluasi & Tugas Praktikum Mandiri
 
-Berdasarkan KUK Unit Kompetensi `J.62DMI00.009.1`:
-
 <Accordions>
-  <Accordion title="Tugas 1: Perbandingan Tiga Teknik Imputasi pada diabetes.csv (KUK 1.1 & 2.1)">
+  <Accordion title="Tugas 1: Perbandingan Tiga Teknik Imputasi pada diabetes.csv">
     Terapkan tiga teknik imputasi berbeda pada kolom `Insulin` yang memiliki **48,70% nilai hilang**: (a) imputasi median, (b) imputasi regresi deterministik, dan (c) imputasi regresi stokastik. Bandingkan **mean, standar deviasi, dan skewness** ketiga hasil, lalu simpulkan teknik mana yang paling menjaga karakteristik distribusi asli. Tampilkan histogram pembanding!
   </Accordion>
 
-  <Accordion title="Tugas 2: Analisis Dampak Binning terhadap Relasi Non-Linier (KUK 1.2)">
+  <Accordion title="Tugas 2: Analisis Dampak Binning terhadap Relasi Non-Linier">
     Gunakan dataset `bins.csv`. Bandingkan hasil `pd.cut()` (lebar sama) dengan `pd.qcut()` (frekuensi sama). Jelaskan mengapa `qcut()` lebih tepat untuk data yang sangat menceng, dan kapan `cut()` justru lebih disukai oleh praktisi bisnis. Sertakan tabel jumlah anggota tiap bin!
   </Accordion>
 
-  <Accordion title="Tugas 3: Studi Kasus Trimming vs. Winsorizing (KUK 2.1)">
+  <Accordion title="Tugas 3: Studi Kasus Trimming vs. Winsorizing">
     Gunakan kolom `SkinThickness` pada `diabetes.csv` (memiliki nilai ekstrem). Terapkan (a) `trima()` untuk memotong pada persentil 5 dan 95, serta (b) `winsorize()` dengan limit `[0.05, 0.05]`. Dokumentasikan perbedaan **jumlah baris**, **mean**, dan **standar deviasi** sebelum dan sesudah kedua perlakukan tersebut!
   </Accordion>
 
-  <Accordion title="Tugas 4: Dokumentasi Konstruksi Data Formal (KUK 3.1 & 3.2)">
+  <Accordion title="Tugas 4: Dokumentasi Konstruksi Data Formal">
     Pilih satu dataset proyek akhir (Capstone) Anda. Susun **laporan dokumentasi konstruksi data** berisi: (1) representasi fitur awal, (2) teknik transformasi yang dipilih beserta justifikasi statistiknya, (3) hasil transformasi dalam bentuk tabel sebelum-sesudah, dan (4) rekomendasi transformasi lanjutan untuk tahap pemodelan!
   </Accordion>
 </Accordions>
@@ -769,9 +760,8 @@ Berdasarkan KUK Unit Kompetensi `J.62DMI00.009.1`:
 ## 10. Referensi Pustaka & Tautan Resmi
 
 1. **Tim Universitas Gunadarma** (2021). *Modul 9 — Transformasi Data*. Thematic Academy Digital Talent Scholarship 2021, Kementerian Komunikasi dan Informatika RI.
-2. **Kementerian Ketenagakerjaan RI** (2020). *Keputusan Menteri Ketenagakerjaan RI No. 299 Tahun 2020 tentang Penetapan SKKNI Bidang Keahlian Artificial Intelligence Subbidang Data Science* (Unit `J.62DMI00.009.1` — Mengkonstruksi Data).
-3. **Donald B. Rubin** (1976). *Inference and Missing Data*. Biometrika, 63(3), 581–592. *(Konsep MCAR, MAR, MNAR)*.
-4. **George E. P. Box & David R. Cox** (1964). *An Analysis of Transformations*. Journal of the Royal Statistical Society, Series B, 26(2), 211–252. *(Transformasi Box-Cox)*.
-5. **Ing-Khiong Yeo & Richard A. Johnson** (2000). *A New Family of Power Transformations to Improve Normality or Symmetry*. Biometrika, 87(4), 954–959. *(Transformasi Yeo-Johnson)*.
-6. **Felipe Flores** (2021). *Feature-engine: A Python package for feature engineering*. [feature-engine.trainindata.com](https://feature-engine.trainindata.com).
-7. **Scikit-learn Developers**. *Preprocessing Data: Standardization, Normalization, and Power Transforms*. [scikit-learn.org](https://scikit-learn.org/stable/modules/preprocessing.html).
+2. **Donald B. Rubin** (1976). *Inference and Missing Data*. Biometrika, 63(3), 581–592. *(Konsep MCAR, MAR, MNAR)*.
+3. **George E. P. Box & David R. Cox** (1964). *An Analysis of Transformations*. Journal of the Royal Statistical Society, Series B, 26(2), 211–252. *(Transformasi Box-Cox)*.
+4. **Ing-Khiong Yeo & Richard A. Johnson** (2000). *A New Family of Power Transformations to Improve Normality or Symmetry*. Biometrika, 87(4), 954–959. *(Transformasi Yeo-Johnson)*.
+5. **Felipe Flores** (2021). *Feature-engine: A Python package for feature engineering*. [feature-engine.trainindata.com](https://feature-engine.trainindata.com).
+6. **Scikit-learn Developers**. *Preprocessing Data: Standardization, Normalization, and Power Transforms*. [scikit-learn.org](https://scikit-learn.org/stable/modules/preprocessing.html).

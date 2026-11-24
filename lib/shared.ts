@@ -29,14 +29,13 @@ export const siteConfig = {
   author: 'Mahendar Dwi Payana',
   role: 'AI & Data Science Practitioner',
   title: 'Learn AI - Data Science & Artificial Intelligence Master Hub',
-  description: 'Portal pembelajaran komprehensif Data Science dan Artificial Intelligence berdasarkan silabus standar SKKNI No. 299 Tahun 2020 dan kurikulum Thematic Academy Kominfo RI - STEI ITB.',
+  description: 'Portal pembelajaran komprehensif Data Science dan Artificial Intelligence berdasarkan kurikulum Thematic Academy Kominfo RI - STEI ITB.',
   keywords: [
     'Data Science',
     'Artificial Intelligence',
     'Machine Learning',
     'Deep Learning',
     'Python',
-    'SKKNI No 299 Tahun 2020',
     'Kominfo DTS',
     'STEI ITB',
     'Mahendar Dwi Payana',
@@ -53,7 +52,6 @@ export const siteConfig = {
     institution: 'Kementerian Komunikasi dan Informatika RI (Kominfo)',
     academicPartner: 'Sekolah Teknik Elektro dan Informatika (STEI) ITB',
     leadInstructor: 'Ir. Windy Gambetta, MBA',
-    standard: 'SKKNI No. 299 Tahun 2020 (Bidang Artificial Intelligence sub bidang Data Science)',
   },
   github: {
     user: 'mahendartea',
